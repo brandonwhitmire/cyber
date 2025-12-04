@@ -12,6 +12,8 @@ on:
 jobs:
   mirror:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     
     steps:
     - name: Checkout Destination Repository
@@ -21,7 +23,7 @@ jobs:
         # Fetch full history for proper mirroring
         fetch-depth: 0
         # Use the built-in GITHUB_TOKEN for cloning/pushing
-        token: ${{ secrets.GITHUB_TOKEN }} 
+        token: ${{ github.token }} 
 
     - name: Fetch and Check for Changes
       id: check_changes
