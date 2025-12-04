@@ -1,0 +1,114 @@
+name: Auto Mirror Public Repo
+
+on:
+  # Run the mirror once per day at 2 AM UTC
+  schedule:
+    - cron: '0 2 * * *'
+  
+  # Allow manual trigger from the GitHub Actions tab
+  workflow_dispatch:
+  
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Destination Repository
+      # Checkout the destination repo where the workflow lives.
+      uses: actions/checkout@v4
+      with:
+        # Fetch full history for proper mirroring
+        fetch-depth: 0
+        # Use the built-in GITHUB_TOKEN for cloning/pushing
+        token: ${{ secrets.GITHUB_TOKEN }} 
+
+    - name: Fetch and Check for Changes
+      id: check_changes
+      # Fetch from source and check if there are any changes
+      run: |
+        SOURCE_REPO="https://github.com/OpenSourceKyle/cyber.git"
+        
+        # 1. Add the source repository as a remote (or update if it exists)
+        git remote add source "$SOURCE_REPO" 2>/dev/null || git remote set-url source "$SOURCE_REPO"
+        
+        # 2. Save current state before fetching
+        # Save current branch SHAs
+        git for-each-ref --format='%(refname:short) %(objectname)' refs/heads/ > /tmp/local_branches.txt
+        # Save current tag SHAs
+        git for-each-ref --format='%(refname:short) %(objectname)' refs/tags/ > /tmp/local_tags.txt
+        
+        # 3. Fetch all remote changes (branches, tags, etc.) from the source.
+        git fetch --all --tags --force source
+        
+        # 4. Check if there are any differences between source and local
+        CHANGES_DETECTED=false
+        
+        # Check for branch differences by comparing remote tracking branches with local
+        for branch in $(git branch -r | grep 'source/' | grep -v HEAD); do
+          branch_name=${branch#source/}
+          local_ref="refs/heads/$branch_name"
+          source_ref="refs/remotes/source/$branch_name"
+          
+          # Check if branch exists locally
+          if git show-ref --verify --quiet "$local_ref"; then
+            # Compare SHA of branch heads
+            local_sha=$(git rev-parse "$local_ref")
+            source_sha=$(git rev-parse "$source_ref")
+            if [ "$local_sha" != "$source_sha" ]; then
+              CHANGES_DETECTED=true
+              break
+            fi
+          else
+            # New branch detected
+            CHANGES_DETECTED=true
+            break
+          fi
+        done
+        
+        # Check for tag differences by comparing with saved state
+        if [ "$CHANGES_DETECTED" = false ]; then
+          # Get current tags after fetch
+          git for-each-ref --format='%(refname:short) %(objectname)' refs/tags/ > /tmp/current_tags.txt
+          
+          # Compare tag lists
+          if ! diff -q /tmp/local_tags.txt /tmp/current_tags.txt > /dev/null 2>&1; then
+            CHANGES_DETECTED=true
+          fi
+        fi
+        
+        # Check if any local branches were deleted from source
+        if [ "$CHANGES_DETECTED" = false ]; then
+          for local_branch in $(git branch | sed 's/^[ *]*//'); do
+            if ! git show-ref --verify --quiet "refs/remotes/source/$local_branch"; then
+              CHANGES_DETECTED=true
+              break
+            fi
+          done
+        fi
+        
+        # Output result for next step
+        echo "CHANGES_DETECTED=$CHANGES_DETECTED" >> $GITHUB_OUTPUT
+        
+        if [ "$CHANGES_DETECTED" = false ]; then
+          echo "No changes detected in source repository. Skipping mirror update."
+        else
+          echo "Changes detected in source repository. Proceeding with mirror update."
+        fi
+
+    - name: Mirror from Source (if changes detected)
+      # Only run if changes were detected
+      if: steps.check_changes.outputs.CHANGES_DETECTED == 'true'
+      run: |
+        # Set the remote URL to the destination using the GITHUB_TOKEN for push authorization.
+        # This allows the push command to succeed.
+        git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+        
+        # Push all branches from source to origin
+        git push origin 'refs/remotes/source/*:refs/heads/*' --force
+        
+        # Push all tags from source to origin
+        git push origin --tags --force
+        
+        echo "Mirror update completed successfully."
+
