@@ -7,7 +7,6 @@ on:
   
   # Allow manual trigger from the GitHub Actions tab
   workflow_dispatch:
-  
 
 jobs:
   mirror:
@@ -16,101 +15,69 @@ jobs:
       contents: write
     
     steps:
-    - name: Checkout Destination Repository
-      # Checkout the destination repo where the workflow lives.
-      uses: actions/checkout@v4
-      with:
-        # Fetch full history for proper mirroring
-        fetch-depth: 0
-        # Use the built-in GITHUB_TOKEN for cloning/pushing
-        token: ${{ github.token }} 
+      - name: Checkout Destination Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ github.token }}
 
-    - name: Fetch and Check for Changes
-      id: check_changes
-      # Fetch from source and check if there are any changes
-      run: |
-        SOURCE_REPO="https://github.com/OpenSourceKyle/cyber.git"
-        
-        # 1. Add the source repository as a remote (or update if it exists)
-        git remote add source "$SOURCE_REPO" 2>/dev/null || git remote set-url source "$SOURCE_REPO"
-        
-        # 2. Save current state before fetching
-        # Save current branch SHAs
-        git for-each-ref --format='%(refname:short) %(objectname)' refs/heads/ > /tmp/local_branches.txt
-        # Save current tag SHAs
-        git for-each-ref --format='%(refname:short) %(objectname)' refs/tags/ > /tmp/local_tags.txt
-        
-        # 3. Fetch all remote changes (branches, tags, etc.) from the source.
-        git fetch source --tags --force
-        
-        # 4. Check if there are any differences between source and local
-        CHANGES_DETECTED=false
-        
-        # Check for branch differences by comparing remote tracking branches with local
-        for branch in $(git branch -r | grep 'source/' | grep -v HEAD); do
-          branch_name=${branch#source/}
-          local_ref="refs/heads/$branch_name"
-          source_ref="refs/remotes/source/$branch_name"
+      - name: Preserve Workflow File
+        # Save the workflow file before mirroring so it doesn't get overwritten
+        run: |
+          mkdir -p /tmp/preserve
+          cp .github/workflows/mirror.yml /tmp/preserve/mirror.yml || true
+
+      - name: Mirror Repository
+        # Use a dedicated action for mirroring to avoid common pitfalls
+        uses: actions/mirroring-action@v1.1
+        with:
+          # The repository to be mirrored
+          source_repo: 'https://github.com/OpenSourceKyle/cyber.git'
           
-          # Check if branch exists locally
-          if git show-ref --verify --quiet "$local_ref"; then
-            # Compare SHA of branch heads
-            local_sha=$(git rev-parse "$local_ref")
-            source_sha=$(git rev-parse "$source_ref")
-            if [ "$local_sha" != "$source_sha" ]; then
-              CHANGES_DETECTED=true
-              break
-            fi
-          else
-            # New branch detected
-            CHANGES_DETECTED=true
-            break
-          fi
-        done
-        
-        # Check for tag differences by comparing with saved state
-        if [ "$CHANGES_DETECTED" = false ]; then
-          # Get current tags after fetch
-          git for-each-ref --format='%(refname:short) %(objectname)' refs/tags/ > /tmp/current_tags.txt
+          # The destination repository (the one this workflow runs in)
+          target_repo: 'https://github.com/${{ github.repository }}.git'
           
-          # Compare tag lists
-          if ! diff -q /tmp/local_tags.txt /tmp/current_tags.txt > /dev/null 2>&1; then
-            CHANGES_DETECTED=true
-          fi
-        fi
-        
-        # Check if any local branches were deleted from source
-        if [ "$CHANGES_DETECTED" = false ]; then
-          for local_branch in $(git branch | sed 's/^[ *]*//'); do
-            if ! git show-ref --verify --quiet "refs/remotes/source/$local_branch"; then
-              CHANGES_DETECTED=true
-              break
+          # The GITHUB_TOKEN is used for authentication automatically.
+          # We need to provide it via a secret for the action to use.
+          target_token: ${{ github.token }}
+
+      - name: Restore Workflow File
+        # Restore the workflow file if it was deleted or changed during mirroring
+        run: |
+          if [ -f /tmp/preserve/mirror.yml ]; then
+            # Configure git for commits
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            
+            # Fetch all branches after mirroring to get latest state
+            git fetch origin --all --prune --force
+            
+            # Get the default branch name (try multiple methods)
+            DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "main")
+            if [ -z "$DEFAULT_BRANCH" ] || [ "$DEFAULT_BRANCH" = "main" ]; then
+              # Try to detect default branch from remote
+              DEFAULT_BRANCH=$(git remote show origin | grep "HEAD branch" | cut -d' ' -f5 || echo "main")
             fi
-          done
-        fi
-        
-        # Output result for next step
-        echo "CHANGES_DETECTED=$CHANGES_DETECTED" >> $GITHUB_OUTPUT
-        
-        if [ "$CHANGES_DETECTED" = false ]; then
-          echo "No changes detected in source repository. Skipping mirror update."
-        else
-          echo "Changes detected in source repository. Proceeding with mirror update."
-        fi
-
-    - name: Mirror from Source (if changes detected)
-      # Only run if changes were detected
-      if: steps.check_changes.outputs.CHANGES_DETECTED == 'true'
-      run: |
-        # Set the remote URL to the destination using the GITHUB_TOKEN for push authorization.
-        # This allows the push command to succeed.
-        git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
-        
-        # Push all branches from source to origin
-        git push origin 'refs/remotes/source/*:refs/heads/*' --force
-        
-        # Push all tags from source to origin
-        git push origin --tags --force
-        
-        echo "Mirror update completed successfully."
-
+            
+            # Checkout the default branch (create tracking branch if needed)
+            if git show-ref --verify --quiet "refs/remotes/origin/$DEFAULT_BRANCH"; then
+              git checkout -f -B "$DEFAULT_BRANCH" "origin/$DEFAULT_BRANCH"
+            else
+              echo "Warning: Could not find default branch, using current branch"
+              git checkout -f $(git rev-parse --abbrev-ref HEAD)
+            fi
+            
+            # Restore the workflow file
+            mkdir -p .github/workflows
+            cp /tmp/preserve/mirror.yml .github/workflows/mirror.yml
+            
+            # Check if the file changed and commit if needed
+            if ! git diff --quiet .github/workflows/mirror.yml 2>/dev/null; then
+              git add .github/workflows/mirror.yml
+              git commit -m "chore: preserve mirror workflow file" || true
+              git push origin "$DEFAULT_BRANCH" || true
+              echo "Workflow file restored and committed to $DEFAULT_BRANCH."
+            else
+              echo "Workflow file unchanged, no commit needed."
+            fi
+          fi
