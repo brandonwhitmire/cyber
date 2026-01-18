@@ -1,3 +1,3 @@
 +++
-title = "✅ Post-Engagement"
+title = "Post-Engagement"
 +++

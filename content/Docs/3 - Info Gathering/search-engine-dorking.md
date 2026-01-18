@@ -1,5 +1,5 @@
 +++
-title = "🔎 Search Engine Dorking"
+title = "Search Engine Dorking"
 +++
 
 - https://www.exploit-db.com/google-hacking-database

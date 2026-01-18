@@ -8,7 +8,7 @@ title = "Docs - Pentesting"
 
 {{< includesection file="Docs/3 - Info Gathering/_index.md" level="1" >}}
 
-{{< includesection file="Docs/4 - Vuln Analysis/_index.md" level="1" >}}
+{{< includesection file="Docs/4 - Vuln Analysis (Services)/_index.md" level="1" >}}
 
 {{< includesection file="Docs/5 - Exploitation/_index.md" level="1" >}}
 

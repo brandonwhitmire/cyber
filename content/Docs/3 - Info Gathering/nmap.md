@@ -1,5 +1,5 @@
 +++
-title = "🗺️ Nmap"
+title = "Nmap"
 +++
 
 - **`Open`** - received TCP SYN-ACK
@@ -73,20 +73,22 @@ nmap -p 80 --script http-put --script-args http-put.url='/dav/shell.php',http-pu
 Location: `/usr/share/nmap/scripts`
 - https://nmap.org/nsedoc/scripts/
 
-- **auth** - Scripts related to authentication, such as bypassing credentials or checking for default ones.
-- **broadcast** - Used to discover hosts on the local network by broadcasting requests.
-- **brute** - Scripts that perform brute-force attacks to guess passwords or credentials.
-- **default** - The core set of scripts that are run automatically with `-sC` or `-A`.
-- **discovery** - Actively gathers more information about a network, often using public registries or protocols like SNMP.
-- **dos** - Tests for vulnerabilities that could lead to a denial-of-service attack.
-- **exploit** - Actively attempts to exploit known vulnerabilities on a target system.
-- **external** - Interacts with external services or databases.
-- **fuzzer** - Sends unexpected or randomized data to a service to find bugs or vulnerabilities.
-- **intrusive** - These scripts can be noisy, resource-intensive, or potentially crash the target system.
-- **malware** - Scans for known malware or backdoors on a target host.
-- **safe** - Scripts that are considered safe to run as they are not designed to crash services, use excessive resources, or exploit vulnerabilities.
-- **version** - Extends the functionality of Nmap's version detection feature.
-- **vuln** - Checks a target for specific, known vulnerabilities.
+| Category | Description |
+| :--- | :--- |
+| **`auth`** | Scripts related to authentication, such as bypassing credentials or checking for default ones. |
+| **`broadcast`** | Used to discover hosts on the local network by broadcasting requests. |
+| **`brute`** | Scripts that perform brute-force attacks to guess passwords or credentials. |
+| **`default`** | The core set of scripts that are run automatically with `-sC` or `-A`. |
+| **`discovery`** | Actively gathers more information about a network, often using public registries or protocols like SNMP. |
+| **`dos`** | Tests for vulnerabilities that could lead to a denial-of-service attack. |
+| **`exploit`** | Actively attempts to exploit known vulnerabilities on a target system. |
+| **`external`** | Interacts with external services or databases. |
+| **`fuzzer`** | Sends unexpected or randomized data to a service to find bugs or vulnerabilities. |
+| **`intrusive`** | These scripts can be noisy, resource-intensive, or potentially crash the target system. |
+| **`malware`** | Scans for known malware or backdoors on a target host. |
+| **`safe`** | Scripts that are considered safe to run as they are not designed to crash services, use excessive resources, or exploit vulnerabilities. |
+| **`version`** | Extends the functionality of Nmap's version detection feature. |
+| **`vuln`** | Checks a target for specific, known vulnerabilities. |
 
 #### 📥 Install New NSE Script
 

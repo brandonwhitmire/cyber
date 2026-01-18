@@ -1,19 +1,19 @@
 +++
-title = "📋 Meta: Penetration Testing Execution Standard (PTES)"
+title = "Meta: Penetration Testing Execution Standard (PTES)"
 +++
 
 - http://www.pentest-standard.org/index.php/PTES_Technical_Guidelines
 
-| **Step** | **Task**                                                                                                                                                                                                                                                                                                                                                                 |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1.       | Get the user flag on your own                                                                                                                                                                                                                                                                                                                                            |
-| 2.       | Get the root flag on your own                                                                                                                                                                                                                                                                                                                                            |
-| 3.       | Write your **technical** documentation                                                                                                                                                                                                                                                                                                                                   |
-| 4.       | Write your **non-technical** documentation                                                                                                                                                                                                                                                                                                                               |
-| 5.       | Compare your notes with the official write-up                                                                                                                                                                                                                                                                                                                            |
-| 6.       | Create a list of information you have missed                                                                                                                                                                                                                                                                                                                             |
-| 7.       | Watch video or read blog walkthrough and compare it with your notes<br>- https://www.youtube.com/@ippsec/videos<br>- https://ippsec.rocks/?# <br>- https://www.youtube.com/@vbscrub/videos <br> - https://www.youtube.com/watch?v=CU9Iafc-Igs&list=PLF7JR1a3dLONdkRYU_8-5OcgOzrWe2549 <br> - https://www.youtube.com/@LiveOverflow/videos <br> - https://0xdf.gitlab.io/ |
-| 8.       | Expand your notes and documentation by adding the missed parts                                                                                                                                                                                                                                                                                                           |
+| **Step** | **Task**                                                                                                                                                                                                                                                                                                                                        |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.       | Get the user flag on your own                                                                                                                                                                                                                                                                                                                   |
+| 2.       | Get the root flag on your own                                                                                                                                                                                                                                                                                                                   |
+| 3.       | Write your **technical** documentation                                                                                                                                                                                                                                                                                                          |
+| 4.       | Write your **non-technical** documentation                                                                                                                                                                                                                                                                                                      |
+| 5.       | Compare your notes with the official write-up                                                                                                                                                                                                                                                                                                   |
+| 6.       | Create a list of information you have missed                                                                                                                                                                                                                                                                                                    |
+| 7.       | Watch video or read blog walkthrough and compare it with your notes<br>- https://www.youtube.com/@ippsec/videos<br>- https://ippsec.rocks/?# <br>- https://www.youtube.com/@vbscrub/videos <br> - https://www.youtube.com/watch?v=CU9Iafc-Igs&list=PLF7JR1a3dLONdkRYU_8-5OcgOzrWe2549 <br> - https://www.youtube.com/@LiveOverflow/videos <br>\ |
+| 8.       | Expand your notes and documentation by adding the missed parts                                                                                                                                                                                                                                                                                  |
 
 - PowerShell: https://underthewire.tech/wargames
 - Linux Terminal: https://overthewire.org/wargames/
@@ -25,14 +25,6 @@ title = "📋 Meta: Penetration Testing Execution Standard (PTES)"
     - https://vimsheet.com/
 
 ## 📦 Recommended Retired Boxes
-
-- Granny/Grandpa
-- Jerry
-- Blue
-- Lame
-- Optimum
-- Legacy
-- Devel
 
 | Box                                                                                           |                                                                                                                                                                                                                                |
 | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
