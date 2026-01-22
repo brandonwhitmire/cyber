@@ -1,9 +1,9 @@
 +++
-title = "Windows Authentication Process"
+title = "Authentication Process - Windows"
 type = "home"
 +++
 
-![Windows Authentication Process](/images/win_auth_process.png)
+![Authentication Process - Windows](/images/win_auth_process.png)
 
 ### 1. Key Processes & Architecture
 

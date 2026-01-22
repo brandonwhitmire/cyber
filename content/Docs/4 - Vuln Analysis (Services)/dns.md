@@ -87,3 +87,36 @@ dig any <DOMAIN>
 # Content Search: google.com Dork
 inurl:<DOMAIN> intext:<TERM>
 ```
+
+### LLMNR & NBT-NS
+
+- `UDP 5355`: LLMNR (modern)
+- `UDP 137`: NBT-NS (ancient)
+
+Link-Local Multicast Name Resolution (LLMNR) and NetBIOS Name Service (NBT-NS) are Microsoft Windows components that used as failover protocols when DNS is unavailable.
+
+On a Windows, the box will attempt to resolve a hostname in this order:
+1. Checks **Local HOSTS file**.
+2. Checks **DNS Cache / DNS Server**.
+3. **(If DNS Fails):** Sends **LLMNR** Multicast.
+4. **(If LLMNR Fails):** Sends **NBT-NS** Broadcast.
+
+#### Remediation
+
+Typically, disabling LLMNR and NBT-NS can cautiously used (to ensure no breakages) at the network or host-level.
+
+- Disable LLMNR by:
+    - Group Policy -->
+    - Computer Configuration -->
+    - Administrative Templates -->
+    - Network -->
+    - DNS Client
+    - Enable "Turn OFF Multicast Name Resolution"
+
+- Disable NBT-NS (locally only on each host or via GPO w/ PowerShell):
+    - Network and Sharing Center -->
+    - Control Panel -->
+    - Change adapter settings
+    - Right-clicking on the adapter --> properties -->
+    - Selecting Internet Protocol Version 4 (TCP/IPv4) --> Properties --> Advanced --> selecting the WINS tab
+    - Select "Disable NetBIOS over TCP/IP"

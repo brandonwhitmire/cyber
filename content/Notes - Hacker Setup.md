@@ -31,8 +31,25 @@ type = "home"
 - set default display resolution: 1920x1080
 - add automatic VPN configs files
 
+## Website:
+
+- ~~add Hugo shortcode to `relref` just a header section of a page like "See [LINK]" but it's an expandable block of the sourced information to prevent duplication but allow easy access of contextually relevant information~~
+- scrollable tables to not overflow in mobile view
 ## Notes
 
+- make checklist for sections
+    - web enum
+    - AD
+        - especially workflow process to compromise a domain (users, pass, machines, trust, etc.)
+        - domain user and computer attributes, group membership, Group Policy Objects, permissions, ACLs, trusts
+        - `adsisearcher` instead of PS module `ActiveDirectory`
+    - DNS
+    - NMAP (or ARP) for host discovery
+    - SMB (enum4linux-ng, anon/null sessions)
+- **fix `mirror.yml` for website**
+- TASTY BINARIES?: https://github.com/Flangvik/SharpCollection?tab=readme-ov-file
+- SAMPLE PENTEST ENGAGEMENT FLOW: https://archive.ph/i6AeU
+- split out Hydra from password into its own section?
 - add `dnstt` to `lateral-movement` section
 - make cheatsheet guide:
     - scan IP or block
@@ -156,4 +173,59 @@ Install-Module -Name oh-my-posh -Scope CurrentUser -Force
 # --- Update All Modules ---
 # After installation, you can keep them all up to date with this single command.
 Update-Module -Scope CurrentUser
+```
+
+---
+
+# Pentest Engagement Sample
+
+- https://archive.ph/i6AeU
+
+```
+a lot of crappy pentest companies will just run nessus or other vulnerability scanners and call it good. When you guys actually look for and hire a pentest company you should try to get one that performs RISK based pentesting, this means that theyll do much more than just run nessus. I'm a senior pentester for a RISK based pentesting company and this is a rough break out of our standard TTP (much more is included, this is just a standard scenario):
+​
+Internal:
+Nmap discovery scan (quick scan for ports 21,22,23,53,80,139,443,445,3389)
+Aquatone or Eyewitness against results from discovery scan
+Nmap full port scan
+Nessus scan
+crackmapexec --gen-relay-list (to create a list of hosts that have smb signing disabled)(crackmapexec as also known as cme)
+Responder and/or MITM6 (to poison network and attempt to get ntlmv2 hashes, this only works against hosts that are within the same broadcast domain that your attack box is in)
+Pcredz (run at same time as responder because it will collect more hashes than responder, but responder has to be running)
+Impacket ntlmrelayx.py (must be run with responder, this will attempt to relay any incoming ntlmv2 hashes to other hosts that have smb signing disabled)
+crackmapexec --shares (with user and pass empty to see if any hosts have shares that do not require auth to connect to)
+-------
+At this point you should at least have ntlmv2 hashes the have been collected by Responder or Pcredz, hopefully youve been able to crack the password using Hashcat (keep in mind that you CANNOT crack hashes if they are using MFA such as smart cards, in this case your only attack would be ntlmrelayx as long as they have machines that dont have smb signing enabled).
+We'll assume that youve gained user access by this point by cracking a ntlmv2 user hash, so now you have the username and plaintext password for a user.
+-------
+The following is how to own the domain without using cobalt strike - this is assuming that you have a username and password:
+crackmapexec using the username and pass to see if the user has admin access to any hosts - if the user has admin to any host then:
+                crackmapexec --sam (to dump the local admin hash of the host that you have admin access to)
+                crackmapexec -M lsassy (to dump lsass of the host that you have admin access to)
+                DonPapi.py (to dump sam, chrome, IE, last created files, of hosts you have admin to)
+Impacket getuserspns.py (this will kerberoast the domain and retrieve service account hashes to crack with hashcat)
+Bloodhound (this will map out AD and give you attack paths, show you where domain admins are logged into non-DC)
+At this point it is fairly typical that we'll have the local admin ntlm hash for a workstation because we dumped the sam of the workstation that we have access to.
+In this case we can use crackmapexec to pass that hash to every other machine using the --local-auth flag. Assuming that they re-use the local admin pw on most workstations (which they normally do), we should have access to many more workstations now.
+Check bloodhound output to see where domain admins are logged on (lets now assume that we have the local admin hash for a host that has a DA logged in)
+Dump sam of that host
+Dump lsass of the host (if you get the DA hash from lsass then you win, you now own the domain)
+DonPapi against that host to see if you can get their AD password from chrome or IE or a password file
+If you dont get the hash of DA, but you know that they are logged into the box, then you need to spawn a beacon or meterpreter on that box
+Once you have interactive access to the box, list processes, find one owned by the DA, and inject into it (you now own the domain)
+-----------
+The following is a quick rundown of what to do if you have a beacon from cobalt strike:
+execute assembly is used for running C# assembly executables, you will use this a LOT
+Rubues kerberoast (get those service account hashes)
+SharpUp (you could also use PowerUp.ps1 if you want, will output possible ways to privesc)
+Watson (to find missing patches to possibly find ways to privesc)
+SeatBelt -group=user (to find lots of stuff, dump browser passwords, files, etc)
+net computers (internal CS command will get a list of all machines on the network and import them into the 'targets' view)
+SharpView (or powerview.ps1, run the command to query which boxes the user has admin access to)
+SharpHound (C# implementation of the bloodhound ingester)
+At this point hopefully you have local admin or system on a box, either from privesc or because you found that the user has admin to other machines via the sharpview command.
+hashdump (to dump sam)
+logonpasswords (to dump lsass)
+​
+As you can see from this TTP, we run nessus but typically only for the customers benefit. Exploiting vulnerabilities discovered via nessus is typically something that we dont do, primarily because we emulating an actual threat actor that gain access to your network, and threat actors DO NOT RUN NESSUS.
 ```

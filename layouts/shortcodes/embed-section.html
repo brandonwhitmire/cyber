@@ -1,0 +1,196 @@
+{{/* layouts/shortcodes/embed-section.html */}}
+{{- $pagePath := .Get "page" -}}
+{{- $headerParam := .Get "header" -}}
+{{- $customTitle := .Get "title" -}}
+{{- $embeddedContent := "" -}}
+{{- $headerNames := slice -}}
+
+{{- /* Parse multiple headers (comma-separated) */ -}}
+{{- $headerIDsRaw := split $headerParam "," -}}
+{{- $headerIDs := slice -}}
+{{- range $headerIDsRaw -}}
+    {{- $trimmed := trim . " " -}}
+    {{- if ne $trimmed "" -}}
+        {{- $headerIDs = $headerIDs | append $trimmed -}}
+    {{- end -}}
+{{- end -}}
+
+{{- if eq (len $headerIDs) 0 -}}
+    {{- errorf "At least one header ID must be provided in embed-section shortcode" -}}
+{{- end -}}
+
+{{- with .Site.GetPage $pagePath -}}
+    {{- $content := .Content -}}
+    {{- $allSections := slice -}}
+    {{- $allHeaderAnchors := slice -}}
+    {{- $sectionsWithSources := slice -}}
+    
+    {{- /* Build base source path for reuse */ -}}
+    {{- $pathParts := split $pagePath "/" -}}
+    {{- $breadcrumbParts := slice -}}
+    {{- range $pathParts -}}
+        {{- if ne . "" -}}
+            {{- $part := . -}}
+            {{- $part = replace $part ".md" "" -}}
+            {{- $breadcrumbParts = $breadcrumbParts | append $part -}}
+        {{- end -}}
+    {{- end -}}
+    {{- $baseSourcePath := delimit $breadcrumbParts " > " -}}
+    {{- $baseSourceURL := .RelPermalink -}}
+    
+    {{- /* Process each header */ -}}
+    {{- range $headerID := $headerIDs -}}
+        
+        {{- /* Try to find header with exact ID match first */ -}}
+        {{- $headerPattern := printf `<h([1-6])\s+id="%s"` $headerID -}}
+        {{- $headerMatches := findRE $headerPattern $content -}}
+        {{- $actualHeaderID := $headerID -}}
+        
+        {{- if not $headerMatches -}}
+            {{- /* Try case-insensitive exact match (for Hugo's lowercase conversion) */ -}}
+            {{- $actualHeaderID = lower $headerID -}}
+            {{- $headerPattern = printf `<h([1-6])\s+id="%s"` $actualHeaderID -}}
+            {{- $headerMatches = findRE $headerPattern $content -}}
+        {{- end -}}
+    
+        {{- if $headerMatches -}}
+            {{- /* Extract the header level from the first match - use replaceRE to get the captured group */ -}}
+            {{- $fullMatch := index $headerMatches 0 -}}
+            {{- $levelStr := replaceRE `<h([1-6])\s+id="[^"]*"` "$1" $fullMatch -}}
+            {{- $headerLevel := int $levelStr -}}
+            {{- $headerTag := printf "h%d" $headerLevel -}}
+            
+            {{- /* Find the complete header including content and closing tag (handles multiline) */ -}}
+            {{- $fullHeaderPattern := printf `<%s\s+id="%s"[^>]*>.*?</%s>` $headerTag $actualHeaderID $headerTag -}}
+            {{- $fullHeaderMatches := findRE $fullHeaderPattern $content -}}
+            
+            {{- if $fullHeaderMatches -}}
+                {{- $headerLine := index $fullHeaderMatches 0 -}}
+                
+                {{- /* Extract header name from the matched header line - handle nested HTML */ -}}
+                {{- $headerName := "" -}}
+                {{- /* Extract everything between opening and closing tags, then strip HTML */ -}}
+                {{- $namePattern := printf `<%s[^>]*id="%s"[^>]*>(.*?)</%s>` $headerTag $actualHeaderID $headerTag -}}
+                {{- $nameMatches := findRE $namePattern $headerLine -}}
+                {{- if $nameMatches -}}
+                    {{- $rawName := replaceRE $namePattern "$1" (index $nameMatches 0) -}}
+                    {{- /* Strip all HTML tags to get just the text */ -}}
+                    {{- $headerName = replaceRE `<[^>]+>` "" $rawName -}}
+                    {{- $headerName = trim $headerName " \n\r\t" -}}
+                {{- end -}}
+                {{- if ne $headerName "" -}}
+                    {{- $headerNames = $headerNames | append $headerName -}}
+                {{- end -}}
+                
+                {{- /* Split content at the header */ -}}
+                {{- $parts := split $content $headerLine -}}
+                {{- $afterHeader := index $parts 1 -}}
+                
+                {{- /* Find all headers of same or higher level (h1 through h{headerLevel}) in remaining content */ -}}
+                {{- $stopPattern := printf `<h([1-%d])\s+id="[^"]*"` $headerLevel -}}
+                {{- $nextHeaderMatches := findRE $stopPattern $afterHeader -}}
+                
+                {{- $sectionContent := "" -}}
+                {{- if $nextHeaderMatches -}}
+                    {{- /* Find the position of the first next header by looking for its opening tag */ -}}
+                    {{- $nextHeaderTag := index $nextHeaderMatches 0 -}}
+                    {{- /* Extract everything up to (but not including) this next header */ -}}
+                    {{- $sectionParts := split $afterHeader $nextHeaderTag -}}
+                    {{- $sectionContent = index $sectionParts 0 -}}
+                {{- else -}}
+                    {{- /* No next header found, take everything after the header */ -}}
+                    {{- $sectionContent = $afterHeader -}}
+                {{- end -}}
+                
+                {{- /* Store this section with its source link */ -}}
+                {{- $sectionWithHeader := printf "%s%s" $headerLine $sectionContent -}}
+                {{- $allSections = $allSections | append $sectionWithHeader -}}
+                {{- $allHeaderAnchors = $allHeaderAnchors | append (printf "#%s" $actualHeaderID) -}}
+                
+                {{- /* Create source link for this specific section */ -}}
+                {{- $sectionSourcePath := printf "%s#%s" $baseSourcePath $actualHeaderID -}}
+                {{- $sectionSourceURL := printf "%s#%s" $baseSourceURL $actualHeaderID -}}
+                {{- $sectionSourceLink := printf `<p style="margin-bottom: 1em; font-size: 0.9em; color: #666;"><em>Source: <a href="%s">%s</a></em></p>` $sectionSourceURL $sectionSourcePath -}}
+                {{- $sectionWithSource := printf "%s%s" $sectionSourceLink $sectionWithHeader -}}
+                {{- $sectionsWithSources = $sectionsWithSources | append $sectionWithSource -}}
+            {{- else -}}
+                {{- errorf "Could not extract full header tag with ID containing '%s' from page '%s'" $headerID $pagePath -}}
+            {{- end -}}
+        {{- else -}}
+            {{- /* Header not found - check if page has any headers with IDs */ -}}
+            {{- $availableHeaders := findRE `<h[1-6]\s+id="([^"]*)"` $content -}}
+            {{- $availableHeaderIDs := slice -}}
+            {{- range $availableHeaders -}}
+                {{- $availableHeaderIDs = $availableHeaderIDs | append (replaceRE `<h[1-6]\s+id="([^"]*)"` "$1" .) -}}
+            {{- end -}}
+            {{- if eq (len $availableHeaderIDs) 0 -}}
+                {{- /* Page has no headers with IDs - will embed full content at end */ -}}
+                {{- /* Skip this header and continue */ -}}
+            {{- else -}}
+                {{- errorf "Header with ID '%s' not found in page '%s'. Available header IDs: %s" $headerID $pagePath (delimit $availableHeaderIDs ", ") -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+    
+    {{- /* Combine all sections with their source links, or embed full page if no headers with IDs found */ -}}
+    {{- if gt (len $sectionsWithSources) 0 -}}
+        {{- $embeddedContent = delimit $sectionsWithSources "\n\n" -}}
+        
+        {{- /* Fallback: If header names weren't extracted, extract from embedded content */ -}}
+        {{- if eq (len $headerNames) 0 -}}
+            {{- $extractedHeaders := findRE `<h[1-6][^>]*>(.*?)</h[1-6]>` $embeddedContent -}}
+            {{- range $extractedHeaders -}}
+                {{- $rawName := replaceRE `<h[1-6][^>]*>(.*?)</h[1-6]>` "$1" . -}}
+                {{- $name := replaceRE `<[^>]+>` "" $rawName -}}
+                {{- $name = trim $name " \n\r\t" -}}
+                {{- if ne $name "" -}}
+                    {{- $headerNames = $headerNames | append $name -}}
+                {{- end -}}
+            {{- end -}}
+        {{- end -}}
+    {{- else -}}
+        {{- /* No sections found - check if page has any headers with IDs at all */ -}}
+        {{- $anyHeaders := findRE `<h[1-6]\s+id="([^"]*)"` $content -}}
+        {{- if eq (len $anyHeaders) 0 -}}
+            {{- /* No headers with IDs found - embed full page content with source link */ -}}
+            {{- $fullPageSourceLink := printf `<p style="margin-bottom: 1em; font-size: 0.9em; color: #666;"><em>Source: <a href="%s">%s</a></em></p>` $baseSourceURL $baseSourcePath -}}
+            {{- $embeddedContent = printf "%s%s" $fullPageSourceLink $content -}}
+            {{- if eq (len $headerNames) 0 -}}
+                {{- $headerNames = $headerNames | append .Title -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+    
+    {{- /* Wrap the embedded content in a details block (collapsed by default) */ -}}
+    {{- if $embeddedContent -}}
+        {{- /* Build title from header names */ -}}
+        {{- $headerText := "" -}}
+        {{- if $customTitle -}}
+            {{- $headerText = $customTitle -}}
+        {{- else if gt (len $headerNames) 0 -}}
+            {{- /* Format as "See more about... Header1, Header2, Header3" */ -}}
+            {{- $headerNamesList := delimit $headerNames ", " -}}
+            {{- $headerText = printf "See more about... %s" $headerNamesList -}}
+        {{- else -}}
+            {{- /* Fallback if no header names found */ -}}
+            {{- $headerText = printf "See more about... %s" .Title -}}
+        {{- end -}}
+        
+        {{- /* Source links are already added before each section when multiple headers */ -}}
+        {{- /* For single header or fallback, we don't need to add another source link */ -}}
+        {{- $embeddedContentWithSource := $embeddedContent -}}
+        
+        {{- /* Use a more prominent style with icon to make it look more button-like */ -}}
+        {{- partial "shortcodes/notice.html" (dict
+            "page"     $.Page
+            "content"  ($embeddedContentWithSource | safeHTML)
+            "expanded" false
+            "params"   (dict)
+            "style"    "info"
+            "icon"     "fa-info-circle"
+            "title"    $headerText
+        ) -}}
+    {{- end -}}
+{{- else -}}
+    {{- errorf "Page '%s' not found" $pagePath -}}
+{{- end -}}

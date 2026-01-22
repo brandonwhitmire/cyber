@@ -8,7 +8,7 @@ title = "Win: RDP"
 
 Also called "Terminal Services".
 
-**Pass the Hash via RDP**: See [RDP (Restricted Admin Mode)]({{% relref "../6 - Post-Exploitation/pass-the-hash#rdp-restricted-admin-mode" %}})
+{{< embed-section page="Docs/6 - Post-Exploitation/pass-the-hash" header="rdp-restricted-admin-mode" title="RDP via Pass the Hash" >}}
 
 ```bash
 # Enum via nmap

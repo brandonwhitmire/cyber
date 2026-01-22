@@ -12,6 +12,14 @@ title = "Nmap"
 Filtering out live hosts for `-iL`:
 
 ```bash
+# Quick
+sudo nmap -n -Pn -sS -sV -sC --stats-every 15s -oA scan_nmap_initial <TARGET> -v
+# All Ports
+sudo nmap -n -Pn -sS -p- --min-rate 5000 --stats-every 60s -oA scan_nmap_disc_all_ports <TARGET> -v
+sudo nmap -n -Pn -sS -sV -sC -p <NEW_PORTS> --reason --stats-every 60s -oA scan_nmap_details_all_ports <TARGET> -v
+
+---
+
 # Find Live Hosts
 sudo nmap -n -sn --reason -oA host_disc <TARGET>
 # Create list

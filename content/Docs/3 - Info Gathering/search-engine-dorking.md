@@ -33,17 +33,25 @@ NOT
 +
 
 ### EXAMPLES
+# Find Emails
+inurl:<DOMAIN> intext:"@<DOMAIN>"
+
 # Finding Login Pages:
-site:example.com inurl:login
-site:example.com (inurl:login OR inurl:admin)
+site:<DOMAIN> inurl:login
+site:<DOMAIN> (inurl:login OR inurl:admin)
+
 # Identifying Exposed Files:
-site:example.com filetype:pdf
-site:example.com (filetype:xls OR filetype:docx)
+site:<DOMAIN> filetype:pdf
+site:<DOMAIN> (filetype:xls OR filetype:docx)
+inurl:<DOMAIN> filetype:pdf  # !!! careful this one can show malicious site hosting cached files !!!
+
 # Uncovering Configuration Files:
-site:example.com inurl:config.php
+site:<DOMAIN> inurl:config.php
+
 # (searches for extensions commonly used for configuration files)
-site:example.com (ext:conf OR ext:cnf)
+site:<DOMAIN> (ext:conf OR ext:cnf)
+
 # Locating Database Backups:
-site:example.com inurl:backup
-site:example.com filetype:sql
+site:<DOMAIN> inurl:backup
+site:<DOMAIN> filetype:sql
 ```

@@ -49,11 +49,21 @@ mget *
 # Execute local commands (outside of session)
 !<COMMAND>
 
+---
+
+# https://www.netexec.wiki/getting-started/selecting-and-using-a-protocol
+# badPwdCount: https://learn.microsoft.com/en-us/windows/win32/adschema/a-badpwdcount
+# User and Groups
+netexec smb <TARGET> -u "<USERNAME>" -p "<PASSWORD>" --users
+netexec smb <TARGET> -u "<USERNAME>" -p "<PASSWORD>" --groups
+
 # List shares
 netexec smb <TARGET> -u "<USERNAME>" -p "<PASSWORD>" --shares
 
 # Recursively list files
 smbmap -r --depth 3 -r <SHARE> -u <USERNAME> -p <PASSWORD> -H <IP>
+# Directories only
+smbmap -R <SHARE> -d <DOMAIN> -u <USERNAME> -p <PASSWORD> -H <IP> --dir-only
 
 ---
 
@@ -61,11 +71,11 @@ smbmap -r --depth 3 -r <SHARE> -u <USERNAME> -p <PASSWORD> -H <IP>
 # https://www.samba.org/samba/docs/current/man-html/rpcclient.1.html
 
 # RPC
-rpcclient --user=<DOMAIN>/<USERNAME> --password='<PASSWORD>' <TARGET>
+rpcclient -U '<USER>%<PASSWORD' <TARGET>
+querydominfo	# Provides domain, server, and user info
+enumdomusers  # Enumerates all domain users
 srvinfo	 # Server information
 enumdomains	 # Enumerate all domains
-enumdomusers  # Enumerates all domain users
-querydominfo	# Provides domain, server, and user info
 netshareenumall	 # Enumerates available shares
 netsharegetinfo <SHARE>	 # Info about a specific share
 queryuser <RID>  # User info
@@ -80,7 +90,21 @@ for i in $(seq 500 1100);do rpcclient -N -U "" <TARGET> -c "queryuser 0x$(printf
 # Same with other tools
 samrdump.py <TARGET>
 smbmap -H <TARGET>
+```
 
+## enum4linux-ng
+
+enum4linux-ng uses various protocols for enumeration that are outside of the scope here, but for knowledge of the services:
+
+| Tool      | Ports                                             |
+| --------- | ------------------------------------------------- |
+| nmblookup | 137/UDP                                           |
+| nbtstat   | 137/UDP                                           |
+| net       | 139/TCP, 135/TCP, TCP and UDP 135 and 49152-65535 |
+| rpcclient | 135/TCP                                           |
+| smbclient | 445/TCP                                           |
+
+```
 # Enumeration SMB/NetBIOS
-enum4linux-ng -A <TARGET> | tee enum4linux-ng.txt
+enum4linux-ng -oA enum4linux-ng-log -A <TARGET>
 ```

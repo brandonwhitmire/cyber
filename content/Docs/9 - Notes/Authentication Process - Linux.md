@@ -1,5 +1,5 @@
 +++
-title = "Linux Authentication Process"
+title = "Authentication Process - Linux"
 type = "home"
 +++
 

@@ -5,4 +5,48 @@
 /* Ensure H1 items are visible and properly styled */
 .toc li {
     display: block !important;
+}
+
+/* Style embed-section details/summary to look more like a button */
+details.box.cstyle.expand summary.box-label {
+    cursor: pointer;
+    padding: 0.6em 1.2em;
+    background-color: var(--BOX-INFO-color, #28a745);
+    color: var(--BOX-INFO-color-text, #fff);
+    border-radius: 6px;
+    border: 2px solid var(--BOX-INFO-color-border, #1e7e34);
+    transition: all 0.2s ease;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 0.5em;
+    text-decoration: none !important;
+    user-select: none;
+}
+
+details.box.cstyle.expand summary.box-label:hover {
+    background-color: var(--BOX-INFO-color-hover, #218838);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border-color: var(--BOX-INFO-color-border-hover, #34ce57);
+}
+
+details.box.cstyle.expand summary.box-label:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+details.box.cstyle.expand summary.box-label .expander-icon {
+    margin-right: 0.6em;
+    transition: transform 0.2s ease;
+    font-size: 0.9em;
+}
+
+details.box.cstyle.expand[open] summary.box-label .expander-icon {
+    transform: rotate(90deg);
+}
+
+details.box.cstyle.expand summary.box-label i.fa-info-circle {
+    margin-right: 0.5em;
+    font-size: 1em;
 } 

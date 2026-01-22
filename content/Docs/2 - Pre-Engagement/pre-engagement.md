@@ -47,9 +47,10 @@ Diagrams.net: https://app.diagrams.net/
 - How are we correlating the data we are receiving from our infrastructure defenses and end-points?
 - Are we utilizing host-based IDS, IPS, and event logs?
 
-# 3rd-parties-infrastructure
+# 3rd Parties Infrastructure
 
 - AWS: https://aws.amazon.com/es/security/penetration-testing/
+- Oracle: https://www.oracle.com/corporate/security-practices/testing/
 
 # Sensitive Data Regulations
 

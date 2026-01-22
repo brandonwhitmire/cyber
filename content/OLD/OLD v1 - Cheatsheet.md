@@ -2400,10 +2400,10 @@ Invoke-Bloodhound -CollectionMethod All -Domain <DOMAIN> -ZipFileName loot.zip
 # Upload to Bloodhound: http://127.0.0.1:8080/ui/administration/file-ingest
 
 # Change password
-Set-ADAccountPassword sophie -Reset -NewPassword (Read-Host -AsSecureString -Prompt 'New Password') -Verbose
+Set-ADAccountPassword sophie -Reset -NewPassword (Read-Host -AsSecureString -Prompt '<NEW_PASSWORD>') -Verbose
 
 # Force new password for user on login
-Set-ADUser -ChangePasswordAtLogon $true -Identity sophie -Verbose
+Set-ADUser -ChangePasswordAtLogon $true -Identity <USER> -Verbose
 ```
 
 ### Windows Survey for PrivEsc (MSDOS)
