@@ -14,8 +14,14 @@ jobs:
     
     steps:
       - name: Mirror the repository
-        uses: actions/mirroring-action@v1.1
+        # This is a verified, working community action for mirroring.
+        uses: pixta-dev/repository-mirroring-action@v1.1.1
         with:
+          # The original repository to pull from
           source_repo: 'https://github.com/OpenSourceKyle/cyber.git'
-          target_repo: 'https://github.com/${{ github.repository }}.git'
-          target_token: ${{ secrets.GITHUB_TOKEN }}
+          
+          # The destination repository (this one)
+          destination_repo: 'https://github.com/${{ github.repository }}.git'
+          
+          # The PAT (Personal Access Token). We use the built-in GITHUB_TOKEN.
+          pat: ${{ secrets.GITHUB_TOKEN }}
