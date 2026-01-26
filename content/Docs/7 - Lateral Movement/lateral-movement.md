@@ -67,6 +67,14 @@ portfwd add -R -l <REDIR_PORT> -L <ATTACKER_IP> -p <ATTACKER_PORT>
 
 Redirection is simple traffic manipulation on a single host. There are no tunnels.
 
+## Netcat
+
+```bash
+# PORT FORWARD 0.0.0.0:<LISTEN_PORT> => <TARGET>:<FORWARD_PORT>
+# NOTE: use normal netcat (w/o "-e" or "-c" options)
+rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | nc <TARGET> <FORWARD_PORT> 2>&1 | nc -lvnp <LISTEN_PORT> > /tmp/f
+```
+
 ## Socat
 
 This can be forward or reverse, with the `TARGET_*` being the ATTACKER or TARGET respectively.

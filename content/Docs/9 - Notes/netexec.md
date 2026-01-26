@@ -59,7 +59,7 @@ Password spraying uses one password against many users (alternates users), which
 netexec smb <TARGET> -u <USERS> -p <PASSWORD> | grep '+'
 
 # Local authentication (tries local authentication instead of domain authentication)
-# Mitigated with: <https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview>
+# Mitigated with: https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview
 netexec smb <TARGET> -u <USERS> -p <PASSWORD> --local-auth | grep '+'
 ```
 

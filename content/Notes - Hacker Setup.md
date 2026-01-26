@@ -37,6 +37,8 @@ type = "home"
 - scrollable tables to not overflow in mobile view
 ## Notes
 
+- make bloodhound its own page
+- make responder and web traffic capture as pre-actions (before any active scanning)
 - make checklist for sections
     - web enum
     - AD

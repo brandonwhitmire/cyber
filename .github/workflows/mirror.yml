@@ -1,0 +1,21 @@
+name: Auto Mirror Public Repo
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    
+    # KILL SWITCH: This job only runs if the repository is NOT the source.
+    if: github.repository != 'OpenSourceKyle/cyber'
+    
+    steps:
+      - name: Mirror the repository
+        uses: actions/mirroring-action@v1.1
+        with:
+          source_repo: 'https://github.com/OpenSourceKyle/cyber.git'
+          target_repo: 'https://github.com/${{ github.repository }}.git'
+          target_token: ${{ secrets.GITHUB_TOKEN }}

@@ -15,9 +15,8 @@
     {{- end -}}
 {{- end -}}
 
-{{- if eq (len $headerIDs) 0 -}}
-    {{- errorf "At least one header ID must be provided in embed-section shortcode" -}}
-{{- end -}}
+{{- /* If no headers provided, we'll embed the entire page */ -}}
+{{- $embedFullPage := eq (len $headerIDs) 0 -}}
 
 {{- with .Site.GetPage $pagePath -}}
     {{- $content := .Content -}}
@@ -38,6 +37,12 @@
     {{- $baseSourcePath := delimit $breadcrumbParts " > " -}}
     {{- $baseSourceURL := .RelPermalink -}}
     
+    {{- /* If no headers provided, embed full page */ -}}
+    {{- if $embedFullPage -}}
+        {{- $fullPageSourceLink := printf `<p style="margin-bottom: 1em; font-size: 0.9em; color: #666;"><em>Source: <a href="%s">%s</a></em></p>` $baseSourceURL $baseSourcePath -}}
+        {{- $embeddedContent = printf "%s%s" $fullPageSourceLink $content -}}
+        {{- $headerNames = $headerNames | append .Title -}}
+    {{- else -}}
     {{- /* Process each header */ -}}
     {{- range $headerID := $headerIDs -}}
         
@@ -130,6 +135,7 @@
                 {{- errorf "Header with ID '%s' not found in page '%s'. Available header IDs: %s" $headerID $pagePath (delimit $availableHeaderIDs ", ") -}}
             {{- end -}}
         {{- end -}}
+    {{- end -}}
     {{- end -}}
     
     {{- /* Combine all sections with their source links, or embed full page if no headers with IDs found */ -}}
