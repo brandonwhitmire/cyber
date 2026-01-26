@@ -13,15 +13,21 @@ jobs:
     if: github.repository != 'OpenSourceKyle/cyber'
     
     steps:
-      - name: Mirror the repository
-        # This is a verified, working community action for mirroring.
-        uses: pixta-dev/repository-mirroring-action@v1.1.1
+      - name: Checkout source repository
+        uses: actions/checkout@v4
         with:
-          # The original repository to pull from
-          source_repo: 'https://github.com/OpenSourceKyle/cyber.git'
-          
-          # The destination repository (this one)
-          destination_repo: 'https://github.com/${{ github.repository }}.git'
-          
-          # The PAT (Personal Access Token). We use the built-in GITHUB_TOKEN.
-          pat: ${{ secrets.GITHUB_TOKEN }}
+          repository: OpenSourceKyle/cyber
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Push to mirror repository
+        env:
+          TARGET_REPO: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+        run: |
+          git remote set-url origin "$TARGET_REPO"
+          git push --mirror --force origin
