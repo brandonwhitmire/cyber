@@ -2,7 +2,7 @@
 title = "00 - Alpha Checklists"
 +++
 
-This is a meta-checklist that encompasses other checklists..
+{{< img src="0-PT-Process.webp" caption="Penetration Testing Process" >}}
 
 {{< clear-checks >}}
 

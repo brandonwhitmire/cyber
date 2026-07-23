@@ -28,11 +28,17 @@ title = "🌐 FTP: TCP 20/21"
 {{% /details %}}
 
 ```bash
-# Connect to FTP server in passive mode with anonymous login
-ftp -p ftp://<USER>:<PASS>@<TARGET>
-passive
+sudo apt install -y lftp
+```
 
-# lftp equivalents
+```bash
+# Download ALL files (anonymous)
+mkdir ftp_files && cd ftp_files
+lftp -e "set ftp:list-options -a; mirror -c; bye" ftp://anonymous:anonymous@<TARGET>
+```
+
+```bash
+# Normal login
 lftp ftp://<USER>:<PASS>@<TARGET>
 set ftp:passive-mode off
 
@@ -51,9 +57,4 @@ get <FILENAME>
 put <FILENAME>
 # Download all files
 mirror .
-
-# Download ALL files
-mkdir ftp_files && cd ftp_files
-wget -m --no-passive-ftp ftp://anonymous:anonymous@<TARGET>
-wget -m --no-passive-ftp ftp://<USER>:'<PASSWORD>'@<TARGET>
 ```
