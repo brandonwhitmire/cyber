@@ -1,0 +1,69 @@
+name: Weekly Tool and Artifact Update
+
+on:
+  # Run on a schedule (first day of the month at 02:00 UTC)
+  schedule:
+    - cron: '0 2 1 * *'
+  # Allow manual runs from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout your main repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # We need to fetch the submodules as well
+          submodules: 'true'
+
+      # 2. Update all Git Submodules
+      - name: Update Git Submodules
+        run: |
+          # Initialize submodules if needed
+          git submodule update --init --recursive
+          
+          # Update each submodule to the latest remote commit
+          # Use --rebase instead of --merge to avoid unrelated history issues
+          # If that fails, reset to remote (handles force-pushed histories)
+          if ! git submodule update --remote --rebase; then
+            echo "Rebase failed, resetting submodules to remote state..."
+            git submodule foreach '
+              echo "Resetting submodule: $name"
+              git fetch origin || true
+              # Try to determine the branch, default to main
+              BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "main")
+              # Reset to remote branch (handles unrelated histories)
+              git reset --hard "origin/$BRANCH" 2>/dev/null || \
+              git reset --hard origin/main 2>/dev/null || \
+              git reset --hard origin/master 2>/dev/null || true
+            '
+            # Update parent repo's submodule reference to point to the new commit
+            # After reset, we need to add the submodule to update the reference
+            git add .themes/hugo-theme-relearn || true
+          fi
+
+      # 3. Run the artifact download script
+      - name: Update Artifacts
+        run: |
+          chmod +x ./scripts/update_artifacts.sh
+          ./scripts/update_artifacts.sh
+
+      # 4. Commit and push changes if any
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add -A
+          # Check if there are changes to commit
+          if git diff-index --quiet HEAD; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: Weekly automatic update of tools and artifacts"
+            git push
+          fi
+

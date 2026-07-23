@@ -1,0 +1,105 @@
+# =============================================================================
+# Jekyll / GitHub Pages
+# =============================================================================
+# This .gitignore is appropriate for repositories deployed to GitHub Pages and
+# using a Gemfile as specified at https://github.com/github/pages-gem#conventional
+
+# Jekyll build artifacts
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# Ruby/Bundler
+/vendor
+Gemfile.lock
+
+# Note: GitHub Pages will always use its own deployed version of pages-gem.
+# This means GitHub Pages will NOT use your Gemfile.lock and therefore it is
+# counterproductive to check this file into the repository.
+# Details: https://github.com/github/pages-gem/issues/768
+
+
+# =============================================================================
+# Hugo
+# =============================================================================
+
+/public
+resources/
+.hugo_build.lock
+
+# Go modules (if using Hugo with Go)
+go.mod
+go.sum
+
+# Node.js (if using Hugo with npm)
+node_modules/
+package-lock.json
+
+
+# =============================================================================
+# Development Tools & Editors
+# =============================================================================
+
+# Obsidian
+.obsidian/
+
+# VS Code
+.vscode/
+
+# Python virtual environments
+.venv/
+
+# Vim swap files
+*.swp
+
+# Temporary files
+*.tmp
+
+
+# =============================================================================
+# Infrastructure & Automation
+# =============================================================================
+
+# Vagrant
+.vagrant/
+
+# Ansible
+.ansible
+hosts
+artifacts/
+.yamllint
+
+
+# =============================================================================
+# Security & Credentials
+# =============================================================================
+
+# Credentials and secrets
+*creds*
+!*.md
+*vault*
+*.keys
+*.ovpn
+
+# API keys
+api.*
+
+
+# =============================================================================
+# Build Artifacts & Logs
+# =============================================================================
+
+*.log
+*.md.backup
+all
+
+
+# =============================================================================
+# Content Restrictions
+# =============================================================================
+# Per https://help.hackthebox.com/en/articles/5188925-streaming-writeups-walkthrough-guidelines
+# Only free or Level 0 modules in Academy can be published
+
+Academy/
+*.zip

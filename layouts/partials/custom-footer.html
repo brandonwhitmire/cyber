@@ -1,0 +1,21 @@
+<script>
+  document.querySelectorAll('input[type="checkbox"]').forEach((cb, i) => {
+    cb.removeAttribute('disabled');
+    const key = 'cb_' + location.pathname + '_' + i;
+    cb.checked = localStorage.getItem(key) === 'true';
+    cb.addEventListener('change', () => localStorage.setItem(key, cb.checked));
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('details.expand').forEach(function(el, i) {
+      var key = 'expand_' + location.pathname + '_' + i;
+      var saved = localStorage.getItem(key);
+      if (saved !== null) {
+        el.open = (saved === 'true');
+      }
+      el.addEventListener('toggle', function() {
+        localStorage.setItem(key, String(el.open));
+      });
+    });
+  });
+</script>

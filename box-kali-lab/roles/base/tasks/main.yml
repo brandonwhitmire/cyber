@@ -1,0 +1,70 @@
+---
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+  become: true
+  register: base_apt_update_result
+  until: base_apt_update_result is succeeded
+  retries: 5
+  delay: 5
+  ignore_errors: false
+
+- name: Configure timezone
+  community.general.timezone:
+    name: "{{ base_timezone }}"
+  become: true
+
+- name: Install main packages
+  ansible.builtin.apt:
+    name:
+      - kali-desktop-xfce
+      - qemu-guest-agent
+      - spice-vdagent
+      - xserver-xorg-video-qxl
+      - lightdm
+      - gedit
+      - curl
+      - python2
+      - pipx
+      - sshpass
+      - rlwrap
+      - hashcat-utils
+      - obsidian
+      - steghide
+      - stegcracker
+      - powershell
+      - autossh
+      - sshuttle
+      - putty-tools
+      - mono-runtime
+      - rubeus
+      - feroxbuster
+      - enum4linux-ng
+      - jq
+      - golang-go
+      - python3-scrapy
+      - ncat
+      - gss-ntlmssp
+      - krb5-user
+      - evolution
+      - metasploit-framework
+    state: present
+    install_recommends: false
+    update_cache: false
+  become: true
+
+- name: Clean up apt packages
+  ansible.builtin.apt:
+    autoremove: true
+    autoclean: true
+  become: true
+
+- name: Ensure Obsidian config directory exists with correct permissions
+  ansible.builtin.file:
+    path: /home/vagrant/.config/obsidian
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: "0755"
+  become: false

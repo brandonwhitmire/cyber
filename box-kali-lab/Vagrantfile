@@ -1,0 +1,44 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "kalilinux/rolling"
+  #config.vm.box = "kali-box"
+  config.vm.box_check_update = false
+  config.vm.hostname = "kali-lab"
+  config.vm.provider :libvirt do |v|
+    # Automatic resource allocation based on host RAM
+    host_mem_kb = `grep MemTotal /proc/meminfo | awk '{print $2}'`.to_i
+    if host_mem_kb > 12582912
+      v.memory = 8192
+      v.cpus = 4
+    else
+      v.memory = 2048
+      v.cpus = 2
+    end
+    v.management_network_device = "virbr0"
+    #v.memorybacking :access, mode: 'shared'  # disabled due to crashes
+    v.video_type = "qxl"
+    v.video_vram = 32768
+    v.graphics_type = "spice"
+    v.channel :type => 'spicevmc', :target_type => 'virtio', :target_name => 'com.redhat.spice.0'
+  end
+
+  # Override default /vagrant folder to use rsync instead of NFS (works reliably with libvirt)
+  config.vm.synced_folder ".", "/vagrant",
+    type: "rsync",
+    rsync__exclude: [".git/", ".venv/", ".vagrant/"]
+
+  # Mount Obsidian config directory to sync E2EE key and enable vault sync
+  #config.vm.synced_folder "/home/obb/.config/obsidian", "/home/vagrant/.config/obsidian",
+  #  type: "rsync",
+  #  rsync__exclude: ["SingletonLock", "SingletonCookie"]
+
+  # Provision guest with Ansible from host
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "kalilinux.yml"
+    ansible.limit = "all"
+  end
+end
+
+# --- Install the Full QEMU SPICE Ecosystem for Desktop Virtualization ---
+#sudo pacman -Syu
+#sudo pacman -S qemu-hw-display-qxl qemu-chardev-spice qemu-audio-spice
+#sudo systemctl restart libvirtd.service

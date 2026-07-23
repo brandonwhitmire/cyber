@@ -1,0 +1,12 @@
+{{- $level := .Get "level" | default "2" -}}
+{{- $currentPage := .Page -}}
+{{- $pages := $currentPage.Pages -}}
+{{- range $pages -}}
+  {{- if ne .File.LogicalName "_index.md" -}}
+    {{- $title := .Title -}}
+    {{- $url := .RelPermalink -}}
+    {{- $headerTag := printf "h%s" $level -}}
+    {{- printf "<%s id=\"%s\"><a href=\"%s\">%s</a></%s>" $headerTag (.File.UniqueID) $url $title $headerTag | safeHTML -}}
+    {{- .Content -}}
+  {{- end -}}
+{{- end -}}

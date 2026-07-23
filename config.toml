@@ -1,0 +1,29 @@
+baseURL = "/"
+title = "Cyber Cheatsheet"
+theme = "hugo-theme-relearn"
+themesDir = ".themes"
+
+# Ignore .venv directories and other non-content files
+ignoreFiles = [
+  ".venv/",
+  "box-kali-lab/",
+  "box-win-lab/"
+]
+
+[markup.goldmark.renderer]
+  # Allow HTML and markdown rendering in shortcodes (required for tables in details shortcode)
+  unsafe = true
+
+[markup.tableOfContents]
+  # Include H1 headers in TOC (default is 2, which excludes H1)
+  startLevel = 1
+  endLevel = 6
+
+[params]
+defaultTheme = "auto"
+ShowToc = true
+TocOpen = true
+
+[params.homeInfoParams]
+Title = "Cyber Cheatsheet"
+Content = "Study notes and tools for networking, web app hacking, penetration testing, and basic programming (C++, Python). Includes HTTP/S, cookies, SQLi, XSS, enumeration, nmap usage, and more."

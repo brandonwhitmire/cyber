@@ -1,0 +1,14 @@
+{{- $file := .Get "file" | default (.Get 0) -}}
+{{- if $file -}}
+  {{- $page := .Site.GetPage $file -}}
+  {{- if $page -}}
+    {{- $title := $page.Title -}}
+    {{- $url := $page.RelPermalink -}}
+    {{- $level := .Get "level" | default "2" -}}
+    {{- $headerTag := printf "h%s" $level -}}
+    {{- printf "<%s id=\"%s\"><a href=\"%s\">%s</a></%s>" $headerTag ($page.File.UniqueID) $url $title $headerTag | safeHTML -}}
+    {{- $page.Content -}}
+  {{- else -}}
+    {{- warnf "Page not found: %s" $file -}}
+  {{- end -}}
+{{- end -}}
