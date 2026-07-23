@@ -4,7 +4,7 @@ title = "About"
 
 ## WHAT
 
-This site is a **pentesting and offensive security reference**: checklists, service-specific notes, exploitation steps, and tool cheatsheets  Content follows a rough engagement flow from pre-engagement through reporting with a "Notes" section for standalone tool pages (think mini-manuals) and some other, complex distilled material.
+This site is a **pentesting and offensive security reference**: checklists, service-specific notes, exploitation steps, and tool cheatsheets. Content under "Docs" follows a rough engagement flow from pre-engagement through reporting with a "Notes" section for standalone tool pages (think mini-manuals) and some other, complex distilled material.
 
 Although less of a priority, there are likely still lab notes (those are generally very rough) and maybe old versions of my former cheatsheets as I migrate that information into this main web. The **"Docs" section is likely to be of greatest use for anyone else**.
 
@@ -35,7 +35,7 @@ Because this site uses Hugo to generate a static pages from Markdown sources, on
 
 For instance, if want to navigate a very large page like the Active Directory one, you must navigate directly to that page at its lowest level (not the other higher-level pages that nest its content) in order to use the TOC.
 
-This website was birth from the idea of a single page cheatsheet, but it later became obvious after a few versions that that idea was unmaintable and difficult to use for reference or search due to size and egregiously long TOCs:
+This website was birthed from the idea of a single page cheatsheet, but it later became obvious after a few versions that that idea was unmaintable and difficult to use for reference or search due to size and egregiously long TOCs:
   - what if... I want to only search the `mimikatz` commands in the context of Active Directory -- well, I can go the Active Directory page and easily CTRL+F it
   - what if... I want to find all references ever, even in my labs, of that one-off command I used only once, but I don't remember where... use the built-in website search
   - what if... I want to follow a general, chronological process to an engagement... well the built-in navigation bars gives a rough progression overall and the individual page TOCs are normally ordered from start to finish of an idea (references -> enumeration -> technique execution -> more complex things -> etc.)
