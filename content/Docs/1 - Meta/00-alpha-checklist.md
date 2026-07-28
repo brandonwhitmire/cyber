@@ -2,9 +2,16 @@
 title = "00 - Alpha Checklists"
 +++
 
+{{< clear-checks >}}
+
 {{< img src="0-PT-Process.webp" caption="Penetration Testing Process" >}}
 
-{{< clear-checks >}}
+## Modern References
+
+| Resource                                                                                             | Notes                                                                               |
+| ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| [MITRE ATT&CK](https://attack.mitre.org/)                                                            | De facto industry TTP reference. Covers every tactic/technique phase                |
+| [OWASP Web Security Testing Guide (WSTG)](https://owasp.org/www-project-web-security-testing-guide/) | Actively maintained. Current version 4.2. Best reference for web/app testing phases |
 
 ---
 
