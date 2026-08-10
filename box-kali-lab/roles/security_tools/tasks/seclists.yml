@@ -1,8 +1,0 @@
----
-- name: Install seclists
-  ansible.builtin.apt:
-    name: seclists
-    state: present
-    install_recommends: false
-    update_cache: false
-  become: true

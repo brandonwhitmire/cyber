@@ -1,5 +1,0 @@
----
-# Ansible Galaxy Collections Requirements File
-collections:
-  - name: community.general
-    version: '*'

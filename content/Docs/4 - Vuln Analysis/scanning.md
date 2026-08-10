@@ -27,48 +27,24 @@ sudo nmap -n -Pn --script banner.nse <TARGET>
 **NOTE:** sometimes ARP caches are delayed or not built... so running a ping sweep twice can discover new hosts
 
 ```bash
-# NIX
-# !!! LEAVE OFF LAST OCTET !!!
-for i in {1..254} ; do (ping -c1 <TARGET_SUBNET>.$i | grep "bytes from" &) ; done
-
-#  WIN: DOS
-# !!! LEAVE OFF LAST OCTET !!!
-for /L %i in (1 1 254) do ping <TARGET_SUBNET>.%i -n 1 -w 100 | find "Reply"
-# Win: PowerShell
-# !!! LEAVE OFF LAST OCTET !!!
-1..254 | % { $ip="<TARGET_SUBNET>.$_"; if ((New-Object System.Net.NetworkInformation.Ping).Send($ip, 100).Status -eq "Success") { "$($ip): True" } }
-
 # fping
 fping -ag <TARGET_SUBNET>
-
-# Metasploit
-run post/multi/gather/ping_sweep RHOSTS=<TARGET_SUBNET>
 ```
+
+{{< embed-section page="Docs/6 - Post-Exploitation/nice-commands" header="ping-sweep" >}}
+
+{{< embed-section page="Docs/6 - Post-Exploitation/nice-commands" header="windows-ping-sweep" >}}
+
+{{< embed-section page="Docs/5 - Exploitation/metasploit" header="ping-sweep" >}}
 
 ## Full TCP Port Scan
 
-Very slow but useful for adjacent targets when tunnels or proxies keep failing.
-
-```powershell
-$target = "172.16.210.21"
-1..65535 | % {
-    $client = New-Object System.Net.Sockets.TcpClient
-    $result = $client.BeginConnect($target,$_,$null,$null)
-    $success = $result.AsyncWaitHandle.WaitOne(100,$false)
-    if ($success -and $client.Connected) { "Port $_ is open" }
-    $client.Close()
-}
-```
+{{< embed-section page="Docs/6 - Post-Exploitation/nice-commands" header="full-tcp-port-scan" >}}
 
 ## Metasploit
 
-```bash
-# TCP port scan across a subnet
-use auxiliary/scanner/portscan/tcp
-set RHOSTS <TARGET_SUBNET>
-set PORTS 22,80,443,445,3389,5985
-set THREADS 20
-run
-```
+{{< embed-section page="Docs/5 - Exploitation/metasploit" header="tcp-port-scan" >}}
+
+{{< embed-section page="Docs/9 - Notes/autorecon" >}}
 
 {{< embed-section page="Docs/9 - Notes/nmap" >}}
