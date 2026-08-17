@@ -20,6 +20,9 @@ openssl s_client -starttls ftp -connect <TARGET>:<PORT>
 
 # Banner Grabbing
 sudo nmap -n -Pn --script banner.nse <TARGET>
+
+# Windows - TCP
+Test-NetConnection -Port <PORT> <IP>
 ```
 
 ## Ping Sweep

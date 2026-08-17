@@ -148,6 +148,13 @@ ffuf -w /usr/share/seclists/Usernames/Names/names.txt:FUZZ -u http://<TARGET>/<P
 curl http://<TARGET>/<PAGE> -H 'Content-Type: application/x-www-form-urlencoded' -X POST -d '<PARAM>=<VALUE>'
 ```
 
+### API Fuzzing
+
+```bash
+# Fuzz multiple versions (v1, v2, v3) at once
+ffuf -w /usr/share/wordlists/dirb/big.txt:ENDPOINT -w <(printf 'v1\nv2\nv3\n'):VERSION -u 'http://<TARGET>:<PORT>/ENDPOINT/VERSION' \     
+```
+
 ## LFI
 
 Fuzzes a parameter with hundreds of `/etc/passwd` traversal permutations including encoding bypasses, null bytes, and double encoding. First identify the vulnerable parameter by testing pages that load dynamic content (e.g. `?page=`, `?file=`, `?lang=`, `?view=`), then look for parameters whose value matches a filename or path.
