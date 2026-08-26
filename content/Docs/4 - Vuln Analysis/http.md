@@ -81,9 +81,10 @@ nikto -o nikto_vuln_scan.txt -C all -h http://<TARGET>
 - https://github.com/projectdiscovery/katana
 
 ```bash
+sudo apt install -y golang
 CGO_ENABLED=1 go install github.com/projectdiscovery/katana/cmd/katana@latest
 
-katana -output katana_crawl.txt -depth 5 -u http://<TARGET>
+$HOME/go/bin/katana -output katana_crawl.txt -depth 5 -u http://<TARGET>
 ```
 
 ## Directory Brute-Forcing
@@ -136,12 +137,12 @@ curl --get -i "http://<TARGET>/cgi/welcome.bat" --data-urlencode "cmd=C:\windows
 python3 -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))" 'cat /etc/passwd && id'
 ```
 
-| Character | HTTP Syntax Meaning | Why it breaks exploits if unencoded |
-| :--- | :--- | :--- |
-| **`&`** | Parameter Separator | Server splits your payload. `?cmd=id & whoami` becomes Param 1: `cmd=id`, Param 2: `whoami`. |
-| **`#`** | URL Fragment | Browser stops sending data after `#`. The backend never sees it. |
-| **`+`** / **` `** | Space | Raw spaces break the HTTP header structure (`GET /page HTTP/1.1`). |
-| **`?`** | Query String Start | Truncates or confuses path traversal payloads. |
+| Character         | HTTP Syntax Meaning | Why it breaks exploits if unencoded                                                          |
+| :---------------- | :------------------ | :------------------------------------------------------------------------------------------- |
+| **`&`**           | Parameter Separator | Server splits your payload. `?cmd=id & whoami` becomes Param 1: `cmd=id`, Param 2: `whoami`. |
+| **`#`**           | URL Fragment        | Browser stops sending data after `#`. The backend never sees it.                             |
+| **`+`** / **` `** | Space               | Raw spaces break the HTTP header structure (`GET /page HTTP/1.1`).                           |
+| **`?`**           | Query String Start  | Truncates or confuses path traversal payloads.                                               |
 
 ### Command Injection Rule
 

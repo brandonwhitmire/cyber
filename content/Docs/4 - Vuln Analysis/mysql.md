@@ -28,26 +28,21 @@ title = "🌐 MySQL: TCP 3306"
 {{% /details %}}
 
 ```bash
-mysql --user=<USER> --password=<PASSWORD> --skip-ssl --host=<TARGET> --port=<PORT>
+mysql --user=<USER> --password=<PASSWORD> --skip-ssl --skip-ssl-verify-server-cert --host=<TARGET> --port=<PORT>
 ```
 
 ```sql
--- Show Version
-SELECT @@version ;
-SELECT version() ;
-
--- Show User
-SELECT USER() ;
-SELECT CURRENT_USER() ;
-SELECT database() ;
+-- Survey
+SELECT @@version, version(), USER(), CURRENT_USER(), database();
 SELECT user, password FROM mysql.user ;
 
-SHOW DATABASES ;
 SHOW GRANTS ;
+SHOW DATABASES ;
+SHOW TABLES ;
 
 -- Show if user is privileged
 SELECT user, super_priv FROM mysql.user ;
-SELECT super_priv FROM mysql.user WHERE user="root" ;
+SELECT user FROM mysql.user WHERE super_priv="Y" ;
 
 -- Show user permissions
 SELECT grantee, privilege_type FROM information_schema.user_privileges ;

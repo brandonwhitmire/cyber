@@ -14,7 +14,7 @@ title = "01 - Check - Initial Enumeration"
 pushd /usr/share/wordlists/ && sudo gunzip rockyou.txt.gz && popd
 sudo apt update -y
 sudo apt autoremove -y
-sudo apt install -y --fix-missing flameshot ripgrep
+sudo apt install -y --fix-missing flameshot ripgrep autorecon
 sudo updatedb
 mkdir ~/my_data
 echo 'cd ~/my_data' >> ~/.bashrc
