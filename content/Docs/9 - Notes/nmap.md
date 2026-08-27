@@ -122,12 +122,14 @@ The Nmap Scripting Engine (NSE) extends Nmap's functionality with custom scripts
 **Basic Usage:**
 - `-sC` - Run a set of popular, common scripts
 - `--script` - Run specific scripts by name, category, or file path
-- `--script-help` - Show arguments for `--script-args`
+- `--script-help` - Show help manual for script and its `--script-args`
 
 **Advanced Usage:**
-- Combine scripts with wildcards: `--script "smb-*,http-*"`
+- **CAUTION:** Combine scripts with wildcards: `--script "smb-*,http-*"`
 - Use comprehensive documentation: [NSE Script Database](https://nmap.org/nsedoc/scripts/)
-- Search for scripts: `grep "ftp" /usr/share/nmap/scripts/script.db`
+- Search for scripts:
+    - `grep -i "<SEARCH>" /usr/share/nmap/scripts/script.db`
+    - `grep -i "<SEARCH>" /usr/share/nmap/scripts/*.nse`
 
 ```bash
 # --script-trace : trace script scans

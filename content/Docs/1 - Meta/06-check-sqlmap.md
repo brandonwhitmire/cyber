@@ -1,5 +1,5 @@
 +++
-title = "06 - Check - SQL Injection (SQLMap)"
+title = "06 - Check - SQLMap SQLi"
 +++
 
 ### Manual Triage & Setup

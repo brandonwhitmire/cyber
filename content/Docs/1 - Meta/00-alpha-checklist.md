@@ -25,7 +25,9 @@ title = "00 - Alpha Checklists"
 
 {{< embed-section page="Docs/1 - Meta/05-check-web-enumeration.md" expanded=false >}}
 
-{{< embed-section page="Docs/1 - Meta/06-check-sql.md" expanded=false >}}
+{{< embed-section page="Docs/1 - Meta/06-check-sqli-manual.md" expanded=false >}}
+
+{{< embed-section page="Docs/1 - Meta/06-check-sqlmap.md" expanded=false >}}
 
 {{< embed-section page="Docs/1 - Meta/07-check-linux-privesc.md" expanded=false >}}
 
