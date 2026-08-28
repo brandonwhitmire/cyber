@@ -63,10 +63,16 @@ hydra -l <USER> -P <WORDLIST> -f -V smb://<TARGET>
         - `S=302` means a successful login due to an HTTP 302 page forward redirect
 
 **Check with `-dt1` for condition strings**
+
+#### S=302 for login redirects (and no login error)
+
 ```bash
-# S=302 for login redirects (and no login error)
 hydra -l <USER> -P <WORDLIST> -f <TARGET> http-post-form "/<PAGE>:<USERNAME_LABEL>=^USER^&<PASSWORD_LABEL>=^PASS^:S=302" -V
-# F=X for bad logins give an error
+```
+
+#### F=X for bad logins give an error
+
+```bash
 hydra -l <USER> -P <WORDLIST> -f <TARGET> http-post-form "/<PAGE>:<USERNAME_LABEL>=^USER^&<PASSWORD_LABEL>=^PASS^:F=invalid" -V
 ```
 
