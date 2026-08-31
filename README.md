@@ -28,6 +28,8 @@ git submodule add https://github.com/alex-shpak/hugo-book.git .themes/hugo-book
 
 ### Build Website
 
+Requires [Hugo](https://gohugo.io/installation/) **0.158.0 or newer** (extended). GitHub Pages builds with `0.165.0`.
+
 ```bash
 hugo server --noHTTPCache -d /tmp/random
 ```
