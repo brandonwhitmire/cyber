@@ -13,11 +13,18 @@
 {{- $color := .color | default "" }}
 {{- $icon := .icon | default "" }}
 {{- $title := .title | default "" }}
+{{- if templates.Exists "partials/_relearn/boxStyle.gotmpl" }}
 {{- $boxStyle := partial "_relearn/boxStyle.gotmpl" (dict "mode" "notice" "style" $style "color" $color "icon" $icon "title" $title) }}
 {{- $style = $boxStyle.style }}
 {{- $color = $boxStyle.color }}
 {{- $icon = $boxStyle.icon }}
 {{- $title = $boxStyle.title }}
+{{- else }}
+{{- $style = $style | default "default" }}
+{{- if and $icon (not (findRE `.*?\\bfa-\\w.*?` $icon)) }}
+  {{- $icon = printf "fa-fw fas fa-%s" $icon }}
+{{- end }}
+{{- end }}
 
 {{- $expander := false }}
 {{- $expanded := .expanded | default "" }}

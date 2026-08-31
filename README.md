@@ -2,6 +2,8 @@
 
 A website and repository for everything related to my studies and notes to be used as a reference.
 
+The site is built with Hugo and [Hugo Book](https://github.com/alex-shpak/hugo-book). Site config sets `theme = "hugo-book"` and `themesDir = ".themes"`. Site-specific CSS and scripts live in `assets/` and `layouts/`; do not edit files under `.themes/hugo-book`.
+
 ## Quick Start
 
 To clone this repository with all its submodules, use:
@@ -15,9 +17,13 @@ git clone --recursive https://github.com/opensourcekyle/cyber.git
 **First time setup** (if you cloned without `--recursive` or the theme is missing):
 
 ```bash
-rm -rf .themes
-git rm -r .themes
-git submodule add https://github.com/McShelby/hugo-theme-relearn.git .themes/hugo-theme-relearn
+git submodule update --init --recursive
+```
+
+To add the theme from scratch:
+
+```bash
+git submodule add https://github.com/alex-shpak/hugo-book.git .themes/hugo-book
 ```
 
 ### Build Website
@@ -97,4 +103,3 @@ Usage:
 ```markdown
 {{</* img src="filename.png" alt="alt text" caption="optional caption" */>}}
 ```
-

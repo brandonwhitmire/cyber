@@ -34,8 +34,8 @@ netexec ; sleep 5 && sed -i 's/bh_enabled = False/bh_enabled = True/' ~/.nxc/nxc
 
 ### Uploading Info
 - Transfer Bloodhound data to attacker
-- Upload zipfile to Bloodhound: http://127.0.0.1:8080/ui/login
-- Upload to Bloodhound: http://127.0.0.1:8080/ui/administration/file-ingest
+- Upload zipfile to Bloodhound: <http://127.0.0.1:8080/ui/login>
+- Upload to Bloodhound: <http://127.0.0.1:8080/ui/administration/file-ingest>
 
 ### Windows
 

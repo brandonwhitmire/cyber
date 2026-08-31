@@ -1,0 +1,14 @@
+<script>
+(function () {
+  try {
+    if (localStorage.getItem('book-nav-collapsed') === '1') {
+      document.documentElement.classList.add('nav-collapsed');
+    }
+    if (localStorage.getItem('book-toc-collapsed') === '1') {
+      document.documentElement.classList.add('toc-collapsed');
+    } else if (window.matchMedia('(max-width: 56rem)').matches) {
+      document.documentElement.classList.add('toc-collapsed');
+    }
+  } catch (e) {}
+})();
+</script>

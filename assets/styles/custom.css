@@ -1,0 +1,424 @@
+/* Site tweaks for Hugo Book: contrast, panels, copy buttons, checkboxes */
+
+:root {
+  --panel-shadow: 0 2px 8px color-mix(in srgb, var(--body-font-color) 14%, transparent);
+  --panel-shadow-strong: 0 8px 24px color-mix(in srgb, var(--body-font-color) 22%, transparent);
+  --toc-overlay: color-mix(in srgb, color-mix(in srgb, var(--body-background) 55%, #000) 94%, transparent);
+}
+
+/* Clickable task-list checkboxes */
+.markdown input[type="checkbox"] {
+  cursor: pointer;
+  width: 1.05em;
+  height: 1.05em;
+  accent-color: var(--color-link);
+  vertical-align: middle;
+}
+
+/* Embed / details blocks */
+.markdown details {
+  background: var(--gray-100);
+  box-shadow: var(--panel-shadow);
+  border: var(--space-1) solid var(--gray-200);
+}
+
+.markdown details summary {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  background: color-mix(in srgb, var(--gray-200) 55%, var(--gray-100));
+  font-weight: 600;
+}
+
+.markdown details summary::before {
+  font-size: 1.85em;
+  font-weight: 700;
+  line-height: 0.7;
+  width: 0.55em;
+  transform-origin: 40% 55%;
+}
+
+.markdown details[open] summary {
+  border-bottom: var(--space-1) solid var(--gray-200);
+  margin-bottom: var(--space-16);
+}
+
+.markdown details.box.info,
+.markdown details.box.expand {
+  border-inline-start: var(--space-4) solid var(--color-accent-note);
+}
+
+.markdown details .box-content {
+  padding-top: var(--space-8);
+}
+
+/* Hide Font Awesome glyphs the Relearn shortcodes still emit */
+.markdown summary i.fa,
+.markdown summary i.fas,
+.markdown summary i.far,
+.markdown summary i.fa-fw {
+  display: none;
+}
+
+/* Sidebar section cards */
+.book-menu nav > ul > li {
+  margin-bottom: var(--space-8);
+  padding: var(--space-8);
+  background: var(--gray-100);
+  border: var(--space-1) solid var(--gray-200);
+  border-radius: var(--border-radius);
+  box-shadow: var(--panel-shadow);
+}
+
+.book-menu nav > ul > li > a,
+.book-menu nav > ul > li > label {
+  font-weight: 600;
+}
+
+.book-menu nav ul ul {
+  margin-top: var(--space-4);
+  padding: var(--space-4) var(--space-8);
+  background: var(--body-background);
+  border: var(--space-1) solid var(--gray-200);
+  border-radius: var(--border-radius);
+}
+
+/* Search dropdown */
+.book-search {
+  z-index: 5;
+}
+
+#book-search-results {
+  display: none;
+  position: absolute;
+  top: calc(100% + var(--space-4));
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin: 0;
+  padding: var(--space-4) 0;
+  list-style: none;
+  background: var(--body-background);
+  border: var(--space-1) solid var(--gray-200);
+  border-radius: var(--border-radius);
+  box-shadow: var(--panel-shadow-strong);
+  max-height: 18rem;
+  overflow-y: auto;
+}
+
+#book-search-results:not(:empty) {
+  display: block;
+}
+
+#book-search-results li {
+  padding: 0;
+  margin: 0;
+}
+
+#book-search-results a {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.15em;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-8);
+  margin: 0;
+  border-radius: 0;
+  text-align: start;
+}
+
+#book-search-results a:hover {
+  background: var(--gray-100);
+  opacity: 1;
+}
+
+#book-search-results small {
+  display: block;
+  margin: 0;
+  padding: 0;
+  opacity: 0.65;
+  font-size: var(--font-size-smallest);
+}
+
+#book-search-results a span {
+  display: block;
+  margin: 0;
+  padding: 0;
+  text-align: start;
+}
+
+/* Copy button sits inside the pre box */
+.markdown pre.has-copy {
+  position: relative;
+}
+
+.copy-code {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  z-index: 2;
+  padding: 0.05em 0.2em;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--body-font-color);
+  background: color-mix(in srgb, var(--gray-100) 70%, var(--body-background));
+  border: var(--space-1) solid var(--gray-200);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.copy-code:hover {
+  background: var(--gray-200);
+}
+
+.copy-code.is-copied {
+  color: var(--color-accent-tip);
+  border-color: var(--color-accent-tip);
+}
+
+/* Inline snippets: clipboard sits after the text, still inside the chip */
+.markdown code.has-copy {
+  white-space: nowrap;
+}
+
+.copy-code-inline {
+  position: relative;
+  top: auto;
+  right: auto;
+  z-index: 2;
+  display: inline;
+  margin-inline-start: 0.3em;
+  padding: 0;
+  font-size: 0.8em;
+  line-height: 1;
+  vertical-align: middle;
+  background: transparent;
+  border: none;
+}
+
+/* Wrap code instead of a horizontal scrollbar */
+.markdown pre,
+.markdown .highlight pre,
+.markdown .code-wrap pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  overflow-x: hidden;
+  padding-right: 2.5em;
+}
+
+.markdown pre code,
+.markdown .highlight code {
+  white-space: inherit;
+  overflow-wrap: inherit;
+  word-break: inherit;
+}
+
+.markdown .highlight,
+.markdown .highlight table {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+.markdown .highlight table {
+  display: block;
+  width: 100%;
+}
+
+/* Sidebar expand/collapse: pinned to the viewport on every breakpoint */
+.sidebar-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: var(--space-8);
+  z-index: 40;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  color: var(--body-font-color);
+  background: var(--body-background);
+  border: var(--space-1) solid var(--gray-200);
+  border-radius: var(--border-radius);
+  box-shadow: var(--panel-shadow);
+  cursor: pointer;
+}
+
+.sidebar-toggle:hover {
+  background: var(--gray-100);
+}
+
+.sidebar-toggle svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: currentColor;
+}
+
+.sidebar-toggle-nav {
+  left: calc(var(--menu-width) - 2.25rem);
+}
+
+.sidebar-toggle-nav svg {
+  transform: rotate(180deg);
+}
+
+html.nav-collapsed .sidebar-toggle-nav,
+.sidebar-toggle-nav.is-collapsed {
+  left: var(--space-8);
+}
+
+html.nav-collapsed .sidebar-toggle-nav svg,
+.sidebar-toggle-nav.is-collapsed svg {
+  transform: none;
+}
+
+.sidebar-toggle-toc {
+  right: calc(var(--toc-width) - 2.25rem);
+}
+
+html.toc-collapsed .sidebar-toggle-toc,
+.sidebar-toggle-toc.is-collapsed {
+  right: var(--space-8);
+  left: auto;
+  transform: none;
+}
+
+html.toc-collapsed .sidebar-toggle-toc svg,
+.sidebar-toggle-toc.is-collapsed svg {
+  transform: rotate(180deg);
+}
+
+@media screen and (max-width: 56rem) {
+  .book-header label {
+    display: none;
+  }
+
+  .sidebar-toggle-nav {
+    left: var(--space-8);
+  }
+
+  body:has(#menu-control:checked) .sidebar-toggle-nav {
+    left: calc(var(--menu-width) - 2.25rem);
+  }
+
+  .book-toc {
+    display: block;
+    flex: 0 0 0;
+    width: 0;
+    min-width: 0;
+  }
+
+  .book-toc .book-toc-content {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    inset-inline-end: 0;
+    z-index: 25;
+    width: var(--toc-width);
+    padding: 2.6rem var(--space-16) var(--space-16);
+    background: var(--toc-overlay);
+    border-inline-start: var(--space-1) solid color-mix(in srgb, var(--gray-200) 40%, transparent);
+    transform: translateX(100%);
+    visibility: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  html:not(.toc-collapsed) .book-toc .book-toc-content {
+    transform: none;
+    visibility: visible;
+  }
+}
+
+@media screen and (min-width: 56.01rem) {
+  .book-menu .book-menu-content {
+    padding-top: var(--space-8);
+  }
+
+  .book-menu .book-brand {
+    margin-top: 0;
+    padding-right: 2.25rem;
+  }
+
+  .book-toc {
+    flex: 0 0 0;
+    width: 0;
+    min-width: 0;
+    overflow: visible;
+  }
+
+  .book-toc .book-toc-content {
+    inset-inline-end: 0;
+    z-index: 7;
+    padding-top: 2.6rem;
+    background: var(--toc-overlay);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-inline-start: var(--space-1) solid color-mix(in srgb, var(--gray-200) 40%, transparent);
+    box-shadow: none;
+  }
+
+  .book-page {
+    width: 100%;
+    max-width: 52rem;
+    margin-inline: auto;
+  }
+
+  html.nav-collapsed .book-menu {
+    flex: 0 0 2.5rem;
+  }
+
+  html.nav-collapsed .book-menu .book-menu-content {
+    width: 2.5rem;
+    padding: var(--space-8) 0.2rem;
+    overflow: hidden;
+  }
+
+  html.nav-collapsed .book-menu .book-menu-content > * {
+    display: none;
+  }
+
+  html.toc-collapsed .book-toc {
+    flex: 0 0 0;
+  }
+
+  html.toc-collapsed .book-toc .book-toc-content {
+    width: 2.5rem;
+    padding: var(--space-8) 0.2rem;
+    overflow: hidden;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  html.toc-collapsed .book-toc .book-toc-content > * {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 80rem) {
+  .book-page {
+    translate: -2.75rem 0;
+  }
+}
+
+/* Full-width layout: pin both sidebars to the viewport edges */
+.container {
+  max-width: none;
+}
+
+@media screen and (min-width: 90rem) {
+  main.container {
+    gap: 0;
+    padding: 0;
+  }
+
+  .book-menu .book-menu-content,
+  .book-toc .book-toc-content {
+    top: 0;
+  }
+}

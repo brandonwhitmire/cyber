@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Biohazard">
+  <title>Biohazard</title>
+  <style>
+    .fg { fill: #111; }
+    @media (prefers-color-scheme: dark) {
+      .fg { fill: #f2f2f2; }
+    }
+  </style>
+  <text class="fg" x="16" y="16.5" text-anchor="middle" dominant-baseline="central" font-size="24" font-family="Segoe UI Symbol, Noto Sans Symbols 2, Apple Symbols, sans-serif">&#x2623;&#xFE0E;</text>
+</svg>

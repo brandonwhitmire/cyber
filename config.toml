@@ -1,13 +1,11 @@
 baseURL = "/"
-title = "Cyber Cheatsheet"
-theme = "hugo-theme-relearn"
+title = "Cheatsheet"
+theme = "hugo-book"
 themesDir = ".themes"
 
 # Ignore .venv directories and other non-content files
 ignoreFiles = [
-  ".venv/",
-  "box-kali-lab/",
-  "box-win-lab/"
+  ".venv/"
 ]
 
 [markup.goldmark.renderer]
@@ -23,7 +21,13 @@ ignoreFiles = [
 defaultTheme = "auto"
 ShowToc = true
 TocOpen = true
+BookTheme = "auto"
+BookToC = true
+BookSearch = true
+BookComments = false
+BookFavicon = "favicon.svg"
+BookSection = "Docs"
 
 [params.homeInfoParams]
-Title = "Cyber Cheatsheet"
-Content = "Study notes and tools for networking, web app hacking, penetration testing, and basic programming (C++, Python). Includes HTTP/S, cookies, SQLi, XSS, enumeration, nmap usage, and more."
+Title = "Cheatsheet"
+Content = "Study notes and tools for networking, web app hacking, and pentesting."

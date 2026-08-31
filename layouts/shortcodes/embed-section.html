@@ -175,12 +175,9 @@
         {{- if $customTitle -}}
             {{- $headerText = $customTitle -}}
         {{- else if gt (len $headerNames) 0 -}}
-            {{- /* Format as "See more about... Header1, Header2, Header3" */ -}}
-            {{- $headerNamesList := delimit $headerNames ", " -}}
-            {{- $headerText = printf "See more about... %s" $headerNamesList -}}
+            {{- $headerText = delimit $headerNames ", " -}}
         {{- else -}}
-            {{- /* Fallback if no header names found */ -}}
-            {{- $headerText = printf "See more about... %s" .Title -}}
+            {{- $headerText = .Title -}}
         {{- end -}}
         
         {{- /* Source links are already added before each section when multiple headers */ -}}
