@@ -9,6 +9,9 @@
     } else if (window.matchMedia('(max-width: 56rem)').matches) {
       document.documentElement.classList.add('toc-collapsed');
     }
+    if (localStorage.getItem('book-expert-mode') === '1' && !/\/00-alpha-checklist\/?$/.test(location.pathname)) {
+      document.documentElement.classList.add('expert-mode');
+    }
   } catch (e) {}
 })();
 </script>

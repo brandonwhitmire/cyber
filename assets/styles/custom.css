@@ -43,21 +43,8 @@
   margin-bottom: var(--space-16);
 }
 
-.markdown details.box.info,
-.markdown details.box.expand {
-  border-inline-start: var(--space-4) solid var(--color-accent-note);
-}
-
-.markdown details .box-content {
+.markdown details .markdown-inner {
   padding-top: var(--space-8);
-}
-
-/* Hide Font Awesome glyphs the Relearn shortcodes still emit */
-.markdown summary i.fa,
-.markdown summary i.fas,
-.markdown summary i.far,
-.markdown summary i.fa-fw {
-  display: none;
 }
 
 /* Sidebar section cards */
@@ -150,6 +137,37 @@
   text-align: start;
 }
 
+.book-search input {
+  padding-inline-end: 2rem;
+}
+
+.book-search-clear {
+  position: absolute;
+  top: var(--space-8);
+  right: var(--space-8);
+  z-index: 2;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--border-radius);
+  background: transparent;
+  color: var(--body-font-color);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.book-search-clear:not(.hidden) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-search-clear:hover {
+  background: var(--gray-200);
+}
+
 /* Copy button sits inside the pre box */
 .markdown pre.has-copy {
   position: relative;
@@ -162,7 +180,7 @@
   z-index: 2;
   padding: 0.05em 0.2em;
   font: inherit;
-  font-size: 1rem;
+  font-size: 1.5rem;
   line-height: 1;
   color: var(--body-font-color);
   background: color-mix(in srgb, var(--gray-100) 70%, var(--body-background));
@@ -193,9 +211,10 @@
   display: inline;
   margin-inline-start: 0.3em;
   padding: 0;
-  font-size: 0.8em;
+  font-size: 1.2em;
   line-height: 1;
   vertical-align: middle;
+  color: inherit;
   background: transparent;
   border: none;
 }
@@ -208,7 +227,7 @@
   overflow-wrap: anywhere;
   word-break: break-word;
   overflow-x: hidden;
-  padding-right: 2.5em;
+  padding-right: 3.75em;
 }
 
 .markdown pre code,
@@ -227,6 +246,13 @@
 .markdown .highlight table {
   display: block;
   width: 100%;
+}
+
+/* Match inline snippets to highlighted code blocks */
+.markdown :not(pre) > code {
+  background: #272822;
+  color: #f8f8f2;
+  border-color: #3e3d32;
 }
 
 /* Sidebar expand/collapse: pinned to the viewport on every breakpoint */
@@ -421,4 +447,104 @@ html.toc-collapsed .sidebar-toggle-toc svg,
   .book-toc .book-toc-content {
     top: 0;
   }
+}
+
+/* Expert mode: hide explanations, keep headings and commands */
+.expert-mode-toggle {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 40;
+  padding: 0.5rem 0.85rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--body-font-color);
+  background: var(--body-background);
+  border: var(--space-1) solid var(--gray-200);
+  border-radius: var(--border-radius);
+  box-shadow: var(--panel-shadow-strong);
+  cursor: pointer;
+}
+
+.expert-mode-toggle:hover {
+  background: var(--gray-100);
+}
+
+.expert-mode-toggle.is-on {
+  color: #fff;
+  background: #8b5cf6;
+  border-color: #7c3aed;
+}
+
+.expert-mode-toggle.is-on:hover {
+  background: #7c3aed;
+  border-color: #6d28d9;
+}
+
+.clear-checklist {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 41;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-size: 0.85rem;
+  color: #fff;
+  background: #222;
+  border: var(--space-1) solid var(--gray-200);
+  border-radius: var(--border-radius);
+  box-shadow: var(--panel-shadow-strong);
+  cursor: pointer;
+}
+
+html.expert-mode .markdown :is(p, blockquote, table, img, figure, hr, iframe, video, .mermaid):not(:has(pre, .highlight)) {
+  display: none !important;
+}
+
+html.expert-mode .markdown li:not(:has(pre, .highlight)) {
+  display: none !important;
+}
+
+html.expert-mode .markdown :is(ul, ol):not(:has(li:has(pre, .highlight))) {
+  display: none !important;
+}
+
+html.expert-mode .markdown details:not(:has(pre, .highlight)) {
+  display: none !important;
+}
+
+html.expert-mode .markdown :is(h1, h2, h3, h4, h5, h6) {
+  margin-block: 0.85em 0.35em;
+  font-size: 1rem;
+  opacity: 0.72;
+}
+
+html.expert-mode .markdown h1 {
+  font-size: 1.25rem;
+  opacity: 0.9;
+}
+
+html.expert-mode .markdown details {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+}
+
+html.expert-mode .markdown details summary {
+  background: transparent;
+  border: none;
+  margin: 0 0 0.35em;
+  padding: 0.2em 0;
+  font-size: 0.95rem;
+}
+
+html.expert-mode .markdown details .markdown-inner {
+  padding-top: 0;
+}
+
+article.markdown {
+  padding-bottom: 4.5rem;
 }

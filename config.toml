@@ -18,9 +18,6 @@ ignoreFiles = [
   endLevel = 6
 
 [params]
-defaultTheme = "auto"
-ShowToc = true
-TocOpen = true
 BookTheme = "auto"
 BookToC = true
 BookSearch = true
@@ -38,7 +35,3 @@ BookSection = "Docs"
   name = "Bookmarks"
   pageRef = "/bookmarks"
   weight = 20
-
-[params.homeInfoParams]
-Title = "Cheatsheet"
-Content = "Study notes and tools for networking, web app hacking, and pentesting."

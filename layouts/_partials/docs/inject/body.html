@@ -9,13 +9,16 @@
     });
   });
 
-  document.querySelectorAll('details.expand').forEach(function (el, i) {
+  document.querySelectorAll('.markdown details').forEach(function (el, i) {
     var key = 'expand_' + location.pathname + '_' + i;
     var saved = localStorage.getItem(key);
     if (saved !== null) {
       el.open = saved === 'true';
     }
     el.addEventListener('toggle', function () {
+      if (document.documentElement.classList.contains('expert-mode')) {
+        return;
+      }
       localStorage.setItem(key, String(el.open));
     });
   });
@@ -160,5 +163,70 @@
     collapseLabel: 'Collapse table of contents',
     expandLabel: 'Expand table of contents'
   });
+
+  var isChecklistPage = /\/00-alpha-checklist\/?$/.test(location.pathname);
+
+  if (isChecklistPage) {
+    var clearBtn = document.createElement('button');
+    clearBtn.type = 'button';
+    clearBtn.className = 'clear-checklist';
+    clearBtn.textContent = 'Clear Checklist';
+    clearBtn.addEventListener('click', function () {
+      Object.keys(localStorage)
+        .filter(function (k) { return k.startsWith('cb_' + location.pathname); })
+        .forEach(function (k) { localStorage.removeItem(k); });
+      document.querySelectorAll('.markdown input[type="checkbox"]').forEach(function (cb) {
+        cb.checked = false;
+      });
+    });
+    document.body.appendChild(clearBtn);
+  } else {
+    var detailsSnapshot = null;
+    function syncExpertDetails(on) {
+      var nodes = document.querySelectorAll('.markdown details');
+      if (on) {
+        detailsSnapshot = Array.prototype.map.call(nodes, function (el) {
+          return el.open;
+        });
+        nodes.forEach(function (el) {
+          el.open = true;
+        });
+        return;
+      }
+      if (detailsSnapshot) {
+        nodes.forEach(function (el, i) {
+          el.open = detailsSnapshot[i];
+        });
+        detailsSnapshot = null;
+      }
+    }
+
+    var expertBtn = document.createElement('button');
+    expertBtn.type = 'button';
+    expertBtn.className = 'expert-mode-toggle';
+    expertBtn.textContent = 'Expert';
+    function syncExpert() {
+      var on = document.documentElement.classList.contains('expert-mode');
+      expertBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      expertBtn.setAttribute('aria-label', on ? 'Turn off Expert mode' : 'Turn on Expert mode');
+      expertBtn.title = on
+        ? 'Expert mode on: showing commands only'
+        : 'Expert mode: hide explanations, show commands';
+      expertBtn.classList.toggle('is-on', on);
+    }
+    expertBtn.addEventListener('click', function () {
+      var on = document.documentElement.classList.toggle('expert-mode');
+      try {
+        localStorage.setItem('book-expert-mode', on ? '1' : '0');
+      } catch (e) {}
+      syncExpertDetails(on);
+      syncExpert();
+    });
+    document.body.appendChild(expertBtn);
+    syncExpert();
+    if (document.documentElement.classList.contains('expert-mode')) {
+      syncExpertDetails(true);
+    }
+  }
 })();
 </script>

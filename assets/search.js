@@ -20,6 +20,7 @@
 
   const input = document.querySelector('#book-search-input');
   const results = document.querySelector('#book-search-results');
+  const clearBtn = document.querySelector('#book-search-clear');
 
   if (!input) {
     return
@@ -27,11 +28,38 @@
 
   let debounce;
 
+  function syncClearButton() {
+    if (!clearBtn) {
+      return;
+    }
+    clearBtn.classList.toggle('hidden', !input.value);
+  }
+
+  function clearSearch() {
+    input.value = '';
+    syncClearButton();
+    search();
+    input.focus();
+  }
+
   input.addEventListener('focus', init, { once: true });
   input.addEventListener('input', function () {
+    syncClearButton();
     clearTimeout(debounce);
     debounce = setTimeout(search, 250);
   });
+  input.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && input.value) {
+      event.preventDefault();
+      clearSearch();
+    }
+  });
+  if (clearBtn) {
+    clearBtn.addEventListener('click', function (event) {
+      event.preventDefault();
+      clearSearch();
+    });
+  }
 
   document.addEventListener('keydown', focusOnKeyDown);
 
@@ -76,7 +104,7 @@
       results.removeChild(results.firstChild);
     }
 
-    if (!input.value) {
+    if (!input.value || !window.bookSearchIndex) {
       return;
     }
 

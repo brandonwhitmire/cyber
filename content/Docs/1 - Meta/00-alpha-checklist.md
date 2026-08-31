@@ -2,8 +2,6 @@
 title = "00 - Alpha Checklists"
 +++
 
-{{< clear-checks >}}
-
 {{< img src="0-PT-Process.webp" caption="Penetration Testing Process" >}}
 
 ## Modern References

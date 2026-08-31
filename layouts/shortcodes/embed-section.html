@@ -168,7 +168,7 @@
         {{- end -}}
     {{- end -}}
     
-    {{- /* Wrap the embedded content in a details block (collapsed by default) */ -}}
+    {{- /* Wrap the embedded content in a details block */ -}}
     {{- if $embeddedContent -}}
         {{- /* Build title from header names */ -}}
         {{- $headerText := "" -}}
@@ -180,20 +180,16 @@
             {{- $headerText = .Title -}}
         {{- end -}}
         
-        {{- /* Source links are already added before each section when multiple headers */ -}}
-        {{- /* For single header or fallback, we don't need to add another source link */ -}}
-        {{- $embeddedContentWithSource := $embeddedContent -}}
-        
-        {{- /* Use a more prominent style with icon to make it look more button-like */ -}}
-        {{- partial "shortcodes/notice.html" (dict
-            "page"     $.Page
-            "content"  ($embeddedContentWithSource | safeHTML)
-            "expanded" $expanded
-            "params"   (dict)
-            "style"    "info"
-            "icon"     "fa-info-circle"
-            "title"    $headerText
-        ) -}}
+        {{- $open := true -}}
+        {{- if in (slice false "false" 0 "0") $expanded -}}
+            {{- $open = false -}}
+        {{- end -}}
+        <details class="expand"{{ if $open }} open{{ end }}>
+          <summary>{{ $headerText }}</summary>
+          <div class="markdown-inner">
+{{ $embeddedContent | safeHTML }}
+          </div>
+        </details>
     {{- end -}}
 {{- else -}}
     {{- errorf "Page '%s' not found" $pagePath -}}

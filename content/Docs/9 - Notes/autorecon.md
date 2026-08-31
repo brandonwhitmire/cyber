@@ -15,6 +15,9 @@ sudo apt install -y autorecon
 
 ```bash
 autorecon -vv <TARGET>
+```
 
+```bash
+# Includes top 100 UDP ports scan
 sudo autorecon -vv <TARGET>
 ```
