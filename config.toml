@@ -28,6 +28,17 @@ BookComments = false
 BookFavicon = "favicon.svg"
 BookSection = "Docs"
 
+# Top-level pages (outside Docs/) in the left nav, above the file tree
+[[menus.before]]
+  name = "About"
+  pageRef = "/about"
+  weight = 10
+
+[[menus.before]]
+  name = "Bookmarks"
+  pageRef = "/bookmarks"
+  weight = 20
+
 [params.homeInfoParams]
 Title = "Cheatsheet"
 Content = "Study notes and tools for networking, web app hacking, and pentesting."
