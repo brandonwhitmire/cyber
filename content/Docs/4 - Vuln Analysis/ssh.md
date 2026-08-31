@@ -27,10 +27,14 @@ title = "🐧 SSH: TCP 22"
 
 ```bash
 sshpass -p '<PASSWORD>' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22 <USER>@<TARGET>
+```
 
+```bash
 # Specify auth-method: password
 ssh -v -o PreferredAuthentications=password <USER>@<TARGET>
+```
 
+```bash
 # Force auth-method: privkey
 ssh -i <PRIVATE_KEY> <USER>@<TARGET>
 ```

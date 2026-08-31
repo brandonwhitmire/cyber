@@ -93,6 +93,16 @@ nslookup <TARGET>
 
 ## Wine Installation
 
+### Kali
+
+Kali is much simpler and straightforward to install
+
+```bash
+sudo bash -c "dpkg --add-architecture i386 && apt-get update -y && apt-get install -y wine32:i386"
+```
+
+### ParrotOS
+
 The Parrot OS PwnBox has some trouble with `wine` and `mono`, but this is necessary for Windows binaries like `ysoserial.exe`.
 
 **NOTE:** this is not an automatic installation as it will pop-up a few windows that require the user to agree to the terms and conditions

@@ -11,10 +11,10 @@ Multi-threaded enumeration orchestrator that runs baseline enumeration across al
 
 ```bash
 sudo apt install -y autorecon
+```
 
-# Single Target
-sudo autorecon <TARGET>
+```bash
+autorecon -vv <TARGET>
 
-# Tweak over laggy VPN/proxy
-sudo autorecon --max-scans 10 <TARGET>
+sudo autorecon -vv <TARGET>
 ```

@@ -100,12 +100,12 @@ Sometimes `feroxbuster` has issues with `https` and DNS resolution... [see fix h
 
 ```bash
 # Directory Bruteforce
-feroxbuster -t 64 -w /usr/share/seclists/Discovery/Web-Content/common.txt --depth 5 -o feroxbuster_dir_common --scan-dir-listings --insecure -u http://<TARGET>
+feroxbuster -t 64 -w /usr/share/seclists/Discovery/Web-Content/common.txt --depth 5 -o feroxbuster_dir_common --scan-dir-listings --insecure --redirects -u http://<TARGET>
 
 # Bruteforce w/ File Extensions
 # LIN:  -x php,html,htm,txt,bak,zip,xml,json,js,sh,py,config
 # WIN:  -x asp,aspx,ashx,asmx,html,htm,txt,bak,zip,xml,json,js,config,cs
-feroxbuster -t 64 -w /usr/share/seclists/Discovery/Web-Content/common.txt --depth 5 -o feroxbuster_dir_extensions --scan-dir-listings --insecure -u http://<TARGET> -x <EXTENSIONS>
+feroxbuster -t 64 -w /usr/share/seclists/Discovery/Web-Content/common.txt --depth 5 -o feroxbuster_dir_extensions --scan-dir-listings --insecure --redirects -u http://<TARGET> -x <EXTENSIONS>
 ```
 
 ## URL Encoding

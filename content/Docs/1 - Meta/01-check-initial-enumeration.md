@@ -11,15 +11,16 @@ title = "01 - Check - Initial Enumeration"
     - [Bloodhound (w/`netexec` integration enabled)]({{% ref "bloodhound.md#setup" %}})
     - [Flameshot](https://flameshot.org/) for screenshots and terminal:
 ```bash
-pushd /usr/share/wordlists/ && sudo gunzip rockyou.txt.gz && popd
+pushd /usr/share/wordlists/ && sudo gunzip rockyou.txt.gz ; popd
 sudo apt update -y
 sudo apt autoremove -y
-sudo apt install -y --fix-missing flameshot ripgrep autorecon
+sudo apt install -y --fix-missing flameshot ripgrep autorecon sshpass
 sudo updatedb
 mkdir ~/my_data
 echo 'cd ~/my_data' >> ~/.bashrc
 echo 'cd ~/my_data' >> ~/.zshrc
 curl -LsSf https://astral.sh/uv/install.sh | sh && curl -LsSf https://astral.sh/uv/install.sh | sudo sh
+git clone https://github.com/brandonwhitmire/cyber-tools.git
 ```
 
 2. [ ] Login into [SysReptor and create engagement report](https://labs.sysre.pt/projects?ordering=-created)
