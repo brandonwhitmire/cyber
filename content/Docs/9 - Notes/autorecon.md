@@ -3,7 +3,7 @@ title = "AutoRecon"
 +++
 
 - [GitHub](https://github.com/Tib3rius/AutoRecon)
-    - [README / Docs](https://github.com/Tib3rius/AutoRecon/blob/master/README.md)
+  - [README / Docs](https://github.com/Tib3rius/AutoRecon/blob/master/README.md)
 
 Multi-threaded enumeration orchestrator that runs baseline enumeration across all services/targets in parallel and organizes output into per-target directories.
 
