@@ -164,7 +164,8 @@
     expandLabel: 'Expand table of contents'
   });
 
-  var isChecklistPage = /\/00-alpha-checklist\/?$/.test(location.pathname);
+  var path = (location.pathname || '/').replace(/\/+$/, '') || '/';
+  var isChecklistPage = path === '/' || path === '/cyber' || /\/docs\/1---meta(?:\/|$)/.test(path);
 
   if (isChecklistPage) {
     var clearBtn = document.createElement('button');
