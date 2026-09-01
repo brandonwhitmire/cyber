@@ -171,7 +171,7 @@
     var clearBtn = document.createElement('button');
     clearBtn.type = 'button';
     clearBtn.className = 'clear-checklist';
-    clearBtn.textContent = 'Clear Checklist';
+    clearBtn.textContent = 'CLEAR Checklists';
     clearBtn.addEventListener('click', function () {
       Object.keys(localStorage)
         .filter(function (k) { return k.startsWith('cb_' + location.pathname); })
@@ -205,7 +205,7 @@
     var expertBtn = document.createElement('button');
     expertBtn.type = 'button';
     expertBtn.className = 'expert-mode-toggle';
-    expertBtn.textContent = 'Expert';
+    expertBtn.textContent = 'Code Mode';
     function syncExpert() {
       var on = document.documentElement.classList.contains('expert-mode');
       expertBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
