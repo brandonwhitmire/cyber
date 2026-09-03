@@ -3,6 +3,7 @@ title = "Mimikatz"
 +++
 
 - Ref: https://tools.thehacker.recipes/mimikatz/modules
+- Master Class: https://darkoperator.github.io/mimikatz-missing-manual/
 
 Mimikatz is a post-exploitation tool that can extract plaintext passwords, hashes, PINs, and Kerberos tickets from memory. It can also perform pass-the-hash, pass-the-ticket, and build Golden Tickets.
 

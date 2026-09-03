@@ -153,13 +153,9 @@ nxc <PROTOCOL> -M <MODULE> -o <MOD_KEY>=<MOD_VALUE> <MOD_KEY>=<MOD_VALUE>,...
 
 **Spray valid creds against all protocols (local and domain auth) to see if one offers more privileges**
 ```bash
-# NOTE: this misses local authentication for "nxc mssql -d ."
-for proto in $(nxc -h 2>&1 | grep -oP '(?<=\{)[^}]+(?=\})' | head -1 | tr ',' ' '); do
-  for auth in "--local-auth" "-d <DOMAIN>"; do
-    echo "[*] $proto -- $auth" | tee -a nxc_spray_all_protos.txt
-    nxc $proto <TARGETS> -u <USER> -p '<PASSWORD>' $auth 2>/dev/null | grep '+' | tee -a nxc_spray_all_protos.txt
-  done
-done
+sudo wget -q https://raw.githubusercontent.com/brandonwhitmire/nxcblast/main/nxcblast.py -O /usr/local/bin/nxcblast && sudo chmod +x /usr/local/bin/nxcblast
+
+nxcblast <TARGET>
 ```
 
 ## SMB
@@ -415,6 +411,12 @@ sudo apt install -y flatpak
 flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 flatpak install --assumeyes --user flathub org.keepassxc.KeePassXC
 flatpak run org.keepassxc.KeePassXC
+```
+
+#### Manual Search
+
+```powershell
+Get-ChildItem -File -Recurse -ErrorAction SilentlyContinue -Path C:\ -Include *.kdbx
 ```
 
 ### Enable RDP

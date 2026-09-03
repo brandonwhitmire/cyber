@@ -121,7 +121,8 @@ EOF
 cat << EOF > custom.rule
 c
 C
-t                                                                \$!
+t
+\$!
 \$1\$9\$9\$8
 \$1\$9\$9\$8\$!
 sa@
@@ -130,7 +131,7 @@ ss\$
 EOF
 
 # Generate permutated wordlist
-hashcat --force -r custom.rule keywords.txt --stdout | sort -u > wordlist.txt
+hashcat -r custom.rule keywords.txt --stdout | sort -u > wordlist.txt
 
 # Crack with same rules
 hashcat -a 0 -m <HASH_ID> -r custom.rule <HASH> wordlist.txt
@@ -141,8 +142,7 @@ hashcat -a 0 -m <HASH_ID> -r custom.rule <HASH> wordlist.txt
 Build a **targeted wordlist** from personal information (name, birthday, pet, company, etc.). Use when you have OSINT on the target and want passwords likely derived from that data.
 
 ```bash
-git clone https://github.com/Mebus/cupp.git
-cd cupp
+git clone https://github.com/Mebus/cupp.git && cd cupp
 python3 cupp.py -i
 ```
 

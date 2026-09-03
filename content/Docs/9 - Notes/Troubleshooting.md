@@ -98,6 +98,7 @@ nslookup <TARGET>
 Kali is much simpler and straightforward to install
 
 ```bash
+sudo apt install -y wine
 sudo bash -c "dpkg --add-architecture i386 && apt-get update -y && apt-get install -y wine32:i386"
 ```
 
@@ -128,4 +129,12 @@ sudo apt install -t sid wine wine32:i386 wine64 -y
 # Install .NET
 sudo apt install winetricks -y
 winetricks dotnet48
+```
+
+# `hashcat`: "No OpenCL..."
+
+To resolve the error: `ATTENTION! No OpenCL, HIP or CUDA compatible platform found.`
+
+```bash
+sudo apt install -y pocl-opencl-icd
 ```

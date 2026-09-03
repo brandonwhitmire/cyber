@@ -29,12 +29,9 @@ title = "🌐 FTP: TCP 20/21"
 
 ```bash
 sudo apt install -y lftp
-```
-
-```bash
 # Download ALL files (anonymous)
 mkdir ftp_files && cd ftp_files
-lftp -e "set ftp:list-options -a; mirror -c; bye" ftp://anonymous:anonymous@<TARGET>
+lftp -e "set ssl:verify-certificate no;set ftp:list-options -a; mirror -c; bye" ftp://anonymous:anonymous@<TARGET>
 ```
 
 ```bash

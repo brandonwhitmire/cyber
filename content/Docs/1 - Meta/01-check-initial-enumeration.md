@@ -10,6 +10,7 @@ title = "01 - Check - Initial Enumeration"
     - [Metasploit database]({{% ref "metasploit.md#database" %}})
     - [Bloodhound (w/`netexec` integration enabled)]({{% ref "bloodhound.md#setup" %}})
     - [Flameshot](https://flameshot.org/) for screenshots and terminal:
+
 ```bash
 pushd /usr/share/wordlists/ && sudo gunzip rockyou.txt.gz ; popd
 sudo apt update -y
@@ -20,8 +21,11 @@ mkdir ~/my_data
 echo 'cd ~/my_data' >> ~/.bashrc
 echo 'cd ~/my_data' >> ~/.zshrc
 curl -LsSf https://astral.sh/uv/install.sh | sh && curl -LsSf https://astral.sh/uv/install.sh | sudo sh
+sudo wget -q https://raw.githubusercontent.com/brandonwhitmire/nxcblast/main/nxcblast.py -O /usr/local/bin/nxcblast && sudo chmod +x /usr/local/bin/nxcblast
 git clone https://github.com/brandonwhitmire/cyber-tools.git
 ```
+
+{{< embed-section page="Docs/9 - Notes/tmux.md" header="setup" >}}
 
 2. [ ] Login into [SysReptor and create engagement report](https://labs.sysre.pt/projects?ordering=-created)
     - Use [trigger-based event reporting](https://www.brunorochamoura.com/posts/cpts-report/#triggers)
