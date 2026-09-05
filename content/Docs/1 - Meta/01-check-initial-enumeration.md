@@ -22,7 +22,7 @@ echo 'cd ~/my_data' >> ~/.bashrc
 echo 'cd ~/my_data' >> ~/.zshrc
 curl -LsSf https://astral.sh/uv/install.sh | sh && curl -LsSf https://astral.sh/uv/install.sh | sudo sh
 sudo wget -q https://raw.githubusercontent.com/brandonwhitmire/nxcblast/main/nxcblast.py -O /usr/local/bin/nxcblast && sudo chmod +x /usr/local/bin/nxcblast
-git clone https://github.com/brandonwhitmire/cyber-tools.git $HOME/cyber-tools
+git clone https://github.com/brandonwhitmire/cyber-tools.git $HOME/cyber-tools && $HOME/cyber-tools/tools.sh --install && source "$HOME/cyber-tools/tools.sh"
 ```
 
 {{< embed-section page="Docs/9 - Notes/tmux.md" header="setup" >}}

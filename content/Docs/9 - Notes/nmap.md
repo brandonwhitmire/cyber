@@ -19,7 +19,7 @@ title = "Nmap"
 
 ```bash
 # Quick + All Ports
-export TARGET="<TARGET>" ; sudo nmap -n -Pn -sS -sV -sC --open --stats-every 30s -vvv -oA nmap_quick $TARGET && sudo nmap -n -Pn -sS -p- -sV -sC --open --stats-every 30s -vvv -oA nmap_all $TARGET
+export TARGET="<TARGET>" ; sudo nmap -n -Pn -sS -sV -sC --open --stats-every 30s -vvv -oA nmap_quick_tcp $TARGET && sudo nmap -n -Pn -sS -p- -sV -sC --open --stats-every 30s -vvv -oA nmap_all_tcp $TARGET
 ```
 
 ```bash
