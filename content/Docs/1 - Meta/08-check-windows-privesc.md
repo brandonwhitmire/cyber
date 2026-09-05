@@ -4,7 +4,7 @@ title = "08 - Check - Windows Privilege Escalation"
 
 ### Initial Foothold
 
-1. [ ] Launch winPEAS in the background -- it runs while you work through manual checks below.
+1. [ ] Launch winPEAS in the background
     - [winPEAS]({{% ref "privilege-escalation-windows.md#winpeas" %}})
 
 2. [ ] Establish identity: user, groups, privileges

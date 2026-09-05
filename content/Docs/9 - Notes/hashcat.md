@@ -45,7 +45,7 @@ Fall
 for i in $(cat pwlist.txt); do echo $i; echo ${i}\!; echo ${i}2025; echo ${i}2026; done > passwords.txt
 
 hashcat \
-    -r /usr/share/hashcat/rules/best64.rule \
+    -r /usr/share/hashcat/rules/best66.rule \
     -r /usr/share/hashcat/rules/toggles1.rule \
     --stdout passwords.txt | sort -u > passwords_mutated.txt
 ```
@@ -54,7 +54,7 @@ hashcat \
 
 - **Hash Mode**: Always specify the correct `-m` mode for your hash type. Use `hashid` or check the hash format to determine the mode.
 - **Wordlists**: Common wordlists include `rockyou.txt`, `SecLists`, and custom wordlists generated from OSINT.
-- **Rules**: Start with `best64.rule` for quick results, then move to more comprehensive rules if needed.
+- **Rules**: Start with `best66.rule` for quick results, then move to more comprehensive rules if needed.
 - **Performance**: Use `-w 3` or `-w 4` for faster cracking (uses more resources). Use `-O` for optimized kernels (may limit password length).
 - **GPU Acceleration**: Hashcat automatically uses GPU if available. Ensure proper drivers are installed.
 - **Resume Sessions**: Hashcat saves progress automatically. Use `--restore` to resume interrupted sessions.
@@ -155,7 +155,7 @@ Rule-based attacks apply transformations to words in a wordlist, creating permut
 
 | Rule File          | Rule Count | Use Case                                                                                                       |
 | :----------------- | :--------- | :------------------------------------------------------------------------------------------------------------- |
-| **`best64.rule`**  | 64         | **First Run.** Instant results for easy passwords.                                                             |
+| **`best66.rule`**  | 66         | **First Run.** Instant results for easy passwords.                                                             |
 | **`toggle1.rule`** |            | **Optional: Add w/ `base64.rule`** Toggles the case of exactly one letter at a time in each password candidate |
 | **`d3ad0ne.rule`** | ~34,000    | **Deep Crack.** Good for standard "complex" user passwords.                                                    |
 | **`dive.rule`**    | ~100,000+  | **Paranoid.** Extremely slow; last resort for dictionary attacks.                                              |
@@ -164,7 +164,7 @@ Rule-based attacks apply transformations to words in a wordlist, creating permut
 
 ```bash
 # Apply rule file to wordlist
-hashcat -m 1800 -r /usr/share/hashcat/rules/best64.rule hashes.txt <WORDLIST>
+hashcat -m 1800 -r /usr/share/hashcat/rules/best66.rule hashes.txt <WORDLIST>
 ```
 
 ### Creating Custom Rules

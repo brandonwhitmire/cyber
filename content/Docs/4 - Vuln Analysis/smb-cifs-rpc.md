@@ -33,8 +33,6 @@ SMB/CIFS/RPC: TCP 135/139/445
 |`magic output = script.out`|Where the output of the magic script needs to be stored?|
 {{% /details %}}
 
-- https://hacktricks.wiki/en/network-services-pentesting/pentesting-rpcbind.html
-
 ## Enumeration (nxc)
 
 {{< embed-section page="Docs/9 - Notes/netexec" header="basic-enumeration" >}}

