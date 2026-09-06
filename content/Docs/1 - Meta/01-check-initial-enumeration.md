@@ -33,9 +33,15 @@ sudo bash -c "echo \"alias penelope='penelope --oscp-safe'\" >> /root/.bashrc"
 sudo bash -c "echo \"alias penelope='penelope --oscp-safe'\" >> /root/.zshrc"
 ```
 
+**tmux**
+
 {{< embed-section page="Docs/9 - Notes/tmux.md" header="setup" >}}
 
-{{< embed-section page="Docs/5 - Exploitation/metasploit.md" header="database" >}}
+**Metasploit**
+
+{{< embed-section page="Docs/5 - Exploitation/metasploit.md" header="setup" >}}
+
+**BloodHound**
 
 {{< embed-section page="Docs/9 - Notes/bloodhound.md" header="setup" >}}
 
