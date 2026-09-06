@@ -79,6 +79,10 @@ sudo nmap -n -Pn -sS -p- --stats-every 30s -oA nmap_all_tcp --excludefile scope_
 
 ##### UDP
 
+```bash
+$HOME/go/bin/udpx -c 128 -w 1000 -o udpx_results.jsonl --excludefile scope_excludes.txt -tf live_hosts.txt
+```
+
 Top 100 (full `-p-` UDP is impractically slow)
 
 ```bash

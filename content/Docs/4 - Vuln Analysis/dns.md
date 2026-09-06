@@ -10,17 +10,6 @@ title = "🌐 DNS: UDP/TCP 53"
     - `/etc/bind/named.conf.log`
     - https://wiki.debian.org/BIND9
 - https://web.archive.org/web/20250329174745/https://securitytrails.com/blog/most-popular-types-dns-attacks
-- Domain Takeover: https://github.com/EdOverflow/can-i-take-over-xyz
-
-{{% details "Dangerous Settings" %}}
-
-| **Option**        | **Description**                                                                |
-| ----------------- | ------------------------------------------------------------------------------ |
-| `allow-query`     | Defines which hosts are allowed to send requests to the DNS server.            |
-| `allow-recursion` | Defines which hosts are allowed to send recursive requests to the DNS server.  |
-| `allow-transfer`  | Defines which hosts are allowed to receive zone transfers from the DNS server. |
-| `zone-statistics` | Collects statistical data of zones.                                            |
-{{% /details %}}
 
 ```bash
 # Add subdomains or vHosts

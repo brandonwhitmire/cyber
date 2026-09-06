@@ -62,7 +62,7 @@ Create a fake SPN to Kerberoast a user. This will require proper enumeration and
 
 **First import PowerView:**
 
-{{< embed-section page="Docs/6 - Post-Exploitation/nice-commands" header="via-powerview" >}}
+{{< embed-section page="Docs/6 - Post-Exploitation/nice-commands-windows" header="via-powerview" >}}
 
 ```powershell
 # Authenticate

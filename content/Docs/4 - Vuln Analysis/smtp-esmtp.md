@@ -9,20 +9,6 @@ title = "🌐 SMTP/ESMTP: TCP 25/465/587"
     - Sender Policy Framework (SPF): https://dmarcian.com/what-is-spf/
     - DMARC: https://dmarc.org/
 - https://serversmtp.com/smtp-error/
-- 
-{{% details "Dangerous Settings" %}}
-
-| **Option**               | **Description**                                                                                                                                                                          |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `mynetworks = 0.0.0.0/0` | With this setting, this SMTP server can send fake emails and thus initialize communication between multiple parties. Another attack possibility would be to spoof the email and read it. |
-{{% /details %}}
-
-- https://hacktricks.wiki/en/network-services-pentesting/pentesting-smtp/index.html#basic-actions
-
-```bash
-# CAREFUL! Open relay check
-sudo nmap -p25,465,587,2525 --script smtp-open-relay <TARGET>
-```
 
 ## User Enumeration
 

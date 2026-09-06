@@ -14,20 +14,6 @@ title = "🌐 SNMP: UDP 161/162"
 
 *Management Information Base (MIB)* is a text file of *Object Identifier (OID)* s, which provide addresses to access device info, in the *Abstract Syntax Notation One (ASN.1)* based ASCII text format. Community Strings are sort of "passwords" to manage the access level.
 
-{{% details "Dangerous Settings" %}}
-
-| **Settings**                                  | **Description**                                                                       |
-| --------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `rwuser noauth`                               | Provides access to the full OID tree without authentication.                          |
-| `rwcommunity <COMMUNITY_STRING> <IPv4_ADDR>`  | Provides access to the full OID tree regardless of where the requests were sent from. |
-| `rwcommunity6 <COMMUNITY_STRING> <IPv6_ADDR>` | Same access as with `rwcommunity` with the difference of using IPv6.                  |
-{{% /details %}}
-
-```bash
-# Enum via nmap
-sudo nmap -n -Pn -sU -p161 -sV --script 'snmp* and not snmp-brute' --reason -oA nmap_snmp_scan <TARGET>
-```
-
 ### Brute-force names of Community Strings
 
 - Common Default Strings:

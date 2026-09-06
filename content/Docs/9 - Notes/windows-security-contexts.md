@@ -82,9 +82,22 @@ whoami /all           :: everything at once (user, groups, privs, integrity)
 |`Event Log Readers`|Read security logs -- useful for local recon, rare privesc|
 |`Group Policy Creator Owners`|Create GPOs -- link to OU for code exec as any user in that OU|
 
+Group refs: [ss64 security groups](https://ss64.com/nt/syntax-security_groups.html), [MS privileged groups](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/appendix-b--privileged-accounts-and-groups-in-active-directory).
+
+**High-value accounts** (membership in the local `Administrators` group is what matters):
+
+| Account | Notes |
+|---|---|
+| `NT AUTHORITY\SYSTEM` / `LocalSystem` | More privileged than local admin; runs most services -- goal of most local privesc |
+| Built-in local `Administrator` | Often reused across hosts; sometimes disabled |
+| Member of local `Administrators` | Same power as the built-in `Administrator` |
+| Domain user in local `Administrators` | Standard domain user, local admin on this host |
+| Domain admin in local `Administrators` | DA on the box -- token theft = domain compromise |
+
 ### Privileges
 
 - Named capabilities that bypass normal ACL checks, disabled privs can usually be enabled easily:
+- A privilege can bootstrap access rights -- e.g. `SeTakeOwnershipPrivilege` → own the object → Windows auto-grants `WRITE_DAC` → rewrite the DACL to give yourself `GenericAll`. ([ref](https://blog.palantir.com/windows-privilege-abuse-auditing-detection-and-defense-3078a403d74e))
 
 **Read privileges:**
 ```cmd
@@ -108,6 +121,8 @@ Get-Process -Id <PID> | Select-Object Name, Id
 |`SeRestorePrivilege`|Write any file ignoring ACLs|
 |`SeLoadDriverPrivilege`|Load kernel drivers -- route to kernel exploits|
 |`SeTakeOwnershipPrivilege`|Take ownership of any object|
+|`SeSecurityPrivilege`|Manage/clear the Security log, read SACLs -- log tampering|
+|`SeTcbPrivilege`|Act as part of the OS -- assume any user's identity (full impersonation)|
 
 ### Integrity Level (Mandatory Label)
 
@@ -182,6 +197,18 @@ Get-Acl <FILE> | Format-List          # full ACL
 (Get-Acl <FILE>).Access               # just the ACE list
 Get-Acl <REGKEY> | Format-List   # registry key ACL
 ```
+
+**icacls permission codes** -- look for `F`, `M`, or `W` granted to unprivileged groups / your SID:
+
+| Code | Meaning | Offensive value |
+| ---- | ------- | --------------- |
+| `F` | Full Control | Jackpot -- overwrite, delete, or re-permission |
+| `M` | Modify | High -- read/write/delete (same as F for hijacking) |
+| `W` | Write | High -- overwrite with a payload (reverse-shell `.exe`) |
+| `RX` | Read & Execute | Usually none -- run but can't alter |
+| `R` | Read | Low -- steal config files / hardcoded creds |
+
+Inheritance flags: `(I)` inherited from parent, `(OI)` files inherit, `(CI)` subfolders inherit, `(IO)` inherit-only (not this object).
 
 ### SACL (System ACL)
 

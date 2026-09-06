@@ -11,22 +11,12 @@ title = "🪟 MSSQL: TCP/UDP 1433"
     - `msdb`
     - `resource`
 
-
-Microsoft's closed-source version of SQL.
+Microsoft's closed-source version of SQL
 
 - https://www.microsoft.com/en-us/sql-server/sql-server-2019
 - https://learn.microsoft.com/en-us/ssms/install/install?view=sql-server-ver15
 - https://learn.microsoft.com/en-us/sql/relational-databases/databases/system-databases?view=sql-server-ver15
 - https://learn.microsoft.com/en-us/sql/tools/configuration-manager/named-pipes-properties?view=sql-server-ver15
-
-{{% details "Dangerous Settings" %}}
-
-- MSSQL clients not using encryption to connect to the MSSQL server
-- The use of self-signed certificates when encryption is being used. It is possible to spoof self-signed certificates
-- The use of [named pipes](https://docs.microsoft.com/en-us/sql/tools/configuration-manager/named-pipes-properties?view=sql-server-ver15)
-- Weak & default `sa` credentials. Admins may forget to disable this account
-
-{{% /details %}}
 
 ```bash
 # Domain account

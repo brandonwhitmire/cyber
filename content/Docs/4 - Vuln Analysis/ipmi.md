@@ -7,14 +7,9 @@ title = "🌐 IPMI: UDP 623"
     - Dell iDRAC:	`root:calvin`
     - HP iLO: `Administrator:[randomized 8-character string consisting of numbers and uppercase letters]`
     - Supermicro IPMI: `ADMIN:ADMIN`
-
-A hardware control protocol that gives "virtual" physical access to a machine.
-
-{{% details "Dangerous Settings" %}}
-
 - Server sends the salted hash of the user's password to the user before authentication
 
-{{% /details %}}
+A hardware control protocol that gives "virtual" physical access to a machine.
 
 ```bash
 ### Enumeration via nmap

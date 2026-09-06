@@ -151,10 +151,10 @@ nxc <PROTOCOL> -M <MODULE> -o <MOD_KEY>=<MOD_VALUE> <MOD_KEY>=<MOD_VALUE>,...
 
 ## Protocol Spraying
 
+- https://github.com/brandonwhitmire/nxcblast
+
 **Spray valid creds against all protocols (local and domain auth) to see if one offers more privileges**
 ```bash
-sudo wget -q https://raw.githubusercontent.com/brandonwhitmire/nxcblast/main/nxcblast.py -O /usr/local/bin/nxcblast && sudo chmod +x /usr/local/bin/nxcblast
-
 nxcblast <TARGET>
 ```
 

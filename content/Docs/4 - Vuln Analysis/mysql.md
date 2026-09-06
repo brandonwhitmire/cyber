@@ -14,19 +14,6 @@ title = "🌐 MySQL: TCP 3306"
     - `sys` - a set of objects that helps interpret data
 - Cheatsheet: https://devhints.io/mysql
 
-{{% details "Dangerous Settings" %}}
-- https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html
-
-| **Settings**       | **Description**                                                                                              |
-| ------------------ | ------------------------------------------------------------------------------------------------------------ |
-| `user`             | Sets which user the MySQL service will run as.                                                               |
-| `password`         | Sets the password for the MySQL user.                                                                        |
-| `admin_address`    | The IP address on which to listen for TCP/IP connections on the administrative network interface.            |
-| `debug`            | This variable indicates the current debugging settings                                                       |
-| `sql_warnings`     | This variable controls whether single-row INSERT statements produce an information string if warnings occur. |
-| `secure_file_priv` | This variable is used to limit the effect of data import and export operations.                              |
-{{% /details %}}
-
 ```bash
 mysql --user=<USER> --password=<PASSWORD> --skip-ssl --skip-ssl-verify-server-cert --host=<TARGET> --port=<PORT>
 ```

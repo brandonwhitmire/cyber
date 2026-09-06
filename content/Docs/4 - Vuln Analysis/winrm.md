@@ -8,12 +8,6 @@ title = "🪟 WinRM: TCP 5985/5986"
     - Member of the `Remote Management Users` group
     - Domain Admin (inherits local admin)
     - explicit permissions for PowerShell Remoting in the session configuration
-
-```bash
-# Enum via nmap
-sudo nmap --disable-arp-ping -n -Pn -sV -sC -p5985,5986 <TARGET>
-```
-
 - https://github.com/Hackplayers/evil-winrm
 
 ```bash
