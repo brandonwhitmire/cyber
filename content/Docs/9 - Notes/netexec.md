@@ -687,10 +687,16 @@ nxc rdp <TARGET> -u <USER> -p '<PASS>' --screenshot --screentime 5
     - Got `Pwn3d!` but `-x` fails → `LocalAccountTokenFilterPolicy` is `0`, you're not RID 500
     - RID 500 but `-x` fails → `FilterAdministratorToken` is `1`
 
-| Registry Key                                                                                   | Default | Value `0`                                       | Value `1`                                           |
-| ---------------------------------------------------------------------------------------------- | ------- | ----------------------------------------------- | --------------------------------------------------- |
-| `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\LocalAccountTokenFilterPolicy` | `0`     | Only RID 500 (built-in Admin) can exec remotely | **All** LOCAL (not domain) admins can exec remotely |
-| `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\FilterAdministratorToken`      | `0`     | RID 500 can exec remotely                       | RID 500 **blocked** from remote exec                |
+```bash
+reg.exe query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v LocalAccountTokenFilterPolicy
+
+reg.exe query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v FilterAdministratorToken
+```
+
+| Registry Key                                                                                   | Default           | Value `0`                                       | Value `1`                                           |
+| ---------------------------------------------------------------------------------------------- | ----------------- | ----------------------------------------------- | --------------------------------------------------- |
+| `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\LocalAccountTokenFilterPolicy` | `0` or **Absent** | Only RID 500 (built-in Admin) can exec remotely | **All** LOCAL (not domain) admins can exec remotely |
+| `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\FilterAdministratorToken`      | `0` or **Absent** | RID 500 can exec remotely                       | RID 500 **blocked** from remote exec                |
 
 | `--exec-method` (SMB only) | Protocol | How                                                                        | Noise  | Port |
 | -------------------------- | -------- | -------------------------------------------------------------------------- | ------ | ---- |
