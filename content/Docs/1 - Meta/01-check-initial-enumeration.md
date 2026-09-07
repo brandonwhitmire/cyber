@@ -12,7 +12,7 @@ pushd /usr/share/wordlists/ && sudo gunzip rockyou.txt.gz ; popd
 # System update and install some packages
 sudo apt update -y
 sudo apt autoremove -y
-sudo apt install -y --fix-missing flameshot ripgrep sshpass pocl-opencl-icd autorecon penelope
+sudo apt install -y --fix-missing flameshot ripgrep sshpass golang pocl-opencl-icd autorecon penelope
 # Update locate DB
 sudo updatedb
 # Manual tool installs
@@ -21,16 +21,17 @@ curl -LsSf https://astral.sh/uv/install.sh | sh && curl -LsSf https://astral.sh/
 sudo wget -q https://raw.githubusercontent.com/brandonwhitmire/nxcblast/main/nxcblast.py -O /usr/local/bin/nxcblast && sudo chmod +x /usr/local/bin/nxcblast
 git clone https://github.com/brandonwhitmire/cyber-tools.git $HOME/cyber-tools
 "$HOME/cyber-tools/tools.sh" --install
-. "$HOME/.zshrc"
 # Artifacts folder
 mkdir ~/my_data
 echo 'cd ~/my_data' >> ~/.bashrc
 echo 'cd ~/my_data' >> ~/.zshrc
 # Penelope shell auto-safe mode
-echo "alias penelope='penelope --oscp-safe'" >> ~/.bashrc
-echo "alias penelope='penelope --oscp-safe'" >> ~/.zshrc
-sudo bash -c "echo \"alias penelope='penelope --oscp-safe'\" >> /root/.bashrc"
-sudo bash -c "echo \"alias penelope='penelope --oscp-safe'\" >> /root/.zshrc"
+echo "alias penelope='penelope --oscp-safe --payloads'" >> ~/.bashrc
+echo "alias penelope='penelope --oscp-safe --payloads'" >> ~/.zshrc
+sudo bash -c "echo \"alias penelope='penelope --oscp-safe --payloads'\" >> /root/.bashrc"
+sudo bash -c "echo \"alias penelope='penelope --oscp-safe --payloads'\" >> /root/.zshrc"
+# Source the shell
+. "$HOME/.zshrc"
 ```
 
 **tmux**
