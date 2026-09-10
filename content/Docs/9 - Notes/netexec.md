@@ -361,7 +361,7 @@ netexec smb <TARGET> -u <USER> -p '<PASSWORD>' --spider <SHARE> --regex .
 Download all files from all shares except the excluded defaults; max file size `1 MB`
 
 ```bash
-nxc smb <TARGET> -u <USER> -p <PASS> -M spider_plus -o DOWNLOAD_FLAG=True OUTPUT_FOLDER=$HOME/my_data/nxc_spider MAX_FILE_SIZE=$((1024 * 1024 * 1)) EXCLUDE_FILTER='admin$,c$,ipc$,print$,NETLOGON,SYSVOL'
+nxc smb <TARGET> -u <USER> -p <PASS> -M spider_plus -o DOWNLOAD_FLAG=True OUTPUT_FOLDER=$HOME/my_data/nxc_spider MAX_FILE_SIZE=$((1024 * 1024 * 1)) EXCLUDE_FILTER='admin$,c$,ipc$,print$,NETLOGON'
 ```
 
 ### `gpp_password`

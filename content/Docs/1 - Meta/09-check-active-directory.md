@@ -6,8 +6,8 @@ title = "09 - Check - Active Directory"
 
 {{< embed-section page="Docs/7 - Lateral Movement/active-directory" header="sync-clock" expanded=true >}}
 
-1. [ ] **RUN [BLOODHOUND]({{% ref "bloodhound.md" %}})** and mark everything owned -- This is the holy grail.
-    - Run both **SharpHound** and **RustHound** since they are not exhaustive
+1. [ ] **RUN [BLOODHOUND]({{% ref "bloodhound.md" %}})** and mark everything owned
+    - Run both **SharpHound** and **RustHound**
 
 ---
 

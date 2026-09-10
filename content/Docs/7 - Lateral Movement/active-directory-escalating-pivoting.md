@@ -125,6 +125,8 @@ smbclient //<TARGET>/C$ -k -no-pass -c 'ls'
 
 ## Double Hop Problem
 
+- TL;DR: **Prefer RDP over WinRM/PowerShell Remoting**
+
 There's an issue known as the "Double Hop" problem that arises when an attacker attempts to use Kerberos authentication across two (or more) hops. The issue concerns how Kerberos tickets are granted for specific resources. **Kerberos tickets should not be viewed as passwords**. They are signed pieces of data from the KDC that state what resources an account can access (e.g. a computer but not beyond that computer). When we perform Kerberos authentication, we get a "ticket" that permits us to access the requested resource (i.e., a single machine). On the contrary, when we use a password to authenticate, that NTLM hash is stored in our session and can be used elsewhere without issue.
 
 ### Enumeration of the Problem

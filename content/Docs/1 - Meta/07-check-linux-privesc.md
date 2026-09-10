@@ -22,7 +22,7 @@ Tasty info:
 
 2. [ ] Run automated scanners in background.
     - [LinPEAS]({{% ref "privilege-escalation-linux.md#linpeas" %}})
-    - [RootHound]({{% ref "privilege-escalation-linux.md#roothound" %}}): parse the LinPEAS output visual graph
+        - [RootHound]({{% ref "privilege-escalation-linux.md#roothound" %}}): parse the LinPEAS output visual graph
     - `pspy64`: process monitor
 
 3. [ ] Manual commands: `sudo -l`

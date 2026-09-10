@@ -6,19 +6,12 @@ title = "Active Directory"
 
 ```bash
 # Linux
-sudo ntpdate <DC_IP>
-
-# Per app run
-sudo apt install -y faketime
-faketime <DC_TIME> <COMMAND>
+sudo timedatectl set-ntp false && sudo ntpdate <DC_IP> && date
 
 # Windows
 net.exe time /domain /set /y
 ```
 
-- https://notes.dollarboysushil.com/active-directory-attacks
-- AD Cheatsheet: https://wadcoms.github.io/
-    - Filter by info currently known and by attack type like enumeration, exploitation, etc.
 - https://adsecurity.org/
 
 # Authentication Protocol Selection
@@ -48,6 +41,47 @@ sudo nmap -n -Pn -p 53,88,389,445,636,3268,3269 --open -oA dc_hunt.txt -v <TARGE
 {{< embed-section page="Docs/7 - Lateral Movement/Lateral Movement" header="network-info" >}}
 
 # AD Enumeration
+
+```powershell
+function LDAPSearch {
+    param (
+        [string]$LDAPQuery
+    )
+
+    $PDC = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().PdcRoleOwner.Name
+    $DistinguishedName = ([adsi]'').distinguishedName
+    $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry("LDAP://$PDC/$DistinguishedName")
+    $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher($DirectoryEntry, $LDAPQuery)
+    $result = $DirectorySearcher.FindAll()
+
+    $count = 0
+    foreach ($obj in $result) {
+        $count++
+        Write-Host "`n[Object $count]" -ForegroundColor Cyan
+        foreach ($prop in $obj.Properties.PropertyNames | Sort-Object) {
+            $val = $obj.Properties[$prop] -join ", "
+            Write-Host "  $prop : $val"
+        }
+    }
+    Write-Host "`n[Total: $count objects]" -ForegroundColor Yellow
+}
+```
+
+```powershell
+# Common queries
+# all users
+LDAPSearch "(samAccountType=805306368)"
+# all groups
+LDAPSearch "(objectclass=group)"
+# all computers
+LDAPSearch "(objectclass=computer)"
+# all OUs
+LDAPSearch "(objectclass=organizationalUnit)"
+# admin users
+LDAPSearch "(&(objectclass=user)(adminCount=1))"
+# kerberoastable users
+LDAPSearch "(servicePrincipalName=*)"
+```
 
 {{< embed-section page="Docs/9 - Notes/bloodhound" header="bloodhound" >}}
 

