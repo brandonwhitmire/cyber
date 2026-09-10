@@ -10,8 +10,6 @@ Although dated and heavily flagged by security products, the underlying LDAP que
 ## Import
 
 ```powershell
-wget https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1
-
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 Import-Module .\PowerView.ps1
 ```

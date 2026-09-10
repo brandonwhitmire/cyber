@@ -4,7 +4,7 @@ title = "01 - Check - Initial Enumeration"
 
 ## Initial Setup
 
-1. [ ] Setup:
+1. [ ] Tasty Setup:
 
 ```bash
 # Unzip rockyou.txt wordlist
@@ -38,13 +38,13 @@ sudo bash -c "echo \"alias penelope='penelope --oscp-safe --payloads'\" >> /root
 
 {{< embed-section page="Docs/9 - Notes/tmux.md" header="setup" >}}
 
-**Metasploit**
-
-{{< embed-section page="Docs/5 - Exploitation/metasploit.md" header="setup" >}}
-
 **BloodHound**
 
 {{< embed-section page="Docs/9 - Notes/bloodhound.md" header="setup" >}}
+
+**Metasploit**
+
+{{< embed-section page="Docs/5 - Exploitation/metasploit.md" header="setup" >}}
 
 2. [ ] [SysReptor: Create engagement report](https://labs.sysre.pt/projects?ordering=-created)
     - Engagement folder (via Obsidian template)

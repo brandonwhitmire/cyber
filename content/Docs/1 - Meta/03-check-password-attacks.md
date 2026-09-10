@@ -44,14 +44,14 @@ Try passwords in this order (one per spray run):
 
 ### Offline Hash Cracking
 
-| Hash Source                | Hashcat Mode |
-| -------------------------- | ------------ |
-| NTLM (SAM/NTDS)            | `1000`       |
-| NTLMv2 (Responder/relay)   | `5600`       |
-| Kerberoast TGS RC4 (type `23`)    | `13100`      |
+| Hash Source                        | Hashcat Mode |
+| ---------------------------------- | ------------ |
+| NTLM (SAM/NTDS)                    | `1000`       |
+| NTLMv2 (Responder/relay)           | `5600`       |
+| AS-REP Roast                       | `18200`      |
+| Kerberoast TGS RC4 (type `23`)     | `13100`      |
 | Kerberoast TGS AES-128 (type `17`) | `19600`      |
 | Kerberoast TGS AES-256 (type `18`) | `19700`      |
-| AS-REP Roast               | `18200`      |
 
 Wordlist order:
 1. [ ] `rockyou.txt` straight

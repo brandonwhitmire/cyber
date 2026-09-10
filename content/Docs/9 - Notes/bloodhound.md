@@ -52,7 +52,7 @@ Invoke-Bloodhound -OutputDirectory <PATH> -ZipFileName bh_logs.zip -CollectionMe
 
 ### Linux
 
-This is helpful when on a non-Windows both or from outside of the domain:
+This is helpful when on a non-Windows host or from outside of the domain:
 
 #### RustHound-CE
 
@@ -68,14 +68,12 @@ LIBGSSAPI_IMPL=mit cargo install rusthound-ce --locked
 $HOME/.cargo/bin/rusthound-ce --domain <DOMAIN> --ldapusername <USER> --ldappassword <PASSWORD> --ldapfqdn <DC_FQDN> --zip --collectionmethod All
 ```
 
-#### BloodHound-CE-Python
+#### BloodHound-CE-Python via `netexec`
 
-- https://github.com/dirkjanm/BloodHound.py
+- https://github.com/dirkjanm/BloodHound.py/tree/bloodhound
 
 ```bash
-uv tool install bloodhound-ce
-
-bloodhound-ce-python -d '<DOMAIN>' -u '<USER>' -p '<PASSWORD>' -ns <DC_IP> --auth-method auto --zip --outputprefix bh_logs -c All
+nxc ldap <DC> -d <DOMAIN> -u <USER> -p <PASS> --bloodhound --collection All -ns <DC_IP>
 ```
 
 ## Analysis and Queries

@@ -5,8 +5,6 @@ title = "Netexec"
 - https://www.netexec.wiki/getting-started/selecting-and-using-a-protocol
     - Logs: `~/.nxc/logs/`
 - Cheatsheet: https://gist.github.com/strikoder/99635df00444bbf5fc90ca83ec8051a0
-
-**NOTES:**
 - by default, `netxec` attempts to authenticate with passwords or hashes at the domain level... use `--local-auth` to force local authentication, since sometimes passwords and hashes are different at these levels
     - **Note: ` --local-auth` NEVER works with DCs**
 
@@ -38,18 +36,18 @@ Common protocols include:
 
 Usually only `smb` or `winrm` are "true" admin, but the rest usually include some level of code execution.
 
-|Protocol|What `Pwn3d!` means|How it checks|
-|---|---|---|
-|`smb`|Local admin on the machine|Can write to `ADMIN$` / `C$`, member of local Administrators group|
-|`ldap`|Path to Domain Admin exists|Account has DCSync rights, is DA, or has privileged ACLs|
-|`winrm`|Remote shell access|Code execution possible — local admin OR `Remote Management Users` member|
-|`mssql`|`sysadmin` role on SQL instance|SQL server role check, **completely separate from AD**|
-|`rdp`|RDP code execution available|Account has RDP access — local admin OR `Remote Desktop Users` member|
-|`wmi`|Local admin (WMI exec works)|WMI process create succeeds, usually requires local admin|
-|`ssh`|Root access|Logged in as root, OR sudo without password possible|
-|`ftp`|**No admin check**|Just shows `[+]` for valid auth, no `Pwn3d!` ever|
-|`vnc`|Code execution|VNC session established with control|
-|`nfs`|Root/write access on share|Can mount and write as root|
+| Protocol | What `Pwn3d!` means             | How it checks                                                             |
+| -------- | ------------------------------- | ------------------------------------------------------------------------- |
+| `smb`    | Local admin on the machine      | Can write to `ADMIN$` / `C$`, member of local Administrators group        |
+| `winrm`  | Remote shell access             | Code execution possible — local admin OR `Remote Management Users` member |
+| `ldap`   | Path to Domain Admin exists     | Account has DCSync rights, is DA, or has privileged ACLs                  |
+| `mssql`  | `sysadmin` role on SQL instance | SQL server role check, **completely separate from AD**                    |
+| `rdp`    | RDP code execution available    | Account has RDP access — local admin OR `Remote Desktop Users` member     |
+| `wmi`    | Local admin (WMI exec works)    | WMI process create succeeds, usually requires local admin                 |
+| `ssh`    | Root access                     | Logged in as root, OR sudo without password possible                      |
+| `ftp`    | **No admin check**              | Just shows `[+]` for valid auth, no `Pwn3d!` ever                         |
+| `vnc`    | Code execution                  | VNC session established with control                                      |
+| `nfs`    | Root/write access on share      | Can mount and write as root                                               |
 
 **Key behavioral notes:**
 
@@ -194,10 +192,12 @@ nxc smb <TARGET> -u "<USERNAME>" -p "<PASSWORD>" --groups
 nxc smb <TARGET> -u <USER> -p <PASSWORD> --groups "Domain Admins"
 ```
 
-#### Logged-on Users
+#### Logged-on Users and Sessions
+
+Shows various logged on users... useful to dump their live creds
 
 ```bash
-nxc smb <TARGET> -u "<USERNAME>" -p "<PASSWORD>" --loggedon-users
+nxc smb <TARGET> -u "<USERNAME>" -p "<PASSWORD>" --reg-sessions --loggedon-users --qwinsta
 ```
 
 #### Computers
