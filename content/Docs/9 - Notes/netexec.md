@@ -9,9 +9,8 @@ title = "Netexec"
 **NOTES:**
 - by default, `netxec` attempts to authenticate with passwords or hashes at the domain level... use `--local-auth` to force local authentication, since sometimes passwords and hashes are different at these levels
     - **Note: ` --local-auth` NEVER works with DCs**
-- `(Pwn3d!)` for valid creds means an `Administrator` account
 
-Netexec (formerly CrackMapExec) is a swiss army knife for pentesting networks that helps automate assessing the security of large networks in AD environments. Netexec uses `secretsdump` libraries under its hood, so it is the preferred tool for network enumeration (though `secretsdump` is still great for offline hash extraction or targeted actions)
+Netexec (formerly CrackMapExec) is a swiss army knife for pentesting networks that helps automate assessing the security of large networks in AD environments. Netexec uses `impacket` libraries under its hood
 
 ## Protocol Selection
 
@@ -358,10 +357,10 @@ netexec smb <TARGET> -u <USER> -p '<PASSWORD>' --spider <SHARE> --regex .
 
 ### `spider_plus`
 
-Download all files from all shares except the excluded defaults; max file size `1 MB`
+Download all files from all shares except the excluded defaults; max file size `2 MB`
 
 ```bash
-nxc smb <TARGET> -u <USER> -p <PASS> -M spider_plus -o DOWNLOAD_FLAG=True OUTPUT_FOLDER=$HOME/my_data/nxc_spider MAX_FILE_SIZE=$((1024 * 1024 * 1)) EXCLUDE_FILTER='admin$,c$,ipc$,print$,NETLOGON'
+nxc smb <TARGET> -u <USER> -p <PASS> -M spider_plus -o DOWNLOAD_FLAG=True OUTPUT_FOLDER=$HOME/my_data/nxc_spider MAX_FILE_SIZE=$((1024 * 1024 * 2)) EXCLUDE_FILTER='admin$,c$,ipc$,print$'
 ```
 
 ### `gpp_password`

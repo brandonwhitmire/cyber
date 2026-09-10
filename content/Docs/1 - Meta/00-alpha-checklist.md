@@ -32,5 +32,3 @@ title = "00 - Alpha Checklists"
 {{< embed-section page="Docs/1 - Meta/08-check-windows-privesc.md" expanded=false >}}
 
 {{< embed-section page="Docs/1 - Meta/09-check-active-directory.md" expanded=false >}}
-
-{{< embed-section page="Docs/1 - Meta/10-check-adcs.md" expanded=false >}}

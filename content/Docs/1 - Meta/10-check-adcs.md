@@ -1,5 +1,6 @@
 +++
 title = "10 - Check - ADCS (Certificate Services)"
+draft = true
 +++
 
 ## Active Directory Certificate Services (ADCS)

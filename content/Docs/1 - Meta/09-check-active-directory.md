@@ -11,35 +11,19 @@ title = "09 - Check - Active Directory"
 
 ---
 
-### Uncredentialed (Initial) Enumeration
-
-#### Host Identification
-
-1. [ ] Start Wireshark or [Responder in Analyze mode]({{% ref "protocol-poisoners.md" %}}) to listen for Layer 2 (ARP, MDNS, NBNS) traffic, discover IP addresses and hostnames, and to discover IP addresses and hostnames.
-
-2. [ ] Perform an [`fping` ICMP sweep]({{% ref "scanning.md#ping-sweep" %}}) to find all hosts on your subnet that respond to an ICMP echo request.
+### Enumeration - WITHOUT Creds
 
 #### User Identification
 
-1. [ ] Create a document for all discovered users.
+1. [ ] Grab all users by an [SMB Null Session against the DC with netexec]({{% ref "netexec.md#enumerate-users" %}})
 
-2. [ ] Grab all users by an [SMB Null Session against the DC with netexec]({{% ref "netexec.md#enumerate-users" %}})
+2. [ ] Attempt an [anonymous LDAP search against the domain controller to grab all users]({{% ref "netexec.md#anonymous-ldap-search" %}})
 
-3. [ ] Attempt an [anonymous LDAP search against the domain controller to grab all users]({{% ref "netexec.md#anonymous-ldap-search" %}})
+3. [ ] Try [RID Brute-forcing]({{% ref "netexec.md#enumerate-users" %}}) for discovering users with SID/RID brute forcing.
 
-4. [ ] Try [RID Brute-forcing]({{% ref "netexec.md#enumerate-users" %}}) for discovering users with SID/RID brute forcing.
+4. [ ] Brute-force [usernames with wordlists via AS-REP Roasting]({{% ref "netexec.md#asreproast" %}})
 
-5. [ ] Brute-force [usernames with wordlists via AS-REP Roasting]({{% ref "netexec.md#asreproast" %}})
-
-#### Get User Foothold
-
-1. [ ] Start [Responder/Inveigh]({{% ref "protocol-poisoners.md" %}}) on network interface to listen for NTLM users and hashes. Attempt to crack with Hashcat/John.
-
-2. [ ] Attempt a [password spray]({{% ref "03-check-password-attacks.md" %}}) against all discovered users.
-
----
-
-### Credentialed Enumeration
+### Enumeration - WITH Creds Enumeration
 
 #### Host Identification
 
@@ -75,8 +59,6 @@ title = "09 - Check - Active Directory"
     - [(If needed) ensure proxy is setup]({{% ref "lateral-movement.md#step-0-pre-requisites" %}})
 
 2. [ ] Check AGAIN [BloodHound]({{% ref "bloodhound.md" %}}) for `CanRDP`, `CanPSRemote`, or `SQLAdmin` abilities to move laterally onto other machines.
-
----
 
 ### Exploitation
 
@@ -126,18 +108,6 @@ title = "09 - Check - Active Directory"
     - [Look for passwords in AD user description fields]({{% ref "active-directory.md#user-attributes-mining" %}})
     - [Check for PASSWD_NOTREQD accounts -- test for weak or blank passwords]({{% ref "active-directory.md#user-attributes-mining" %}})
     - Search accessible SMB shares with [Snaffler]({{% ref "finding-creds.md#snaffler" %}}) or [LaZagne]({{% ref "finding-creds.md#lazange" %}})
-
----
-
-### Additional Auditing
-
-1. [ ] Create a snapshot of the AD database with [AD Explorer]({{% ref "active-directory.md#active-directory-explorer-sysinternals" %}}) for offline analysis.
-
-2. [ ] Use [PingCastle]({{% ref "active-directory.md#pingcastle" %}}) to discover additional AD misconfigurations and vulnerabilities.
-
-3. [ ] Run [Group3r]({{% ref "active-directory.md#group3r" %}}) to uncover vulnerabilities in AD Group Policy.
-
-4. [ ] Run [ADRecon.ps1]({{% ref "active-directory.md#adrecon" %}}) to discover additional AD misconfigurations and vulnerabilities that may have been missed.
 
 #### Attacking AD Trusts (Parent Domain)
 

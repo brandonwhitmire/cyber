@@ -1,5 +1,5 @@
 +++
-title = "Linux Security Contexts"
+title = "Security Contexts: Linux"
 +++
 
 ## Capabilities

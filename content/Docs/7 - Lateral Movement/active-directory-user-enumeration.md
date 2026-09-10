@@ -15,7 +15,7 @@ title = "AD: User Enumeration"
 
 ## PowerShell (ADSI searcher)
 
-Uses [System.DirectoryServices] (ADSI/LDAP) so it works from any domain-joined host without the Active Directory RSAT module.
+Uses `[System.DirectoryServices]` (ADSI/LDAP) so it works from any domain-joined host without the Active Directory RSAT module.
 
 - Ref: https://learn.microsoft.com/en-us/dotnet/api/system.directoryservices.directorysearcher
 

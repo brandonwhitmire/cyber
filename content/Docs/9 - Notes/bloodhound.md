@@ -46,8 +46,8 @@ netexec ; sleep 5 && sed -i 's/bh_enabled = False/bh_enabled = True/' ~/.nxc/nxc
 .\SharpHound.exe --OutputDirectory <PATH> --zipfilename bh_logs.zip -c All -d <DOMAIN>
 
 # PowerShell
-Import-Module .\Downloads\SharpHound.ps1    
-Invoke-Bloodhound -ZipFileName bh_logs.zip -CollectionMethod All -Domain <DOMAIN> 
+Import-Module .\SharpHound.ps1
+Invoke-Bloodhound -OutputDirectory <PATH> -ZipFileName bh_logs.zip -CollectionMethod All -Domain <DOMAIN> 
 ```
 
 ### Linux

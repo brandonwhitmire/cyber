@@ -12,7 +12,7 @@ pushd /usr/share/wordlists/ && sudo gunzip rockyou.txt.gz ; popd
 # System update and install some packages
 sudo apt update -y
 sudo apt autoremove -y
-sudo apt install -y --fix-missing flameshot ripgrep sshpass golang pocl-opencl-icd autorecon penelope
+sudo apt install -y --fix-missing flameshot ripgrep sshpass golang pocl-opencl-icd ntpsec-ntpdate autorecon penelope bloodyad
 # Update locate DB
 sudo updatedb
 # Manual tool installs

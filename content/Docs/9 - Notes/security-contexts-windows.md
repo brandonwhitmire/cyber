@@ -1,5 +1,5 @@
 +++
-title = "Windows Security Contexts"
+title = "Security Contexts: Windows"
 +++
 
 **NOTE: AI summary of Windows security contexts edited by hand**

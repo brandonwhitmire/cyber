@@ -3,9 +3,9 @@ title = "Authentication Process - Kerberos"
 type = "home"
 +++
 
-**WIP: currently this is AI slop distilled from handouts and notes** 
+**NOTE:** AI + manually written hybrid
 
-## Core Concepts & Flow
+## Core Concepts
 
 Kerberos is a ticket-based authentication protocol. It relies on a trusted third party, the **Key Distribution Center (KDC)**, which resides on the Domain Controller (DC).
 
@@ -18,38 +18,50 @@ Kerberos is a ticket-based authentication protocol. It relies on a trusted third
 5.  **AP-REQ (Application Request):** User presents the TGS to the Application Server/Service. Service decrypts the ticket using its own hash to validate access.
 6.  **AP-REP (Application Reply):** Access Granted
 
----
+### DC Replication (KCC)
+The **Knowledge Consistency Checker (KCC)** generates a replication topology for the AD forest and automatically connects to other domain controllers through Remote Procedure Calls (RPC) to synchronize information.
+
+## Target Prioritization
+
+`Domain Admins` is the technical end goal, but those credentials get rotated quickly once compromise is suspected. Prioritize near-privileged accounts instead:
+
+*   **Credentials with local admin rights on several machines.** Most orgs have a group (or two -- one for workstations, one for servers) with local admin rights across the estate. Harvesting these gives access to most of the environment.
+*   **Service accounts with delegation permissions.** These let you force golden and silver tickets to perform Kerberos delegation attacks.
+*   **Accounts used for privileged AD services.** Compromising Exchange, WSUS, or SCCM service accounts can be leveraged for a privileged foothold into AD.
+
+We often want to persist through service accounts with delegation permissions specifically to forge silver and golden tickets.
 
 ## Ticket Forgery Attacks
 
 ### Golden Tickets (Forged TGT)
 A Golden Ticket is a forged TGT. It bypasses the authentication step (`AS-REQ`) entirely.
 
-*   **Requirement:** The NTLM hash of the `KRBTGT` account.
+*   **Requirement:** The NTLM hash of the `KRBTGT` account. You do **not** need the target user's password -- only the domain name, domain SID, and target user ID, all of which are derivable once you have the KRBTGT hash.
 *   **Scope:** **Complete Domain Compromise.** You can request a TGS for *any* service on *any* machine.
 *   **Mechanics:**
     *   You are forging the proof of identity that the KDC trusts.
-    *   You can impersonate non-existent users (as long as the ticket timestamp is >20 mins old).
-    *   You can set the ticket validity to 10+ years.
+    *   You can impersonate non-existent, disabled, or deleted users, as long as the ticket timestamp is >20 mins old (the KDC only validates the account if the ticket is older than 20 minutes).
+    *   You can set the ticket validity to 10+ years, overriding the default 10-hour KDC policy.
     *   Bypasses Smart Card requirements (since TGT issuance is the result of SC checks).
+    *   Can be generated on any machine, even one that isn't domain-joined, making detection harder.
 *   **Persistence:**
     *   Access remains valid until the `KRBTGT` password is rotated **twice** (AD keeps the current and previous hash valid).
+    *   Rotating KRBTGT is painful for the blue team -- it breaks services that hold a TGT with a still-valid timestamp but a now-invalid signature. Not all services are smart enough to detect this and auto-request a new TGT, so services can silently fail for hours after rotation.
     *   Detection is difficult as TGT generation can occur off-domain.
 
 ### Silver Tickets (Forged TGS)
 A Silver Ticket is a forged Service Ticket. It bypasses the KDC entirely and interacts directly with the target server.
 
 *   **Requirement:** The NTLM hash of the **Target Service Account** (usually the Computer Account hash).
-*   **Scope:** **Limited.** Grants administrative access *only* to the specific service on the specific host targeted.
+*   **Scope:** **Limited.** Grants administrative access *only* to the specific service on the specific host targeted -- versus a Golden Ticket's domain-wide scope.
 *   **Mechanics:**
-    *   You are skipping the KDC/DC steps (1-4). There is no network traffic to the DC.
-    *   Logs only appear on the target server, making detection difficult for centralized SIEMs.
-    *   Can create non-existent users with custom SIDs (e.g., Domain Admin SID) inside the ticket.
+    *   You are skipping the KDC/DC steps (1-4). There is no network traffic to the DC, so no associated TGT exists.
+    *   Logs only appear on the target server, making detection difficult for centralized SIEMs -- more limited in scope than a Golden Ticket, but significantly harder to detect.
+    *   Can create non-existent users with custom SIDs (e.g., Domain Admin SID) inside the ticket, since permissions are resolved via SIDs.
 *   **Persistence:**
     *   Valid until the Machine Account password rotates (default 30 days).
-    *    Attackers may disable machine password rotation in the registry to maintain access.
-
----
+    *   Attackers may disable machine password rotation via the registry to maintain access.
+    *   A compromised machine account isn't just a dead end -- it can be used like a normal AD account, giving you a foothold to continue enumerating and exploiting AD beyond the single host.
 
 ## Account & Attribute Persistence
 
@@ -70,9 +82,16 @@ Forging authentication certificates using a compromised Certificate Authority (C
     *   Persists through user password changes.
     *   Persists through `KRBTGT` rotation.
     *   The rogue certificates are not in the CA's issued list, so they cannot be individually revoked.
+    *   You can continue requesting TGTs regardless of how many rotations occur -- the only way to get kicked out is revocation or expiry of the certificate itself, giving roughly 5 years of persistence by default.
     *   **Remediation:** Requires revoking the **Root CA**, effectively breaking the entire trust infrastructure of the domain.
 
----
+## Engagement Scope Warning
+
+**The techniques from Structural Persistence and Machine/Host Persistence onward are incredibly invasive and hard to remove.** Even with signoff on a red team exercise, exercise utmost caution:
+
+*   In real-world scenarios, exploiting most of these techniques would result in a full domain rebuild.
+*   Make sure you fully understand the consequences and only perform them if you have prior approval and they are deemed necessary.
+*   In most cases, a red team exercise would be de-chained at this point instead of executing these techniques -- meaning you'd most likely simulate rather than perform them.
 
 ## Structural Persistence
 
@@ -94,8 +113,6 @@ Using Group Policy Objects to deploy persistence across the fleet.
 
 *   **Restricted Groups:** Pushing a policy that adds a compromised domain user to the Local Administrators group of every PC.
 *   **Logon Scripts:** Configuring a GPO to run a reverse shell script every time a user (or specifically an Admin) logs in.
-
----
 
 ## Machine/Host Persistence
 

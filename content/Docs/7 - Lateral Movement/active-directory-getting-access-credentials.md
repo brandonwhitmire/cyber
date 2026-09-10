@@ -286,11 +286,11 @@ Coerces the DC machine account (DC01$) to authenticate via MS-EFSRPC. The captur
 
 - https://github.com/topotam/PetitPotam
 
-| Condition | Result |
-| --- | --- |
-| ADCS on network | ✅ relay to certsrv → certificate → TGT → DCSync (see [ESC8]({{% ref "active-directory-adcs.md#adcs-attack-reference" %}})) |
-| SMB signing OFF on a target | ✅ relay DC01$ auth → instant access |
-| SMB signing ON + no ADCS | ❌ hash captured but uncrackable -- dead end |
+| Condition                   | Result                                          |
+| --------------------------- | ----------------------------------------------- |
+| ADCS on network             | ✅ relay to certsrv → certificate → TGT → DCSync |
+| SMB signing OFF on a target | ✅ relay DC01$ auth → instant access             |
+| SMB signing ON + no ADCS    | ❌ hash captured but uncrackable -- dead end     |
 
 ```bash
 # Download
