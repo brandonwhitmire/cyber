@@ -6,7 +6,7 @@ title = "04 - Check - SMB Enumeration"
 
 1. [ ] Attempt **null/anonymous session** (no creds) and list available shares
     - [SMB Anonymous Access & Share Listing]({{% ref "smb-cifs-rpc.md" %}})
-    - [Enumerate Shares with NetExec]({{% ref "netexec.md#shares-enumeration" %}})
+    - [Enumerate Shares with NetExec]({{% ref "netexec.md#basic-enumeration" %}})
 
 2. [ ] Run comprehensive unauthenticated enumeration (users, groups, OS info, password policy)
     - [Null Session Enumeration (nxc)]({{% ref "netexec.md#basic-enumeration" %}})
@@ -35,4 +35,4 @@ title = "04 - Check - SMB Enumeration"
 7. [ ] Choose relay action based on target service
     - **SMB exec:** shell/command execution on relay target
     - **LDAP (RBCD or Shadow Credentials):** delegate access or add key credential
-    - **HTTP/CA (ADCS ESC8):** [relay to certificate authority for a machine certificate -> NT hash]({{% ref "active-directory.md#adcs-attack-reference" %}})
+    - **HTTP/CA (ADCS ESC8):** [relay to certificate authority for a machine certificate -> NT hash]({{% ref "certipy.md" %}})

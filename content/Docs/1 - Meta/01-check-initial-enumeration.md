@@ -67,7 +67,7 @@ sudo bash -c "echo \"alias penelope='penelope --oscp-safe --payloads'\" >> /root
     - TCP/UDP host discovery (`nmap -sn`, masscan)
     - **Add discovered hostnames:
 
-{{< embed-section page="Docs/9 - Notes/netexec" header="generating-hosts-file" expanded=true >}}
+{{< embed-section page="Docs/9 - Notes/netexec" header="generate-hosts-file" expanded=true >}}
 
 3. [ ] For each active host, scan ALL TCP/UDP ports. Document each open port per host in Obsidian.
     - [NMAP All Ports (TCP + UDP)]({{% ref "nmap.md#quickstart" %}})

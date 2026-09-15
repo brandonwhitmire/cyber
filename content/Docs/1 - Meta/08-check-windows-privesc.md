@@ -21,6 +21,7 @@ Tasty info:
     - [SharpUp]({{% ref "privilege-escalation-windows.md#sharpup" %}})
     - [Seatbelt]({{% ref "privilege-escalation-windows.md#seatbelt" %}})
     - [winPEAS]({{% ref "privilege-escalation-windows.md#winpeas" %}})
+    - [PrivHound]({{< ref "privhound.md" >}})
     - (Domain) [Bloodhound]({{% ref "bloodhound.md" %}})
 
 2. [ ] Manual comands
@@ -31,5 +32,5 @@ Tasty info:
 3. [ ] Look for interesting files on the server that may have credentials or other sensitive info.
     - [Credential Hunting]({{% ref "finding-creds.md" %}})
     - [Credential Hunting Other Files]({{% ref "finding-creds.md#searching" %}})
-    - [Dumping Hashes / Credentials]({{% ref "netexec.md#sam-database" %}})
+    - [Dumping Hashes / Credentials]({{% ref "netexec.md#registry-secrets---sam-and---lsa" %}})
     - [Mimikatz]({{% ref "mimikatz-post-exploit.md" %}})

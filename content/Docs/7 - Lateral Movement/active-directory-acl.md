@@ -14,7 +14,7 @@ title = "AD: Access Control List (ACL)"
 - `WriteDACL` abused with `Add-DomainObjectACL`
 - `AllExtendedRights` abused with `Set-DomainUserPassword` or `Add-DomainGroupMember`
 - `AddSelf` abused with `Add-DomainGroupMember`
-- `DS-Replication-Get-Changes-All` to perform a [DCSync attack]({{% ref "active-directory-getting-access-credentials.md#dcsync" %}})
+- `DS-Replication-Get-Changes-All` to perform a [DCSync attack]({{% ref "netexec.md#ntds-dump" %}})
 - `AddKeyCredentialLink` to get user's NTLM Hash
 
 | ACL                                     | Abuse                                                                    | Impact                             |
@@ -48,79 +48,6 @@ title = "AD: Access Control List (ACL)"
 #### PowerView
 
 {{< embed-section page="Docs/9 - Notes/powerview" header="acl-enumeration" >}}
-
-#### Manual
-
-**WARNING:** These commands are very slow
-
-```powershell
-# Create list of Domain Users (ADSI)
-$root = [ADSI]"LDAP://RootDSE"
-$defaultNC = $root.defaultNamingContext.Value
-$searcher = New-Object System.DirectoryServices.DirectorySearcher([ADSI]"LDAP://$defaultNC")
-$searcher.Filter = "(objectCategory=user)"
-$searcher.PropertiesToLoad.Add("samAccountName") | Out-Null
-$searcher.FindAll() | ForEach-Object { $_.Properties["samaccountname"][0] } | Set-Content ad_users.txt
-
-# Iterate over users to find filtered ACL (ACL via LDAP path)
-foreach($line in [System.IO.File]::ReadLines(".\ad_users.txt")) {
-  $u = New-Object System.DirectoryServices.DirectorySearcher([ADSI]"LDAP://$defaultNC")
-  $u.Filter = "(&(objectCategory=user)(samAccountName=$line))"
-  $u.PropertiesToLoad.Add("distinguishedName") | Out-Null
-  $r = $u.FindOne(); if($r) { $dn = $r.Properties["distinguishedname"][0]; Get-Acl "LDAP://$dn" | Select-Object Path -ExpandProperty Access | Where-Object {$_.IdentityReference -match '<DOMAIN>\\<USER>'} }
-}
-
-# Manually resolve ACL (ObjectAceType) GUIDs (ADSI)
-$root = [ADSI]"LDAP://RootDSE"
-$configNC = $root.configurationNamingContext.Value
-$extSearcher = New-Object System.DirectoryServices.DirectorySearcher([ADSI]"LDAP://CN=Extended-Rights,$configNC")
-$extSearcher.Filter = "(objectClass=controlAccessRight)"
-$extSearcher.PropertiesToLoad.Add("name") | Out-Null
-$extSearcher.PropertiesToLoad.Add("displayName") | Out-Null
-$extSearcher.PropertiesToLoad.Add("distinguishedName") | Out-Null
-$extSearcher.PropertiesToLoad.Add("rightsGuid") | Out-Null
-$extSearcher.FindAll() | Where-Object { $_.Properties["rightsguid"][0] -eq "<GUID>" }
-```
-
-## Checking Access Rights
-
-### Remote Desktop
-
-- https://powersploit.readthedocs.io/en/latest/Recon/Get-NetLocalGroupMember/
-
-```powershell
-# Check if machine is RDP-able
-Import-Module .\PowerView.ps1
-Get-NetLocalGroupMember -GroupName "Remote Desktop Users" -ComputerName <COMPUTER_NAME>
-```
-
-{{< embed-section page="Docs/9 - Notes/bloodhound" header="canrdp" >}}
-
-### WinRM
-
-```powershell
-# Check if machine is WinRM-able
-Import-Module .\PowerView.ps1
-Get-NetLocalGroupMember -GroupName "Remote Management Users" -ComputerName <COMPUTER_NAME>
-```
-
-{{< embed-section page="Docs/9 - Notes/bloodhound" header="canpsremote" >}}
-
-### SQL
-
-```powershell
-# Enumerate MSSQL instances on the domain
-Import-Module .\PowerUpSQL.ps1
-Get-SQLInstanceDomain
-
-Get-SQLQuery -Verbose -Instance "<TARGET>,1433" -username "<DOMAIN>\<USER>" -password "<PASSWORD>" -query 'Select @@version'
-```
-
-```bash
-impacket-mssqlclient -windows-auth <DOMAIN>/<USER>:'<PASSWORD>'@<TARGET>
-```
-
-{{< embed-section page="Docs/9 - Notes/bloodhound" header="sqladmin" >}}
 
 ## Domain Misconfigurations
 

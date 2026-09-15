@@ -47,21 +47,41 @@ function LDAPSearch {
 
 ### LDAP Queries
 
-The LDAP queries in the quotes can be ran via other methods as well like `netexec ldap --query`
+The LDAP queries in the quotes can be ran via other methods as well like `netexec ldap --query '<QUERY>'`
 
 ```powershell
 # All users
 LDAPSearch "(samAccountType=805306368)"
-# Security groups only (equivalent to net group /domain)
-LDAPSearch "(&(objectclass=group)(groupType:1.2.840.113556.1.4.803:=2147483648))"
-# All groups (more than net group /domain)
-LDAPSearch "(objectclass=group)"
-# All computers
-LDAPSearch "(objectclass=computer)"
-# All OUs/containers
-LDAPSearch "(objectclass=organizationalUnit)"
-# Protected admin accounts
-LDAPSearch "(&(objectclass=user)(adminCount=1))"
+
+# Users With Specific Attributes Set (PASSWD_NOTREQD)
+# 1.2.840.113556.1.4.803:=32 means PASSWD_NOTREQD must be set
+LDAPSearch "(&(objectCategory=person)(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=32))"
+
 # Kerberoastable users
 LDAPSearch "(servicePrincipalName=*)"
+
+# Protected admin accounts
+LDAPSearch "(&(objectclass=user)(adminCount=1))"
+
+# Security groups only (equivalent to net group /domain)
+LDAPSearch "(&(objectclass=group)(groupType:1.2.840.113556.1.4.803:=2147483648))"
+
+# All groups (more than net group /domain)
+LDAPSearch "(objectclass=group)"
+
+# All OUs/containers
+LDAPSearch "(objectclass=organizationalUnit)"
+
+# All computers
+LDAPSearch "(objectclass=computer)"
+
+# Search DCs in Current Domain
+LDAPSearch "(userAccountControl:1.2.840.113556.1.4.803:=8192)"
+
+# Search disabled accounts
+LDAPSearch "(&(objectCategory=user)(userAccountControl:1.2.840.113556.1.4.803:=2)(adminCount=1)(description=*))"
 ```
+
+- https://ldap.com/ldap-oid-reference-guide/
+
+{{< img src="LDAP-OID-UAC-values.png" caption="User Account Control Bit Values" >}}

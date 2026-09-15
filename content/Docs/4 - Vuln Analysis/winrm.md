@@ -33,7 +33,6 @@ evil-winrm -u <USER> -H <PASS_HASH> -i <HOST>
 ```powershell
 $secpassword = ConvertTo-SecureString -AsPlainText -Force '<PASSWORD>'
 $cred = New-Object System.Management.Automation.PSCredential '<USER>', $secpassword
-
 New-PSSession -Credential $cred -ComputerName <TARGET>
 Enter-PSSession -Id <SESSION_ID>
 ```

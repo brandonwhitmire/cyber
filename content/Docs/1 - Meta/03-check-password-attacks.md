@@ -19,7 +19,7 @@ Password attacks can be frustrating.
 [Username Generation, Brute-Forcing, and Wordlists]({{% ref "online-credentials-attacks.md#user-enum" %}})
 
 1. [ ] SMB null session or RPC for domain users
-    - [User Enumeration via nxc]({{% ref "netexec.md#enumerate-users" %}})
+    - [User Enumeration via nxc]({{% ref "netexec.md#basic-enumeration" %}})
 
 2. [ ] Kerbrute userenum against the DC with a username wordlist
     - [Kerbrute User Enumeration]({{% ref "active-directory.md#user-enumeration" %}})

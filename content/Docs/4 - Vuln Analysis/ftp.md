@@ -14,11 +14,11 @@ title = "🌐 FTP: TCP 20/21"
 - Commands: https://web.archive.org/web/20230326204635/https://www.smartfile.com/blog/the-ultimate-ftp-commands-list/
 - Server Return Codes: https://en.wikipedia.org/wiki/List_of_FTP_server_return_codes
 
+**Download ALL files (anonymous creds)**
 ```bash
 sudo apt install -y lftp
-# Download ALL files (anonymous)
 mkdir -p ~/my_data/ftp_files && cd ~/my_data/ftp_files
-lftp -e "set ssl:verify-certificate no;set ftp:list-options -a; mirror -c; bye" ftp://anonymous:anonymous@<TARGET>
+lftp -e "set ssl:verify-certificate no;set ftp:list-options -a; mirror -c; bye" ftp://anon:anon@<TARGET>
 ```
 
 ```bash
@@ -26,12 +26,16 @@ lftp -e "set ssl:verify-certificate no;set ftp:list-options -a; mirror -c; bye" 
 lftp ftp://<USER>:<PASS>@<TARGET>
 set ftp:passive-mode off
 
-# Execute local commands (outside of session)
-!<COMMAND>
-
 # List files and directories
 ls -la
 ls -laR
+
+# Can move out file root?
+ls -la ..
+ls -la ../..
+
+# Execute local commands (outside of session)
+!<COMMAND>
 
 # Read file
 get <FILENAME> -

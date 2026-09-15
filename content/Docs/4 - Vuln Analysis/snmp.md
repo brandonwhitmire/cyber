@@ -10,15 +10,14 @@ title = "🌐 SNMP: UDP 161/162"
     - v3: encryption via PSK
 - `/etc/snmp/snmpd.conf`
     - https://www.net-snmp.org/docs/man/snmpd.conf.html
-- https://hacktricks.wiki/en/network-services-pentesting/pentesting-snmp/index.html
 
-*Management Information Base (MIB)* is a text file of *Object Identifier (OID)* s, which provide addresses to access device info, in the *Abstract Syntax Notation One (ASN.1)* based ASCII text format. Community Strings are sort of "passwords" to manage the access level.
+*Management Information Base (MIB)* is a text file of *Object Identifiers (OID)*, which provide addresses to access device info, in the *Abstract Syntax Notation One (ASN.1)* based ASCII text format. *Community Strings* are sort of "passwords" to manage the access level
 
-### Brute-force names of Community Strings
+### Find Community Strings
 
 - Common Default Strings:
-    - "public" (Read-Only)
-    - "private" (Read/Write)
+    - `public` (Read-Only)
+    - `private` (Read/Write)
 
 ```bash
 onesixtyone -c /usr/share/seclists/Discovery/SNMP/snmp.txt <TARGET>
@@ -26,8 +25,12 @@ onesixtyone -c /usr/share/seclists/Discovery/SNMP/snmp.txt <TARGET>
 
 ### Brute-force OIDs and info
 
+- Versions `-v`:
+    - `1`
+    - `2c`
+    - `3`
+
 ```bash
-# -v 1,2c,3
 snmpwalk -v <VERSION> -c <COMMUNITY_STRING> <TARGET> .1
 
 # Enumerate Windows local user account names on the target
@@ -47,7 +50,7 @@ snmpwalk -c public -v1 192.168.50.151 1.3.6.1.2.1.6.13.1.3
 
 ```bash
 # -2 : use v2
-# braa usu. uses Version 1
+# braa uses Version 1
 braa <COMMUNITY_STRING>@<TARGET>:.1.*
 braa <COMMUNITY_STRING>@<TARGET>:.1.3.6.*
 ```

@@ -18,9 +18,6 @@ BloodHound is **THE TOOL** for AD enumeration. "\[L\]everages graph theory to re
 - https://bloodhound.specterops.io/get-started/quickstart/community-edition-quickstart
 
 ```bash
-wget https://github.com/SpecterOps/bloodhound-cli/releases/latest/download/bloodhound-cli-linux-amd64.tar.gz
-tar -xvzf bloodhound-cli-linux-amd64.tar.gz
-
 # Start and reset password for BloodHound via Docker
 sudo systemctl enable --now docker
 sudo ./bloodhound-cli install
@@ -43,11 +40,11 @@ netexec ; sleep 5 && sed -i 's/bh_enabled = False/bh_enabled = True/' ~/.nxc/nxc
 
 ```bash
 # EXE
-.\SharpHound.exe --OutputDirectory <PATH> --zipfilename bh_logs.zip -c All -d <DOMAIN>
+.\SharpHound.exe --OutputDirectory <PATH> --zipfilename bh_logs.zip -c All
 
 # PowerShell
 Import-Module .\SharpHound.ps1
-Invoke-Bloodhound -OutputDirectory <PATH> -ZipFileName bh_logs.zip -CollectionMethod All -Domain <DOMAIN> 
+Invoke-Bloodhound -OutputDirectory <PATH> -ZipFileName bh_logs.zip -CollectionMethod All
 ```
 
 ### Linux
@@ -64,7 +61,9 @@ This is helpful when on a non-Windows host or from outside of the domain:
 # Dependencies: https://github.com/g0h4n/RustHound-CE/blob/main/HELP.md#required-dependencies
 sudo apt update -y && sudo apt install -y gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64 cargo
 LIBGSSAPI_IMPL=mit cargo install rusthound-ce --locked
+```
 
+```bash
 $HOME/.cargo/bin/rusthound-ce --domain <DOMAIN> --ldapusername <USER> --ldappassword <PASSWORD> --ldapfqdn <DC_FQDN> --zip --collectionmethod All
 ```
 

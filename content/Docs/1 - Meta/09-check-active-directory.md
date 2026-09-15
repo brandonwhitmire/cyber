@@ -16,48 +16,27 @@ title = "09 - Check - Active Directory"
 
 #### User Identification
 
-1. [ ] Grab all users by an [SMB Null Session against the DC with netexec]({{% ref "netexec.md#enumerate-users" %}})
+1. [ ] Grab all users by an [SMB Null Session against the DC with netexec]({{% ref "netexec.md#basic-enumeration" %}})
 
 2. [ ] Attempt an [anonymous LDAP search against the domain controller to grab all users]({{% ref "netexec.md#anonymous-ldap-search" %}})
 
-3. [ ] Try [RID Brute-forcing]({{% ref "netexec.md#enumerate-users" %}}) for discovering users with SID/RID brute forcing.
+3. [ ] Try [RID Brute-forcing]({{% ref "netexec.md#basic-enumeration" %}}) for discovering users with SID/RID brute forcing.
 
 4. [ ] Brute-force [usernames with wordlists via AS-REP Roasting]({{% ref "netexec.md#asreproast" %}})
-
-### Enumeration - WITH Creds Enumeration
-
-#### Host Identification
-
-1. [ ] Use [ldapdomaindump]({{% ref "active-directory.md#ad-enumeration" %}}) to identify all domain-joined computers.
-
-2. [ ] Enumerate accessible [shares on servers with NetExec]({{% ref "netexec.md#shares-enumeration" %}})
-
-#### User Identification
-
-1. [ ] Gather the [domain password policy using the discovered credentials]({{% ref "netexec.md#basic-enumeration" %}})
-
-2. [ ] Use the discovered credentials and a tool like [NetExec]({{% ref "netexec.md" %}}) to get all users, groups, and logged-on users against the server you have credentials for (ultimate goal is DC)
-
-3. [ ] Gather a list of `Domain Admins` or privileged users using the following tools via [BloodHound]({{% ref "bloodhound.md#analysis-and-queries" %}})
-
-#### On Foothold Enumeration
-
-1. [ ] [Dump any credentials with Mimikatz]({{% ref "mimikatz-post-exploit.md" %}})
-
-2. [ ] Look at owned users for abusable [ACL entries]({{% ref "active-directory.md" %}}) (`ForceChangePassword`, `AddMember`, `GenericAll`, etc.). Easiest to do in [BloodHound]({{% ref "bloodhound.md#enumerating-acls-of-user" %}})
-
-3. [ ] Check GPO from DC for passwords with [Group3r]({{% ref "active-directory.md#group3r-group-policy" %}})
 
 ### Exploitation
 
 1. [ ] Kerberos attack chain in order:
-        - **[ASREPRoasting]({{% ref "netexec.md#asreproast" %}}) (w/o creds)**: only need usernames. Users with `DONT_REQ_PREAUTH` hand you a crackable TGT hash
-        - **[ASREPRoasting (credentialed)]({{% ref "netexec.md#asreproast" %}}) again (w/ creds)**: authenticated enum finds accounts anonymous enum misses.
-        - **[NetExec Kerberoast]({{% ref "netexec.md#kerberoast" %}}) (Linux) or [Rubeus]({{% ref "active-directory.md" %}}) (Windows) (w/ creds)**: any domain user can request TGS tickets for SPNs
 
-2. [ ] Check for [Group Policy Preferences (GPP) Passwords]({{% ref "netexec.md#gpp_password" %}}) in SYSVOL
+- **[ASREPRoasting]({{% ref "netexec.md#asreproast" %}}) (w/o creds)**: only need usernames. Users with `DONT_REQ_PREAUTH` hand you a crackable TGT hash
+- **[ASREPRoasting (credentialed)]({{% ref "netexec.md#asreproast" %}}) again (w/ creds)**: authenticated enum finds accounts anonymous enum misses.
+- **[NetExec Kerberoast]({{% ref "netexec.md#kerberoast" %}}) (Linux) or [Rubeus]({{% ref "active-directory.md" %}}) (Windows) (w/ creds)**: any domain user can request TGS tickets for SPNs
 
-3. [ ] [Abuse any over-permissive ACL entries to gain control of more users and move laterally.]({{% ref "active-directory.md#access-control-list-acl" %}})
+2. [ ] Check for passwords in GPO:
+- [Group Policy Preferences (GPP) Passwords]({{% ref "netexec.md#gpp_password-and-gpp_autologin" %}}) in SYSVOL
+- GPO from DC for passwords with [Group3r]({{% ref "active-directory.md#group3r-group-policy" %}})
+
+3. [ ] [Abuse any over-permissive ACL entries to gain control of more users and move laterally.]({{% ref "active-directory-acl.md#access-control-list-acl" %}})
 
 4. [ ] Check [BloodHound]({{% ref "bloodhound.md" %}}) for [CanRDP]({{% ref "bloodhound.md#canrdp" %}}), [CanPSRemote]({{% ref "bloodhound.md#canpsremote" %}}), or [SQLAdmin]({{% ref "bloodhound.md#sqladmin" %}}) abilities to move laterally. Abuse these rights and look for sensitive info on the new machines
 
@@ -67,24 +46,14 @@ title = "09 - Check - Active Directory"
     - [OverPass the Hash / Pass the Key]({{% ref "active-directory.md#pass-the-key-ptk-overpass-the-hash-oth" %}})
 
 6. [ ] Check for common vulnerabilities and misconfigurations to escalate privileges or move laterally:
-    - [Zerologon (CVE-2020-1472)]({{% ref "active-directory.md#zerologon-cve-2020-1472" %}})
-    - [NoPac (SAMAccountName Spoofing)]({{% ref "active-directory.md#nopac-samaccountname-spoofing" %}})
-    - [PetitPotam (NTLM Coercion)]({{% ref "active-directory.md#petitpotam-ntlm-coercion" %}})
-    - [DFSCoerce (NTLM Coercion)]({{% ref "active-directory.md#dfscoerce-ntlm-coercion" %}})
-    - [ShadowCoerce (NTLM Coercion)]({{% ref "active-directory.md#shadowcoerce-ntlm-coercion" %}})
-    - [EternalBlue (MS17-010)]({{% ref "active-directory.md#eternalblue-ms17-010" %}})
-    - [PrintNightmare]({{% ref "privilege-escalation-windows.md#roguepotato-godpotato-printspoofer-printnightmare" %}})
-    - [Exchange group permissions]({{% ref "active-directory.md#exchange-privilege-escalation" %}})
-    - [MS-RPRN Printer bug]({{% ref "active-directory.md#printer-bug-enumeration-spooler-service" %}})
-    - Sniff for LDAP credentials
-    - Enumerate DNS records for interesting servers
+    - [Scan the DC: Zerologon, NoPac, PrintNightmare, EternalBlue, and coercion (PetitPotam/DFSCoerce/ShadowCoerce/Printerbug)]({{% ref "netexec.md#dc-vulnerability-scanning" %}})
+    - [Exchange group permissions]({{% ref "active-directory-acl.md#exchange-privilege-escalation" %}})
     - [Check for DONT_REQ_PREAUTH field and AS-REP Roast any discovered users]({{% ref "netexec.md#asreproast" %}})
     - Check for GPOs that we have write access over (can be checked with [BloodHound]({{% ref "bloodhound.md" %}}))
-    - Resource Based Constrained Delegation, Constrained Delegation, Unconstrained Delegation
 
 7. [ ] Pillage for credentials and sensitive information across hosts and shares.
-    - [Look for passwords in AD user description fields]({{% ref "active-directory.md#user-attributes-mining" %}})
-    - [Check for PASSWD_NOTREQD accounts -- test for weak or blank passwords]({{% ref "active-directory.md#user-attributes-mining" %}})
+    - [Look for passwords in AD user description fields]({{% ref "active-directory-acl.md#user-attributes-mining" %}})
+    - [Check for PASSWD_NOTREQD accounts -- test for weak or blank passwords]({{% ref "active-directory-acl.md#user-attributes-mining" %}})
     - Search accessible SMB shares with [Snaffler]({{% ref "finding-creds.md#snaffler" %}}) or [LaZagne]({{% ref "finding-creds.md#lazange" %}})
 
 #### Attacking AD Trusts (Parent Domain)

