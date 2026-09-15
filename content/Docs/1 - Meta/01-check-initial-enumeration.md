@@ -36,15 +36,15 @@ sudo bash -c "echo \"alias penelope='penelope --oscp-safe --payloads'\" >> /root
 
 **tmux**
 
-{{< embed-section page="Docs/9 - Notes/tmux.md" header="setup" >}}
+![[tmux#Setup]]
 
 **BloodHound**
 
-{{< embed-section page="Docs/9 - Notes/bloodhound.md" header="setup" >}}
+![[bloodhound#Setup]]
 
 **Metasploit**
 
-{{< embed-section page="Docs/5 - Exploitation/metasploit.md" header="setup" >}}
+![[metasploit#Setup]]
 
 2. [ ] [SysReptor: Create engagement report](https://labs.sysre.pt/projects?ordering=-created)
     - Engagement folder (via Obsidian template)
@@ -67,7 +67,7 @@ sudo bash -c "echo \"alias penelope='penelope --oscp-safe --payloads'\" >> /root
     - TCP/UDP host discovery (`nmap -sn`, masscan)
     - **Add discovered hostnames:
 
-{{< embed-section page="Docs/9 - Notes/netexec" header="generate-hosts-file" expanded=true >}}
+![[netexec#Generate `hosts` File]]
 
 3. [ ] For each active host, scan ALL TCP/UDP ports. Document each open port per host in Obsidian.
     - [NMAP All Ports (TCP + UDP)]({{% ref "nmap.md#quickstart" %}})

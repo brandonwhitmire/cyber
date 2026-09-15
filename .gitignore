@@ -38,6 +38,26 @@ package-lock.json
 
 
 # =============================================================================
+# Python
+# =============================================================================
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+.env
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+.coverage
+htmlcov/
+
+
+# =============================================================================
 # Development Tools & Editors
 # =============================================================================
 
@@ -46,9 +66,6 @@ package-lock.json
 
 # VS Code
 .vscode/
-
-# Python virtual environments
-.venv/
 
 # Vim swap files
 *.swp

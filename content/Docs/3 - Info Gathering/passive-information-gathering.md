@@ -64,9 +64,9 @@ Great to validate and discover new information, especially from IP and ASN searc
 
 ## via Search Engine Dorking
 
-- {{< embed-section page="Docs/3 - Info Gathering/search-engine-dorking" header="examples" >}}
+- ![[search-engine-dorking#EXAMPLES]]
 
-- {{< embed-section page="Docs/7 - Lateral Movement/active-directory" header="user-enumeration" >}}
+- ![[active-directory#User Enumeration]]
 
 ## via Social Media
 
@@ -93,4 +93,4 @@ Passively, sampling the traffic can be a great way to understand the network ins
 sudo tcpdump -i <INTERFACE> -w <OUTPUT_FILE>
 ```
 
-{{< embed-section page="Docs/5 - Exploitation/protocol-poisoners" >}}
+![[protocol-poisoners]]

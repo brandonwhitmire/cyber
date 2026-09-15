@@ -31,8 +31,11 @@ NOT
 " "
 -
 +
+```
 
 ### EXAMPLES
+
+```bash
 # Find Emails
 inurl:<DOMAIN> intext:"@<DOMAIN>"
 

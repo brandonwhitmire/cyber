@@ -36,13 +36,13 @@ net.exe time /domain /set /y
 sudo nmap -n -Pn -p 53,88,389,445,636,3268,3269 --open -oA nmap_find_dc.txt -v <TARGET>
 ```
 
-{{< embed-section page="Docs/4 - Vuln Analysis/ldap" header="powershell-enumerator" >}}
+![[ldap#PowerShell Enumerator]]
 
-{{< embed-section page="Docs/7 - Lateral Movement/Lateral Movement" header="network-info" >}}
+![[lateral-movement#Network Info]]
 
-{{< embed-section page="Docs/9 - Notes/bloodhound" header="bloodhound" >}}
+![[bloodhound#BloodHound]]
 
-{{< embed-section page="Docs/7 - Lateral Movement/active-directory-acl" >}}
+![[active-directory-acl]]
 
 ### Group3r (Group Policy)
 
@@ -65,7 +65,7 @@ group3r.exe -f results.log
     - https://github.com/insidetrust/statistically-likely-usernames
 - PowerShell Tool: https://github.com/dafthack/DomainPasswordSpray
 
-{{< embed-section page="Docs/5 - Exploitation/online-credentials-attacks" header="user-enum" >}}
+![[online-credentials-attacks#User Enum]]
 
 # Escalating and Pivoting
 
@@ -170,7 +170,7 @@ nxc smb <TARGET> -k --use-kcache
 
 NTLM Hash/AES Key -> Kerberos TGT
 
-{{< embed-section page="Docs/9 - Notes/mimikatz" header="extract-aes-keys" >}}
+![[mimikatz#Extract AES Keys]]
 
 ### Request & Inject
 

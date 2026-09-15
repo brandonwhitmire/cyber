@@ -74,7 +74,7 @@ whatweb --log-brief=whatweb_scan.txt --aggression 3 http://<TARGET>
 nikto -o nikto_vuln_scan.txt -C all -h http://<TARGET>
 ```
 
-{{< embed-section page="Docs/9 - Notes/ffuf" header="vhost-brute-force" >}}
+![[ffuf#vHost Brute-Force]]
 
 ## Crawling
 

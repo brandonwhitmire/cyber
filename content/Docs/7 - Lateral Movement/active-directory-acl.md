@@ -43,11 +43,11 @@ title = "AD: Access Control List (ACL)"
 
 ### Enumerating ACLs of User
 
-{{< embed-section page="Docs/9 - Notes/bloodhound" header="enumerating-acls-of-user" >}}
+![[bloodhound#Enumerating ACLs of User]]
 
 #### PowerView
 
-{{< embed-section page="Docs/9 - Notes/powerview" header="acl-enumeration" >}}
+![[powerview#ACL Enumeration]]
 
 ## Domain Misconfigurations
 
@@ -67,7 +67,7 @@ adidnsdump -u <DOMAIN>\<USER> -p <PASSWORD> ldap://<DC_IP> -r
 
 Hunting for passwords in descriptions and weak account configurations.
 
-{{< embed-section page="Docs/9 - Notes/powerview" header="user-attributes-mining" >}}
+![[powerview#User Attributes Mining]]
 
 ### SYSVOL & Group Policy Passwords
 

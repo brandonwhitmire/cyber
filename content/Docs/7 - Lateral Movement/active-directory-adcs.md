@@ -11,11 +11,11 @@ draft = true
 
 ## Setup
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="installation" >}}
+![[certipy#Installation]]
 
 ## Triage
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="enumeration" >}}
+![[certipy#Enumeration]]
 
 **Read the output top-down: CA-level vulnerabilities appear under the CA block; template-level vulnerabilities appear under each template block.**
 
@@ -38,8 +38,8 @@ draft = true
 
 **Why it works:** When `CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT` is set, the requester controls the Subject Alternative Name (SAN) field. The DC resolves identity from the SAN UPN, not the requester's actual identity. PKINIT uses this SAN to issue a TGT for whoever is named — no password required.
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="enroll-with-san" >}}
-{{< embed-section page="Docs/9 - Notes/certipy" header="authentication" >}}
+![[certipy#Enroll with SAN]]
+![[certipy#Authentication]]
 
 ---
 
@@ -53,12 +53,12 @@ draft = true
 
 **Step 1** -- Enroll using the Any Purpose template:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="enroll-base-certificate" >}}
+![[certipy#Enroll Base Certificate]]
 
 **Step 2** -- Use that cert as an enrollment agent to request on behalf of Administrator:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="enroll-on-behalf-of-user" >}}
-{{< embed-section page="Docs/9 - Notes/certipy" header="authentication" >}}
+![[certipy#Enroll on Behalf of User]]
+![[certipy#Authentication]]
 
 ---
 
@@ -72,12 +72,12 @@ draft = true
 
 **Step 1** -- Enroll to get the Enrollment Agent cert:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="enroll-base-certificate" >}}
+![[certipy#Enroll Base Certificate]]
 
 **Step 2** -- Use agent cert to enroll on behalf of Administrator:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="enroll-on-behalf-of-user" >}}
-{{< embed-section page="Docs/9 - Notes/certipy" header="authentication" >}}
+![[certipy#Enroll on Behalf of User]]
+![[certipy#Authentication]]
 
 **NOTE:** `-on-behalf-of` takes the NetBIOS domain name (`CORP\Administrator`), not the FQDN. The second template (`User` here) must be one that Enrollment Agents are authorized to use.
 
@@ -93,20 +93,20 @@ draft = true
 
 **Step 1** -- Back up original template config:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="save-template" >}}
+![[certipy#Save Template]]
 
 **Step 2** -- Overwrite template with ESC1-vulnerable configuration:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="write-default-configuration" >}}
+![[certipy#Write Default Configuration]]
 
 **Step 3** -- Exploit as ESC1:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="enroll-with-san" >}}
+![[certipy#Enroll with SAN]]
 
 **Step 4** -- Restore original template (OpSec):
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="restore-template" >}}
-{{< embed-section page="Docs/9 - Notes/certipy" header="authentication" >}}
+![[certipy#Restore Template]]
+![[certipy#Authentication]]
 
 ---
 
@@ -120,8 +120,8 @@ draft = true
 
 Any Client Authentication template works — not just explicitly vulnerable ones:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="enroll-with-san" >}}
-{{< embed-section page="Docs/9 - Notes/certipy" header="authentication" >}}
+![[certipy#Enroll with SAN]]
+![[certipy#Authentication]]
 
 ---
 
@@ -136,24 +136,24 @@ Any Client Authentication template works — not just explicitly vulnerable ones
 
 **Step 1** -- Grant yourself the Officer role (requires ManageCA):
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="add-officer" >}}
+![[certipy#Add Officer]]
 
 **Step 2** -- Enable SubCA template on the CA:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="enable-template" >}}
+![[certipy#Enable Template]]
 
 **Step 3** -- Request as Administrator; will be DENIED. Note the Request ID in output:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="enroll-with-san" >}}
+![[certipy#Enroll with SAN]]
 
 **Step 4** -- Force-issue the denied request using Officer rights:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="issue-request" >}}
+![[certipy#Issue Request]]
 
 **Step 5** -- Retrieve the issued certificate:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="retrieve-by-request-id" >}}
-{{< embed-section page="Docs/9 - Notes/certipy" header="authentication" >}}
+![[certipy#Retrieve by Request ID]]
+![[certipy#Authentication]]
 
 **NOTE:** If you only have `ManageCertificates` (not `ManageCA`), skip Step 1. If you only have `ManageCA`, run Step 1 first to grant yourself `ManageCertificates`, then proceed.
 
@@ -200,7 +200,7 @@ KRB5CCNAME=~/my_data/'<DC_HOSTNAME>$.ccache' nxc smb <DC_FQDN> --use-kcache -k -
 
 Requires `GenericWrite` or `AddKeyCredentialLink` on the target account. Writes a Key Credential to the target's `msDS-KeyCredentialLink` attribute, then uses PKINIT to authenticate and retrieve the NT hash. Does not modify the password.
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="shadow-credentials" >}}
+![[certipy#Shadow Credentials]]
 
 ---
 
@@ -214,27 +214,27 @@ Requires `GenericWrite` or `AddKeyCredentialLink` on the target account. Writes 
 
 Enumerate ADCS for vulnerable templates and CAs:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="enumeration" >}}
+![[certipy#Enumeration]]
 
 Read target account's AD attributes:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="read-account" >}}
+![[certipy#Read Account]]
 
 Change target's UPN to impersonate a privileged user:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="update-upn" >}}
+![[certipy#Update UPN]]
 
 Request certificate as the impersonated user:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="enroll-with-hash-auth" >}}
+![[certipy#Enroll with Hash Auth]]
 
 Revert UPN back to original after certificate is issued:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="revert-upn" >}}
+![[certipy#Revert UPN]]
 
 Authenticate with the certificate -- extract TGT and NT hash:
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="authentication" >}}
+![[certipy#Authentication]]
 
 ---
 
@@ -253,7 +253,7 @@ Authenticate with the certificate -- extract TGT and NT hash:
 
 **All ESC paths converge here:**
 
-{{< embed-section page="Docs/9 - Notes/certipy" header="authentication" >}}
+![[certipy#Authentication]]
 
 ```bash
 # NT hash → evil-winrm -H <NT_HASH> / impacket-secretsdump / psexec

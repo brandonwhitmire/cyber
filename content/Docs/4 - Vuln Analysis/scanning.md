@@ -34,20 +34,20 @@ Test-NetConnection -Port <PORT> <IP>
 fping -ag <TARGET_SUBNET>
 ```
 
-{{< embed-section page="Docs/6 - Post-Exploitation/nice-commands-linux" header="ping-sweep" >}}
+![[nice-commands-linux#Ping Sweep]]
 
-{{< embed-section page="Docs/6 - Post-Exploitation/nice-commands-windows" header="windows-ping-sweep" >}}
+![[nice-commands-windows#Windows Ping Sweep]]
 
-{{< embed-section page="Docs/5 - Exploitation/metasploit" header="ping-sweep" >}}
+![[metasploit#Ping Sweep]]
 
 ## Full TCP Port Scan
 
-{{< embed-section page="Docs/6 - Post-Exploitation/nice-commands-windows" header="full-tcp-port-scan" >}}
+![[nice-commands-windows#Full TCP Port Scan]]
 
 ## Metasploit
 
-{{< embed-section page="Docs/5 - Exploitation/metasploit" header="tcp-port-scan" >}}
+![[metasploit#TCP Port Scan]]
 
-{{< embed-section page="Docs/9 - Notes/autorecon" >}}
+![[autorecon]]
 
-{{< embed-section page="Docs/9 - Notes/nmap" >}}
+![[nmap]]

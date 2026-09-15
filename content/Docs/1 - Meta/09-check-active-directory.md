@@ -4,7 +4,7 @@ title = "09 - Check - Active Directory"
 
 # **SYNC CLOCK DC**
 
-{{< embed-section page="Docs/7 - Lateral Movement/active-directory" header="sync-clock" expanded=true >}}
+![[active-directory#Sync Clock]]
 
 1. [ ] **RUN [BLOODHOUND]({{% ref "bloodhound.md" %}})** and mark everything owned
     - Run both **SharpHound** and **RustHound**

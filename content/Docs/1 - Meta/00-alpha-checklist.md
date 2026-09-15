@@ -13,22 +13,22 @@ title = "00 - Alpha Checklists"
 
 ---
 
-{{< embed-section page="Docs/1 - Meta/01-check-initial-enumeration.md" expanded=false >}}
+![[01-check-initial-enumeration]]
 
-{{< embed-section page="Docs/1 - Meta/02-check-dns.md" expanded=false >}}
+![[02-check-dns]]
 
-{{< embed-section page="Docs/1 - Meta/03-check-password-attacks.md" expanded=false >}}
+![[03-check-password-attacks]]
 
-{{< embed-section page="Docs/1 - Meta/04-check-smb.md" expanded=false >}}
+![[04-check-smb]]
 
-{{< embed-section page="Docs/1 - Meta/05-check-web-enumeration.md" expanded=false >}}
+![[05-check-web-enumeration]]
 
-{{< embed-section page="Docs/1 - Meta/06-check-sqli-manual.md" expanded=false >}}
+![[06-check-sqli-manual]]
 
-{{< embed-section page="Docs/1 - Meta/06-check-sqlmap.md" expanded=false >}}
+![[06-check-sqlmap]]
 
-{{< embed-section page="Docs/1 - Meta/07-check-linux-privesc.md" expanded=false >}}
+![[07-check-linux-privesc]]
 
-{{< embed-section page="Docs/1 - Meta/08-check-windows-privesc.md" expanded=false >}}
+![[08-check-windows-privesc]]
 
-{{< embed-section page="Docs/1 - Meta/09-check-active-directory.md" expanded=false >}}
+![[09-check-active-directory]]

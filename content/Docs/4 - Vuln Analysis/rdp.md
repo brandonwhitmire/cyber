@@ -44,4 +44,4 @@ reg add "HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-T
 Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
 ```
 
-{{< embed-section page="Docs/6 - Post-Exploitation/pass-the-hash" header="rdp-restricted-admin-mode" title="RDP via Pass the Hash" >}}
+![[pass-the-hash#RDP (Restricted Admin Mode)]]

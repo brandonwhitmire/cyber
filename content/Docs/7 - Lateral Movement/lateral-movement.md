@@ -20,7 +20,7 @@ ipconfig /all
 netstat -r
 ```
 
-{{< embed-section page="Docs/9 - Notes/Troubleshooting" header="access-domain-names" >}}
+![[troubleshooting#Access Domain Names]]
 
 ## Domain Information
 

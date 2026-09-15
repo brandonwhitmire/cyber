@@ -17,9 +17,9 @@ title = "🌐 SMB/CIFS/RPC: TCP 135/139/445"
 
 ## Enumeration
 
-{{< embed-section page="Docs/9 - Notes/netexec" header="basic-enumeration" >}}
+![[netexec#Basic Enumeration]]
 
-{{< embed-section page="Docs/9 - Notes/netexec" header="user-enumeration" >}}
+![[netexec#User Enumeration]]
 
 ## Interactive
 

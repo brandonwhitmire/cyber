@@ -35,6 +35,9 @@ jobs:
         id: pages
         uses: actions/configure-pages@v5
 
+      - name: Convert Obsidian embeds
+        run: python3 scripts/obsidian-embeds.py content
+
       - name: Build with Hugo
         env:
           HUGO_ENVIRONMENT: production

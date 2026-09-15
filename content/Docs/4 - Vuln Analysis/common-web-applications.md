@@ -185,7 +185,7 @@ Typically uses Groovy (language) to execute commands:
 println "cmd.exe /c <COMMAND>".execute().text
 ```
 
-{{< embed-section page="Docs/5 - Exploitation/shells" header="groovy" >}}
+![[shells#Groovy]]
 
 ## Splunk
 

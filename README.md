@@ -30,9 +30,13 @@ git submodule add https://github.com/alex-shpak/hugo-book.git .themes/hugo-book
 
 Requires [Hugo](https://gohugo.io/installation/) **0.158.0 or newer** (extended). GitHub Pages builds with `0.165.0`.
 
+Obsidian `![[page]]` embeds are converted at GitHub Pages build time. To preview them locally without rewriting the vault:
+
 ```bash
-hugo server --noHTTPCache -d /tmp/random
+python3 scripts/obsidian-embeds.py content --output-dir /tmp/cyber-content && hugo server --noHTTPCache -d /tmp/random --contentDir /tmp/cyber-content
 ```
+
+Open **http://127.0.0.1:1313/cyber/** (`hugo server` uses the development `baseURL` so the path matches GitHub Pages).
 
 ### Adding Front Matter to Lab Files (pre-commit hook)
 
@@ -54,6 +58,15 @@ chmod +x .git/hooks/pre-commit
 ## Embedding Content Sections
 
 The `embed-section` shortcode allows you to embed a specific section from one Markdown page into another, identified by the header ID.
+
+In the vault, prefer Obsidian embed syntax. GitHub Pages rewrites it to the shortcode before Hugo runs (the vault itself is not committed in converted form):
+
+```markdown
+![[netexec]]
+![[netexec#User Enumeration]]
+```
+
+`name` is the markdown filename without a path. `|alias` embeds and image embeds (`.png`, `.jpg`, `.gif`, `.svg`, `.webp`) are left unchanged.
 
 ### Usage
 

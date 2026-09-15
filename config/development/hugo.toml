@@ -1,0 +1,3 @@
+# hugo server (development): absolute URL so /cyber/ actually serves.
+# Path-only /cyber/ in config.toml makes the dev server 404.
+baseURL = "http://127.0.0.1/cyber/"
