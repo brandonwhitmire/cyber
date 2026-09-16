@@ -4,9 +4,9 @@ title = "Netexec"
 
 - https://www.netexec.wiki/getting-started/selecting-and-using-a-protocol
     - Logs: `~/.nxc/logs/`
+    - By default, `netxec` attempts to authenticate with passwords or hashes at the domain level... use `--local-auth` to force local authentication
+        - **Note: ` --local-auth` NEVER works with DCs**
 - Cheatsheet: https://gist.github.com/strikoder/99635df00444bbf5fc90ca83ec8051a0
-- by default, `netxec` attempts to authenticate with passwords or hashes at the domain level... use `--local-auth` to force local authentication
-    - **Note: ` --local-auth` NEVER works with DCs**
 
 Netexec (formerly CrackMapExec) is a swiss army knife for pentesting networks that helps automate assessing the security of large networks in AD environments. Netexec uses `impacket` libraries under its hood
 
@@ -32,8 +32,8 @@ Usually only `smb` or `winrm` are "true" admin, but the rest usually include som
 **Key behavioral notes:**
 
 - "With the SMB protocol, your compromised users are most likely in the (local) administrators group" when Pwn3d! appears [Palo Alto Networks](https://docs-cortex.paloaltonetworks.com/r/Cortex-XDR/Cortex-XDR-Analytics-Alert-Reference-by-Alert-name/Fodhelper.exe-UAC-bypass)
-- "Code execution results in a (Pwn3d!) added after the login confirmation" — this is the universal rule across all code-execution-capable protocols [GitHub](https://github.com/CousTov/UACBypass)
-- LDAP `Pwn3d!` is fundamentally different — it doesn't mean code execution, it means **AD privilege**. A user with DCSync gets `Pwn3d!` on LDAP but might be `[+]` only on SMB
+- "Code execution results in a (Pwn3d!) added after the login confirmation": this is the universal rule across all code-execution-capable protocols [GitHub](https://github.com/CousTov/UACBypass)
+- LDAP `Pwn3d!` is fundamentally different: it doesn't mean code execution, it means **AD privilege**. A user with DCSync gets `Pwn3d!` on LDAP but might be `[+]` only on SMB
 
 ## Kerberos
 
@@ -155,7 +155,7 @@ grep SidTypeUser nxc_rid_users.txt | cut -d "\\" -f 2 | cut -d " " -f 1 | grep -
 Shows various logged on users... useful to dump their live creds
 
 ```bash
-nxc smb <TARGET> -u "<USERNAME>" -p "<PASSWORD>" --reg-sessions --loggedon-users --qwinsta
+nxc smb <TARGET> -u "<USERNAME>" -p "<PASSWORD>" --reg-sessions --loggedon-users --qwinsta --smb-sessions
 ```
 
 ### Get machine IP address and domains

@@ -66,7 +66,7 @@ title = "09 - Check - Active Directory"
 
 4. [ ] Child -> Parents Attacks
     - [Child -> Parent Attacks - Windows]({{% ref "active-directory.md" %}})
-    - [ ] [Child -> Parent Attacks - Linux]({{% ref "active-directory.md" %}})
+    - [Child -> Parent Attacks - Linux]({{% ref "active-directory.md" %}})
 
 #### Attacking AD Trusts (Cross Forest)
 

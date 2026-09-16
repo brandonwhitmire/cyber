@@ -1,12 +1,11 @@
 +++
-title = "06 - Check - SQLMap SQLi"
+title = "06 - Check - SQLi (SQLMap)"
 +++
 
 ### Manual Triage & Setup
 
-1. [ ] Manually confirm injection in Burp first -- verify a True vs False response difference before running SQLMap
+1. [ ] Manually confirm injection in Burp first: verify a True vs False response difference before running SQLMap
     - [SQL Injection -- Manual Testing]({{% ref "sql-injection.md" %}})
-    - Never run SQLMap blind
 
 2. [ ] Set up SQLMap with a captured request and run baseline
     - [SQLMap Workflow]({{% ref "sqlmap.md#workflow" %}})
@@ -30,7 +29,7 @@ title = "06 - Check - SQLMap SQLi"
 6. [ ] Check DBA status and current database before dumping
     - [Database Enumeration]({{% ref "sqlmap.md#database-enumeration" %}})
 
-7. [ ] Perform surgical extraction -- target specific tables/columns, do not dump entire DB
+7. [ ] Perform surgical extraction: target specific tables/columns, do not dump entire DB
     - [Database Enumeration]({{% ref "sqlmap.md#database-enumeration" %}})
 
 8. [ ] If DBA: attempt OS shell or web shell write for RCE
