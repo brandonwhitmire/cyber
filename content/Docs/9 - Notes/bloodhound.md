@@ -20,7 +20,7 @@ BloodHound is **THE TOOL** for AD enumeration. "\[L\]everages graph theory to re
 ```bash
 # Start and reset password for BloodHound via Docker
 sudo systemctl enable --now docker
-sudo ~/cyber-tools/tools/bloodhound-cli install
+sudo ~/cyber-tools/tools/bloodhound-cli install | tee ~/bh_install.log
 netexec ; sleep 5 && sed -i 's/bh_enabled = False/bh_enabled = True/' ~/.nxc/nxc.conf
 #sudo ./bloodhound-cli resetpwd  # needed if PW not grabbed from install
 ```

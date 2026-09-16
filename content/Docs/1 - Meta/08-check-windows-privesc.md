@@ -33,4 +33,4 @@ Tasty info:
     - [Credential Hunting]({{% ref "finding-creds.md" %}})
     - [Credential Hunting Other Files]({{% ref "finding-creds.md#searching" %}})
     - [Dumping Hashes / Credentials]({{% ref "netexec.md#registry-secrets---sam-and---lsa" %}})
-    - [Mimikatz]({{% ref "mimikatz-post-exploit.md" %}})
+    - [Mimikatz]({{% ref "mimikatz.md" %}})
