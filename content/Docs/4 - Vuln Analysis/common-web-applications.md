@@ -46,6 +46,7 @@ Sitemap: https://<DOMAIN>/wp-sitemap.xml
     - `themes`: same
     - scanning for `readme.txt` under these folders can find hidden resources
 - `wp-login.php`
+- `/readme.txt`: good for versions
 
 **Users**
 - **Administrator**: can add and delete users and posts, as well as editing source code
@@ -57,8 +58,17 @@ Sitemap: https://<DOMAIN>/wp-sitemap.xml
 
 **Page Source**
 ```bash
+# Basic
 curl -so- 'http://<TARGET>/robots.txt'
 curl -s http://<TARGET> | grep -i -e WordPress -e themes -e plugins
+
+# Version
+curl -s http://<TARGET>/readme.txt | grep -i version
+curl -s http://<TARGET>/feed/ | grep -i generator
+curl -s http://<TARGET> | grep -i 'meta name="generator"'
+
+# Users via API
+curl -s http://<TARGET>/wp-json/wp/v2/users | python3 -m json.tool
 ```
 
 **WPScan**
@@ -67,13 +77,14 @@ curl -s http://<TARGET> | grep -i -e WordPress -e themes -e plugins
 
 ```bash
 # Generic enumeration
-sudo wpscan -t 20 --api-token <API_TOKEN> --url http://<TARGET> --enumerate
+sudo wpscan -t 20 --enumerate u1-100 --plugins-detection aggressive --api-token <API_TOKEN> --url http://<TARGET>
 
 # Enumerate all plugins
-sudo wpscan -t 20 --api-token <API_TOKEN> --url http://<TARGET> --enumerate ap
+sudo wpscan -t 20 --enumerate ap --plugins-detection aggressive --api-token <API_TOKEN> --url http://<TARGET>
 
 # Login brute-force
 sudo wpscan -t 20 --url http://<TARGET> --password-attack xmlrpc -U <USER> -P /usr/share/wordlists/rockyou.txt
+sudo wpscan -t 20 --url http://<TARGET> --password-attack wp-login -U <USER> -P /usr/share/wordlists/rockyou.txt
 ```
 
 ## Joomla
