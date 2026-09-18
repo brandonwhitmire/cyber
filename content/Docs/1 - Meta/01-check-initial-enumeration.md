@@ -12,7 +12,7 @@ pushd /usr/share/wordlists/ && sudo gunzip rockyou.txt.gz ; popd
 # System update and install some packages
 sudo apt update -y
 sudo apt autoremove -y
-NEEDRESTART_MODE=a sudo apt install -y --fix-missing flameshot ripgrep sshpass golang pocl-opencl-icd ntpsec-ntpdate autorecon penelope bloodyad docker.io docker-compose
+DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a sudo apt install -y --fix-missing flameshot ripgrep sshpass golang pocl-opencl-icd ntpsec-ntpdate autorecon penelope bloodyad docker.io docker-compose
 # Update locate DB
 sudo updatedb
 # Manual tool installs
@@ -26,10 +26,10 @@ mkdir ~/my_data
 echo 'cd ~/my_data' >> ~/.bashrc
 echo 'cd ~/my_data' >> ~/.zshrc
 # Penelope shell auto-safe mode
-echo "alias penelope='penelope --oscp-safe --payloads'" >> ~/.bashrc
-echo "alias penelope='penelope --oscp-safe --payloads'" >> ~/.zshrc
-sudo bash -c "echo \"alias penelope='penelope --oscp-safe --payloads'\" >> /root/.bashrc"
-sudo bash -c "echo \"alias penelope='penelope --oscp-safe --payloads'\" >> /root/.zshrc"
+echo "alias penelope='penelope --oscp-safe --payloads --interface eth0'" >> ~/.bashrc
+echo "alias penelope='penelope --oscp-safe --payloads --interface eth0'" >> ~/.zshrc
+sudo bash -c "echo \"alias penelope='penelope --oscp-safe --payloads --interface eth0'\" >> /root/.bashrc"
+sudo bash -c "echo \"alias penelope='penelope --oscp-safe --payloads --interface eth0'\" >> /root/.zshrc"
 # Source the shell
 . "$HOME/.zshrc"
 ```

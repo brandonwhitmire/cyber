@@ -9,6 +9,27 @@ Hashcat is a fast password recovery tool that supports multiple attack modes and
 - Cheat Sheet: <https://pentesting.site/cheat-sheets/hashcat/>
 - Rule-Based Attack: <https://hashcat.net/wiki/doku.php?id=rule_based_attack>
 
+## Common Hash Values
+
+| Hash Value | Type | Meaning |
+| :--- | :--- | :--- |
+| **`d41d8cd98f00b204e9800998ecf8427e`** | **MD5** | **Empty String** (0 byte input) |
+| **`da39a3ee5e6b4b0d3255bfef95601890afd80709`** | **SHA1** | **Empty String** (0 byte input) |
+| **`e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`** | **SHA256** | **Empty String** (0 byte input) |
+
+## Hash Identification
+
+Before cracking, identify the hash type:
+
+```bash
+# Use hashid to identify hash and get hashcat mode
+hashid -jm '<HASH>'
+
+# Alternative: online tool
+# https://hashes.com/en/tools/hash_identifier
+```
+
+
 ## Quick Password Mutation
 
 If making a custom password list from some target and environment information, that list can be mutated with `hashcat` given a list of something like:
@@ -94,55 +115,21 @@ hashcat -m <HASH_MODE> -a <ATTACK_MODE> <HASH_FILE> <WORDLIST>
 - Hash Type Codes: <https://hashcat.net/wiki/doku.php?id=example_hashes>
     - `hashcat --example-hashes | grep -i <SEARCH>`
 
-### Windows Hashes
-
-**NOTE:** `$DCC2$` is the Domain Cached Credentials 2 (DCC2), MS Cache 2 -- Those hashes can be cracked using Hashcat, provided a weak password is set because this algorithm is much stronger than NTLM. Also, they cannot be used for a Pass the Hash attack.
-
-```bash
-# NT hashes (NTLM)
-hashcat -m 1000 <HASHES> <WORDLIST>
-
-# PBKDF2 (DCC2 hashes for domain - cached domain credentials)
-hashcat -m 2100 <HASHES> <WORDLIST>
-```
-
-### Linux Hashes
-
-```bash
-# SHA-512crypt (most common legacy default)
-hashcat -m 1800 hashes.txt <WORDLIST>
-
-# MD5crypt (with salt)
-hashcat -m 20 <HASH>:<SALT> <WORDLIST>
-```
-
-### Kerberos (Active Directory)
-
-```bash
-# Kerberoasting - RC4 encrypted TGS (Type 23)
-hashcat -m 13100 spn_tickets.txt <WORDLIST>
-
-# Kerberoasting - AES-256 encrypted TGS (Type 18)
-hashcat -m 19600 spn_tickets.txt <WORDLIST>
-
-# Kerberoasting - AES-128 encrypted TGS (Type 17)
-hashcat -m 19700 spn_tickets.txt <WORDLIST>
-```
-
-### Other Hash Types
-
-```bash
-# Bitlocker
-hashcat -a 0 -m 22100 hash_crackme_vhd.txt <WORDLIST>
-
-# IPMI (HP iLO)
-hashcat -m 7300 ipmi_hash.txt -a 3 ?1?1?1?1?1?1?1?1 -1 ?d?u
-hashcat -m 7300 -w 3 -O "<HASH>" /usr/share/wordlists/rockyou.txt
-```
+| Hash Type | Explanation |
+| :--- | :--- |
+| **NTLM** (`-m 1000`) | Windows NT hashes; usable for Pass-the-Hash. |
+| **DCC2 / MS Cache 2** (`-m 2100`) | Domain Cached Credentials 2 (`$DCC2$`), PBKDF2-based. Much stronger than NTLM and cannot be used for Pass-the-Hash. |
+| **SHA-512crypt** (`-m 1800`) | Most common legacy Linux default (`$6$`). |
+| **MD5crypt** (`-m 20`) | Linux MD5 with salt, formatted `<HASH>:<SALT>`. |
+| **Kerberoast RC4 TGS** (`-m 13100`) | AD service ticket, Type 23 (RC4-encrypted). |
+| **Kerberoast AES-256 TGS** (`-m 19600`) | AD service ticket, Type 18 (AES-256). |
+| **Kerberoast AES-128 TGS** (`-m 19700`) | AD service ticket, Type 17 (AES-128). |
+| **BitLocker** (`-m 22100`) | Encrypted volume recovery. |
+| **IPMI / HP iLO** (`-m 7300`) | RAKP hashes; often numeric PINs -- brute-force with `-a 3 ?1?1?1?1?1?1?1?1 -1 ?d?u`. |
 
 ## Rule-Based Attacks
 
-Rule-based attacks apply transformations to words in a wordlist, creating permutations and variations.
+Rule-based attacks apply transformations to words in a wordlist, creating permutations and variations
 
 ### Rule Files Location
 
@@ -234,58 +221,23 @@ hashcat -a 3 -m <HASH_ID> <HASH> '?u?l?l?l?l?d?s'
 hashcat -a 3 -m 7300 hash.txt ?1?1?1?1?1?1?1?1 -1 ?d?u
 ```
 
-## Hash Identification
+## SSH Key Passphrase Cracking
 
-Before cracking, identify the hash type:
+- https://github.com/HashPals/Name-That-Hash/pull/150
 
-```bash
-# Use hashid to identify hash and get hashcat mode
-hashid -jm '<HASH>'
+**Known issue:** `hashcat -m 22921` does not support the OpenSSH key-v1 format
 
-# Alternative: online tool
-# https://hashes.com/en/tools/hash_identifier
-```
-
-## Common Hash Values
-
-| Hash Value | Type | Meaning |
-| :--- | :--- | :--- |
-| **`d41d8cd98f00b204e9800998ecf8427e`** | **MD5** | **Empty String** (0 byte input) |
-| **`da39a3ee5e6b4b0d3255bfef95601890afd80709`** | **SHA1** | **Empty String** (0 byte input) |
-| **`e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`** | **SHA256** | **Empty String** (0 byte input) |
-
-## Workflow Examples
-
-### Linux Password Cracking
+| Header                                | Format                                | Cracker            |
+| :------------------------------------ | :------------------------------------ | :----------------- |
+| `-----BEGIN RSA PRIVATE KEY-----`     | Legacy PEM                            | `hashcat -m 22921` |
+| `-----BEGIN OPENSSH PRIVATE KEY-----` | OpenSSH key-v1 (ed25519 / modern RSA) | John only          |
 
 ```bash
-# 1. Prepare unshadowed file
-unshadow /etc/passwd /etc/shadow > unshadowed.hashes
+ssh2john <KEY_FILE> > crackme_ssh_id_rsa.txt
 
-# 2. Crack with hashcat (SHA-512, mode 1800)
-hashcat -m 1800 -a 0 unshadowed.hashes rockyou.txt
+# PEM (RSA legacy)
+hashcat -m 22921 --username crackme_ssh_id_rsa.txt /usr/share/wordlists/rockyou.txt
+
+# OpenSSH key-v1 (ed25519 / modern RSA)
+john --wordlist=/usr/share/wordlists/rockyou.txt crackme_ssh_id_rsa.txt
 ```
-
-### Kerberoasting
-
-```bash
-# 1. Get TGS tickets
-impacket-GetUserSPNs -dc-ip <DC_IP> <DOMAIN>/<USER> -request -outputfile spn_tickets.txt
-
-# 2. Crack TGS (RC4, most common)
-hashcat -m 13100 spn_tickets.txt <WORDLIST>
-
-# 3. If AES-256, use mode 19600
-hashcat -m 19600 spn_tickets.txt <WORDLIST>
-```
-
-### Windows NT Hashes
-
-```bash
-# Extract hashes from SAM
-impacket-secretsdump -sam sam.save -security security.save -system system.save LOCAL
-
-# Crack NT hashes
-hashcat -m 1000 <HASHES> <WORDLIST>
-```
-

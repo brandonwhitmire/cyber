@@ -2,7 +2,7 @@
 title = "08 - Check - Windows Privilege Escalation"
 +++
 
-Tasty info:
+**Tasty info:**
 
 - Privileges
 - Groups

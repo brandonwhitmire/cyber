@@ -31,20 +31,19 @@ netexec ; sleep 5 && sed -i 's/bh_enabled = False/bh_enabled = True/' ~/.nxc/nxc
 
 ### Uploading Info
 - Transfer Bloodhound data to attacker
-- Upload zipfile to Bloodhound: <http://127.0.0.1:8080/ui/login>
-- Upload to Bloodhound: <http://127.0.0.1:8080/ui/administration/file-ingest>
+    - Upload zipfile: <http://127.0.0.1:8080/ui/administration/file-ingest>
 
 ### Windows
 
 #### SharpHound
 
 ```bash
-# EXE
-.\SharpHound.exe --OutputDirectory <PATH> --zipfilename bh_logs.zip -c All
+.\SharpHound.exe -c All --zipfilename bh_logs.zip --OutputDirectory <PATH>
+```
 
-# PowerShell
+```powershell
 Import-Module .\SharpHound.ps1
-Invoke-Bloodhound -OutputDirectory <PATH> -ZipFileName bh_logs.zip -CollectionMethod All
+Invoke-Bloodhound -CollectionMethod All -ZipFileName bh_logs.zip -OutputDirectory <PATH>
 ```
 
 ### Linux
@@ -64,7 +63,7 @@ LIBGSSAPI_IMPL=mit cargo install rusthound-ce --locked
 ```
 
 ```bash
-$HOME/.cargo/bin/rusthound-ce --domain <DOMAIN> --ldapusername <USER> --ldappassword <PASSWORD> --ldapfqdn <DC_FQDN> --zip --collectionmethod All
+$HOME/.cargo/bin/rusthound-ce --zip --collectionmethod All --domain <DOMAIN> --ldapusername <USER> --ldappassword <PASSWORD> --ldapfqdn <DC_FQDN>
 ```
 
 #### BloodHound-CE-Python via `netexec`
@@ -72,7 +71,7 @@ $HOME/.cargo/bin/rusthound-ce --domain <DOMAIN> --ldapusername <USER> --ldappass
 - https://github.com/dirkjanm/BloodHound.py/tree/bloodhound
 
 ```bash
-nxc ldap <DC> -d <DOMAIN> -u <USER> -p <PASS> --bloodhound --collection All -ns <DC_IP>
+nxc ldap <DC> -d <DOMAIN> -u <USER> -p <PASS> --dns-server <DC_IP> --bloodhound --collection All
 ```
 
 ## Analysis and Queries
