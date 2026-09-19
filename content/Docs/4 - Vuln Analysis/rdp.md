@@ -9,7 +9,7 @@ Also called "Terminal Services"
 
 **Connects to RDP and mounts share with `mimikatz`**
 ```bash
-mkdir "$HOME/my_data/loot"; xfreerdp3 /clipboard /dynamic-resolution /cert:ignore /drive:'/usr/share/windows-resources/mimikatz/x64',share /drive:"$HOME/my_data/loot",loot /v:<TARGET> /d:<DOMAIN> /u:<USER> /p:'<PASSWORD>'
+mkdir "$HOME/cyber-tools/tools"; xfreerdp3 /clipboard /dynamic-resolution /cert:ignore /drive:"$HOME/cyber-tools/tools",tools /v:<TARGET> /d:<DOMAIN> /u:<USER> /p:'<PASSWORD>'
 ```
 
 # Enable RDP

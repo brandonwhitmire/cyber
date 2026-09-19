@@ -16,11 +16,11 @@ DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a sudo apt install -y --fix-miss
 # Update locate DB
 sudo updatedb
 # Manual tool installs
-go install -v github.com/nullt3r/udpx/cmd/udpx@latest
 curl -LsSf https://astral.sh/uv/install.sh | sh && curl -LsSf https://astral.sh/uv/install.sh | sudo sh
 sudo rm -f /usr/local/bin/nxcblast ; sudo wget -q https://raw.githubusercontent.com/brandonwhitmire/nxcblast/main/nxcblast.py -O /usr/local/bin/nxcblast && sudo chmod +x /usr/local/bin/nxcblast
 git clone https://github.com/brandonwhitmire/cyber-tools.git $HOME/cyber-tools
 "$HOME/cyber-tools/tools.sh" --install
+ln -s ~/cyber-tools/tools/ ~/my_data/tools
 # Artifacts folder
 mkdir ~/my_data
 echo 'cd ~/my_data' >> ~/.bashrc

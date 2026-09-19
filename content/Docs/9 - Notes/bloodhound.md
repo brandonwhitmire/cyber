@@ -57,22 +57,10 @@ This is helpful when on a non-Windows host or from outside of the domain:
 **RustHound-CE collects certificate information as well!**
 
 ```bash
-# Dependencies: https://github.com/g0h4n/RustHound-CE/blob/main/HELP.md#required-dependencies
-sudo apt update -y && sudo apt install -y gcc clang libclang-dev libgssapi-krb5-2 libkrb5-dev libsasl2-modules-gssapi-mit musl-tools gcc-mingw-w64-x86-64 cargo
-LIBGSSAPI_IMPL=mit cargo install rusthound-ce --locked
+./rusthound-ce --zip --collectionmethod All --domain <DOMAIN> --ldapusername <USER> --ldappassword <PASSWORD> --ldapfqdn <DC_FQDN>
 ```
 
-```bash
-$HOME/.cargo/bin/rusthound-ce --zip --collectionmethod All --domain <DOMAIN> --ldapusername <USER> --ldappassword <PASSWORD> --ldapfqdn <DC_FQDN>
-```
-
-#### BloodHound-CE-Python via `netexec`
-
-- https://github.com/dirkjanm/BloodHound.py/tree/bloodhound
-
-```bash
-nxc ldap <DC> -d <DOMAIN> -u <USER> -p <PASS> --dns-server <DC_IP> --bloodhound --collection All
-```
+![[netexec#BloodHound-CE-Python via `netexec`]]
 
 ## Analysis and Queries
 

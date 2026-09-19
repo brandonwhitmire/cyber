@@ -10,9 +10,19 @@ Local privilege escalation grapher to map attack paths in BloodHound. Collects v
 
 ```powershell
 # Skip testing found creds against target
-.\PrivHound.ps1 -NoCredTest -OutputPath <PATH>
+.\PrivHound.ps1 -NoCredTest -OutputPath ".\privhound_$env:COMPUTERNAME.json"
+```
+
+**REQUIRES: this [temp fix](https://github.com/dazzyddos/PrivHound/issues/5#issuecomment-4573036467)**
+```bash
+jq '(.graph.nodes[]?.properties) |= (if type=="object" then del(.objectid) else . end)' privhound*.json > fixed.json
 ```
 **UPLOAD output `.json` to BloodHound**
+
+**Upload Schema and Icons**
+```bash
+curl -X POST http://127.0.0.1:8080/api/v2/custom-nodes -H "Content-Type: application/json" -H "Prefer: wait=30" -d @privhound_customnodes.json -v -H "Authorization: Bearer <JWT_TOKEN>"
+```
 
 ## Key Cypher queries
 
@@ -109,19 +119,5 @@ RETURN p
 
 ```cypher
 MATCH p=(u:PHUser)-[:PHCanExploit]->(r:PHRegistryMisconfig)-[:PHEscalatesTo]->(t:PHPrivTarget)
-RETURN p
-```
-
-### 9. GPP PASSWORDS (if SYSVOL readable)
-
-```cypher
-MATCH p=(u:PHUser)-[:PHCanDecryptGPP]->(g:PHGPPPassword)-[:PHCanLoginAs]->(lu:PHLocalUser)-[:PHMemberOf]->(t:PHPrivTarget)
-RETURN p
-```
-
-### 10. FULL GRAPH (if above return nothing -- see everything)
-
-```cypher
-MATCH p=()-[r]->() WHERE type(r) STARTS WITH "PH"
 RETURN p
 ```

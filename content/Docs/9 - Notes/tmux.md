@@ -49,20 +49,24 @@ printf '\n[ -z "$TMUX" ] && tmux new-session -A -s pentest-engagement\n' >> ~/.b
 printf '\n[ -z "$TMUX" ] && tmux new-session -A -s pentest-engagement\n' >> ~/.zshrc
 ```
 
-## Tmux Core Hotkeys
+## Core Hotkeys
 
 *Default Prefix: `CTRL+B`*
 
 | Action                      | Hotkey               | Description                                     |
 | :-------------------------- | :------------------- | :---------------------------------------------- |
-| **Create New Tab (Window)** | `Prefix` + `C`       | Creates a new tmux window (full-screen tab).    |
-| **Next Tab**                | `Prefix` + `N`       | Switches to the next tmux window.               |
-| **Previous Tab**            | `Prefix` + `P`       | Switches to the previous tmux window.           |
+| **Create New Tab (Window)** | `Prefix` + `c`       | Creates a new tmux window (full-screen tab).    |
+| **Next Tab**                | `Prefix` + `n`       | Switches to the next tmux window.               |
+| **Previous Tab**            | `Prefix` + `p`       | Switches to the previous tmux window.           |
 | **Switch by Number**        | `Prefix` + `0-9`     | Jumps directly to a window by index.            |
+| **Switch by Name**          | `Prefix` + `w`       | Open interactive list of windows to switch to.  |
 | **Rename Current Tab**      | `Prefix` + `,`       | Renames the current window for easier tracking. |
 | **Search Output**           | `Prefix` + `[` + `/` | Search for words within the terminal output.    |
+| **Detach Session**          | `Prefix` + `d`       | Close tmux without killing it.                  |
 
-## [Tmux Logging](https://github.com/tmux-plugins/tmux-logging) Hotkeys
+## LoggingHotkeys
+
+- https://github.com/tmux-plugins/tmux-logging
 
 *Note: Logging is enabled by default in this config via `pipe-pane`, with one timestamped file per pane in `~/.tmux/logs/` (format: `YYYYmmdd-HHMMSS-session-window-pane.log`). The plugin hotkeys below are still useful for manual/retroactive captures. See docs for [changing plugin logging options](https://github.com/tmux-plugins/tmux-logging/blob/master/docs/configuration.md).*
 
