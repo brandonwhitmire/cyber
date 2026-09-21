@@ -79,13 +79,14 @@ sudo nmap -n -Pn -sS -p- --stats-every 30s -oA nmap_all_tcp --excludefile scope_
 
 ##### UDP
 
-```bash
-./udpx -c 128 -w 1000 -o udpx_results.jsonl --excludefile scope_excludes.txt -tf live_hosts.txt
-```
+- https://github.com/nullt3r/udpx#options
 
-Top 100 (full `-p-` UDP is impractically slow)
-
+**NOTE: scan UDP with both `udpx` and `nmap`!!!**
 ```bash
+# Max 128 conns, max wait 1000ms
+./udpx -c 128 -w 1000 -o udpx_results.json --excludefile scope_excludes.txt -tf live_hosts.txt
+
+# Top 100 (full UDP -p- ports UDP is way too slow)
 sudo nmap -n -Pn -sU --top-ports 100 -sV -sC --open -vvv --stats-every 30s -oA nmap_top100_udp --excludefile scope_excludes.txt -iL live_hosts.txt
 ```
 

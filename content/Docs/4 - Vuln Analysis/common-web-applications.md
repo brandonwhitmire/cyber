@@ -76,8 +76,11 @@ curl -s http://<TARGET>/wp-json/wp/v2/users | python3 -m json.tool
 - API Token: https://wpscan.com/profile/
 
 ```bash
-# Enumerate
-sudo wpscan -t 20 --enumerate u1-100,ap,at,tt,cb,dbe --plugins-detection aggressive --api-token <API_TOKEN> --url http://<TARGET>
+# Basic Enumerate
+sudo wpscan -t 50 --enumerate u,vp,vt,tt,cb,dbe --plugins-detection passive --api-token <API_TOKEN> --url http://<TARGET>
+
+# Aggressive Plugins
+sudo wpscan -t 50 --enumerate p --plugins-detection aggressive --api-token <API_TOKEN> --url http://<TARGET>
 
 # Login brute-force: xmlrpc and wp-login methods
 sudo wpscan -t 20 --url http://<TARGET> --password-attack xmlrpc -U <USER> -P /usr/share/wordlists/rockyou.txt

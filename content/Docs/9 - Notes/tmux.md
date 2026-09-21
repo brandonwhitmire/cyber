@@ -61,10 +61,11 @@ printf '\n[ -z "$TMUX" ] && tmux new-session -A -s pentest-engagement\n' >> ~/.z
 | **Switch by Number**        | `Prefix` + `0-9`     | Jumps directly to a window by index.            |
 | **Switch by Name**          | `Prefix` + `w`       | Open interactive list of windows to switch to.  |
 | **Rename Current Tab**      | `Prefix` + `,`       | Renames the current window for easier tracking. |
+| **Renumber Current Tab**    | `Prefix` + `.`       | Rename (move) tab to new number                 |
 | **Search Output**           | `Prefix` + `[` + `/` | Search for words within the terminal output.    |
 | **Detach Session**          | `Prefix` + `d`       | Close tmux without killing it.                  |
 
-## LoggingHotkeys
+## Logging Hotkeys
 
 - https://github.com/tmux-plugins/tmux-logging
 
