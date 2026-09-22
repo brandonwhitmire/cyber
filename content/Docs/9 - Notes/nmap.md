@@ -18,14 +18,8 @@ title = "Nmap"
 ### Quickstart
 
 ```bash
-# Quick + All Ports
-export TARGET="<TARGET>" ; sudo nmap -n -Pn -sS -sV -sC --open --stats-every 30s -vvv -oA nmap_quick_tcp $TARGET && sudo nmap -n -Pn -sS -p- -sV -sC --open --stats-every 30s -vvv -oA nmap_all_tcp $TARGET
-```
-
-```bash
-# Metasploit version
-db_nmap -n -Pn -sS -sV -sC --open --stats-every 30s -vvv -oA nmap_quick <TARGET>
-db_nmap -n -Pn -sS -p- -sV -sC --open --stats-every 30s -vvv -oA nmap_all <TARGET>
+# TCP Quick + TCP All Ports + UDP Top 100
+export TARGET="<TARGET>" ; sudo nmap -n -Pn -sS -sV -sC --open --stats-every 30s -vvv -oA nmap_quick_tcp $TARGET ; sudo nmap -n -Pn -sS -p- -sV -sC --open --stats-every 30s -vvv -oA nmap_all_tcp $TARGET ; sudo nmap -n -Pn -sU --top-ports 100 -sV -sC --open -vvv --stats-every 30s -oA nmap_top100_udp $TARGET
 ```
 
 ### Host Discovery
