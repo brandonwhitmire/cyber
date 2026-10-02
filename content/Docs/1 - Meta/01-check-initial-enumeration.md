@@ -26,10 +26,10 @@ mkdir ~/my_data
 echo 'cd ~/my_data' >> ~/.bashrc
 echo 'cd ~/my_data' >> ~/.zshrc
 # Penelope shell auto-safe mode
-echo "alias penelope='penelope --oscp-safe --payloads --interface eth0'" >> ~/.bashrc
-echo "alias penelope='penelope --oscp-safe --payloads --interface eth0'" >> ~/.zshrc
-sudo bash -c "echo \"alias penelope='penelope --oscp-safe --payloads --interface eth0'\" >> /root/.bashrc"
-sudo bash -c "echo \"alias penelope='penelope --oscp-safe --payloads --interface eth0'\" >> /root/.zshrc"
+echo "alias penelope='penelope --oscp-safe'" >> ~/.bashrc
+echo "alias penelope='penelope --oscp-safe'" >> ~/.zshrc
+sudo bash -c "echo \"alias penelope='penelope --oscp-safe'\" >> /root/.bashrc"
+sudo bash -c "echo \"alias penelope='penelope --oscp-safe'\" >> /root/.zshrc"
 # Source the shell
 . "$HOME/.zshrc"
 ```

@@ -155,7 +155,7 @@ grep SidTypeUser nxc_rid_users.txt | cut -d "\\" -f 2 | cut -d " " -f 1 | grep -
 Shows various logged on users... useful to dump their live creds
 
 ```bash
-nxc smb <TARGET> -u "<USERNAME>" -p "<PASSWORD>" --reg-sessions --loggedon-users --qwinsta --smb-sessions
+nxc smb <TARGET> -u "<USERNAME>" -p "<PASSWORD>" --reg-sessions --loggedon-users --qwinsta
 ```
 
 ### Get machine IP address and domains

@@ -9,7 +9,6 @@ Local privilege escalation grapher to map attack paths in BloodHound. Collects v
 ## Collect Survey
 
 ```powershell
-# Skip testing found creds against target
 .\PrivHound.ps1 -NoCredTest -OutputPath ".\privhound_$env:COMPUTERNAME.json"
 ```
 
