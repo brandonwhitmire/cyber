@@ -16,10 +16,10 @@ title = "00 - Alpha Checklists"
 
 ## Modern References
 
-| Resource                                                                                             | Notes                                                                               |
-| ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| [MITRE ATT&CK](https://attack.mitre.org/)                                                            | De facto industry TTP reference. Covers every tactic/technique phase                |
-| [OWASP Web Security Testing Guide (WSTG)](https://owasp.org/www-project-web-security-testing-guide/) | Actively maintained. Current version 4.2. Best reference for web/app testing phases |
+| Resource                                                                                             | Notes                                     |
+| ---------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| [MITRE ATT&CK](https://attack.mitre.org/)                                                            | De facto industry TTP reference           |
+| [OWASP Web Security Testing Guide (WSTG)](https://owasp.org/www-project-web-security-testing-guide/) | Best reference for web/app testing phases |
 
 ---
 

@@ -18,8 +18,8 @@ title = "Nmap"
 ### Quickstart
 
 ```bash
-# TCP Quick + TCP All Ports + UDP Top 100
-export TARGET="<TARGET>" ; sudo nmap -n -Pn -sS -sV -sC --open --stats-every 30s -vvv -oA nmap_quick_tcp $TARGET ; sudo nmap -n -Pn -sS -p- -sV -sC --open --stats-every 30s -vvv -oA nmap_all_tcp $TARGET ; sudo nmap -n -Pn -sU --top-ports 100 -sV --version-all -sC --open -vvv --stats-every 30s -oA nmap_top100_udp $TARGET ; ./udpx -c 128 -w 1000 -o udpx_results.json $TARGET
+# TCP All Ports + UDP Top 100
+export TARGET="<TARGET>" ; sudo nmap -n -Pn -sS -p- -sV -sC --open --stats-every 30s -vvv -oA nmap_all_tcp $TARGET ; sudo nmap -n -Pn -sU --top-ports 100 -sV --version-all -sC --open -vvv --stats-every 30s -oA nmap_top100_udp $TARGET ; ./udpx -c 128 -w 1000 -o udpx_results.json $TARGET
 ```
 
 ### Host Discovery
