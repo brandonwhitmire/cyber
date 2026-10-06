@@ -37,11 +37,7 @@ Password attacks can be frustrating.
 
 Try passwords in this order (one per spray run):
 
-1. [ ] `Welcome1` / `Password1` / `ChangeMe123`
-2. [ ] Username as the password
-3. [ ] `CompanyName` + current year (e.g. `CoolCompany2025`)
-4. [ ] Season + year (`Spring2025`, `Fall2024`, `Winter2024`)
-
+![[online-credentials-attacks#Default Creds]]
 ### Offline Hash Cracking
 
 | Hash Source                        | Hashcat Mode |
