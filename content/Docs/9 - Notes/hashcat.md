@@ -65,10 +65,7 @@ Fall
 ```bash
 for i in $(cat pwlist.txt); do echo $i; echo ${i}\!; echo ${i}2025; echo ${i}2026; done > passwords.txt
 
-hashcat \
-    -r /usr/share/hashcat/rules/best66.rule \
-    -r /usr/share/hashcat/rules/toggles1.rule \
-    --stdout passwords.txt | sort -u > passwords_mutated.txt
+hashcat -r /usr/share/hashcat/rules/best66.rule -r /usr/share/hashcat/rules/toggles1.rule --stdout passwords.txt | sort -u > passwords_mutated.txt
 ```
 
 ## Important Notes
@@ -151,7 +148,7 @@ Rule-based attacks apply transformations to words in a wordlist, creating permut
 
 ```bash
 # Apply rule file to wordlist
-hashcat -m 1800 -r /usr/share/hashcat/rules/best66.rule hashes.txt <WORDLIST>
+hashcat -m 1800 -r toggles1.rule -r /usr/share/hashcat/rules/best66.rule hashes.txt <WORDLIST>
 ```
 
 ### Creating Custom Rules

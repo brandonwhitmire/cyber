@@ -3,6 +3,7 @@ title = "🌐 Oracle TNS: TCP 1521"
 +++
 
 - `TCP 1521`: normal
+- Default user: `SYS` or `SYSTEM`
 - Server Config:
     - `$ORACLE_HOME/network/admin/tnsnames.ora`: names to addrs
     - `$ORACLE_HOME/network/admin/listener.ora`: listener behavior

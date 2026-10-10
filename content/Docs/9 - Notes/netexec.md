@@ -16,18 +16,18 @@ Netexec (formerly CrackMapExec) is a swiss army knife for pentesting networks th
 
 Usually only `smb` or `winrm` are "true" admin, but the rest usually include some level of code execution.
 
-| Protocol | What `Pwn3d!` means             | How it checks                                                             |
-| -------- | ------------------------------- | ------------------------------------------------------------------------- |
-| `smb`    | Local admin on the machine      | Can write to `ADMIN$` / `C$`, member of local Administrators group        |
-| `winrm`  | Remote shell access             | Code execution possible — local admin OR `Remote Management Users` member |
-| `ldap`   | Path to Domain Admin exists     | Account has DCSync rights, is DA, or has privileged ACLs                  |
-| `mssql`  | `sysadmin` role on SQL instance | SQL server role check, **completely separate from AD**                    |
-| `rdp`    | RDP code execution available    | Account has RDP access — local admin OR `Remote Desktop Users` member     |
-| `wmi`    | Local admin (WMI exec works)    | WMI process create succeeds, usually requires local admin                 |
-| `ssh`    | Root access                     | Logged in as root, OR sudo without password possible                      |
-| `ftp`    | **No admin check**              | Just shows `[+]` for valid auth, no `Pwn3d!` ever                         |
-| `vnc`    | Code execution                  | VNC session established with control                                      |
-| `nfs`    | Root/write access on share      | Can mount and write as root                                               |
+| Protocol | What `Pwn3d!` means             | How it checks                                                                                                  |
+| -------- | ------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `smb`    | Local admin on the machine      | Can write to `ADMIN$` / `C$`, member of local Administrators group. See [[security-products#Remote Filtering]] |
+| `winrm`  | Remote shell access             | Code execution possible: local admin OR `Remote Management Users` member                                       |
+| `ldap`   | Path to Domain Admin exists     | Account has DCSync rights, is DA, or has privileged ACLs                                                       |
+| `mssql`  | `sysadmin` role on SQL instance | SQL server role check, **completely separate from AD**                                                         |
+| `rdp`    | RDP code execution available    | Account has RDP access: local admin OR `Remote Desktop Users` member                                           |
+| `wmi`    | Local admin (WMI exec works)    | WMI process create succeeds, usually requires local admin                                                      |
+| `ssh`    | Root access                     | Logged in as root, OR sudo without password possible                                                           |
+| `ftp`    | **No admin check**              | Just shows `[+]` for valid auth, no `Pwn3d!` ever                                                              |
+| `vnc`    | Code execution                  | VNC session established with control                                                                           |
+| `nfs`    | Root/write access on share      | Can mount and write as root                                                                                    |
 
 **Key behavioral notes:**
 

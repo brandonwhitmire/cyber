@@ -4,6 +4,8 @@ title = "🪟 MSSQL: TCP/UDP 1433"
 
 - `TCP/UDP 1433`: normal
 - `TCP 2433`: hidden mode
+- Default user: `sa` (typically disabled)
+    - uses Windows Authentication Mode by default (domain user)
 - default system schemas/databases:
     - `master`
     - `tempdb`

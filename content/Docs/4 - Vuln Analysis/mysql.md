@@ -5,6 +5,7 @@ title = "🌐 MySQL: TCP 3306"
 `Database > Schema > Table > Column > Value`
 
 - `TCP 3306`: normal
+- Default user: `root` (separate from Linux user)
 - Server Config:
     - `/etc/mysql/mysql.conf.d/mysqld.cnf`
 - Default system schemas/databases:
